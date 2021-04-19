@@ -1,0 +1,50 @@
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--white-color);
+  padding: 30px;
+  border: 1px solid var(--lightgray-color);
+  border-radius: 20px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 0 2px 0 var(--lightgray-color);
+}
+
+h3 {
+  margin: 0;
+  padding-bottom: 20px;
+  font-size: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-bottom: 1px solid var(--lightgray-color);
+}
+
+.text {
+  margin-top: 20px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 25px;
+}
+.buttons button {
+  width: 35%;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlay.hidden {
+  display: none;
+}

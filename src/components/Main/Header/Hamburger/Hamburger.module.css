@@ -1,0 +1,34 @@
+.hamburger {
+  position: absolute;
+  align-self: flex-start;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 25px;
+  height: 21px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  cursor: pointer;
+}
+.hamburger:focus {
+  outline: none;
+}
+
+.hamburger span {
+  display: block;
+  background: var(--black-color);
+  width: 30px;
+  height: 3px;
+  transition: 0.7s all;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(10px) rotate(-45deg);
+}
+.hamburger.active span:nth-child(2) {
+  display: none;
+}
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(45deg);
+}

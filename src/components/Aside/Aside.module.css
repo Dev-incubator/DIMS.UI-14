@@ -1,0 +1,14 @@
+.aside {
+  opacity: 0;
+  visibility: hidden;
+  height: 100%;
+  transition: 0.7s all;
+  width: 0;
+}
+
+.aside.active {
+  left: 0;
+  opacity: 1;
+  visibility: visible;
+  width: 265px;
+}
