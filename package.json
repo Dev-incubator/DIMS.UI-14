@@ -22,7 +22,7 @@
     "clean": "rm -rf node_modules coverage build",
     "clean:coverage": "rm -rf coverage",
     "cm": "cz",
-    "precommit": "lint-staged"
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "plugins": [
@@ -51,7 +51,8 @@
       "no-use-before-define": 0,
       "no-param-reassign": 1,
       "curly": "error",
-      "newline-before-return": "warn"
+      "newline-before-return": "warn",
+      "no-shadow": "warn"
     }
   },
   "eslintIgnore": [
@@ -84,14 +85,16 @@
   "dependencies": {
     "@testing-library/jest-dom": "5.11.10",
     "@testing-library/react": "11.2.6",
-    "@testing-library/user-event": "13.1.2",
+    "@testing-library/user-event": "13.1.4",
     "eslint": "7.24.0",
     "node-sass": "5.0.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-icons": "4.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
+    "react-spinners": "0.10.6",
     "web-vitals": "1.1.1"
   },
   "devDependencies": {
@@ -99,9 +102,9 @@
     "commitizen": "4.2.3",
     "cz-conventional-changelog": "3.3.0",
     "eslint-config-airbnb": "18.2.1",
-    "eslint-config-prettier": "8.1.0",
+    "eslint-config-prettier": "8.2.0",
     "eslint-plugin-prettier": "3.3.1",
-    "husky": "4.3.6",
+    "husky": "^6.0.0",
     "lint-staged": "10.5.4",
     "prettier": "2.2.1",
     "semantic-release": "^17.3.9"
