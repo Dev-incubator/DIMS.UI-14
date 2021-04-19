@@ -21,24 +21,26 @@
   "build" - build app
   "test" - run tests
   "test:coverage:ci:codecov" - run test and submit codecoverage to codecov
-  "format" - format code with prettier
   "lint" - check your code with eslint
   "lint:fix" - fix your code with eslint
   "cm" - run commitizen to create a good commit
 ```
 
 To commit message you have to write following commands
+
 ```bash
    git add .
-   git commit 
+   git commit
 ```
+
 then follow commitizen prompts and write a good commit
 
 ### Main technologies ℹ️
 
 - react
 - eslint + air bnb style guide + some additional rules
-- prettier
+- husky and lint-staged
+- prettier and eslint
 - codecov with Travis CI
 - commitizen
 
@@ -54,13 +56,15 @@ Next, it will build and deploy the new site on Netlify bringing you to the site 
 
 ### Env variables 📝
 
- - **CUSTOM_LOGO** - here you can pass a link to your app logo
- - **DIMS_TITLE** - here you can pass your app title
+- **CUSTOM_LOGO** - here you can pass a link to your app logo
+- **DIMS_TITLE** - here you can pass your app title
 
 #### VSCode integration
-For ESLint warnings inline with your code and run formatting automatically with Prettier in VSCode, we need to install:
- - **[ESLint](https://github.com/Microsoft/vscode-eslint)** extension
- - **[Prettier](https://github.com/prettier/prettier-vscode)** extension
- - Edit **VSCode** settings.json to set up formatting on every file change or on every save
 
-#### Basic webstorm setup is in .idea 
+For ESLint warnings inline with your code and run formatting automatically with Prettier in VSCode, we need to install:
+
+- **[ESLint](https://github.com/Microsoft/vscode-eslint)** extension
+- **[Prettier](https://github.com/prettier/prettier-vscode)** extension
+- Edit **VSCode** settings.json to set up formatting on every file change or on every save
+
+#### Basic webstorm setup is in .idea
