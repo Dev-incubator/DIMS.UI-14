@@ -4,21 +4,9 @@ import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
 
-export default function Users({ dispatch, usersList, modal }) {
+export default function Users({ dispatch, usersList, modalSettings }) {
   const users = usersList.map((user) => {
-    return (
-      <User
-        modal={modal}
-        dispatch={dispatch}
-        key={user.id.toString()}
-        id={user.id}
-        fullname={user.fullname}
-        direction={user.direction}
-        education={user.education}
-        start={user.start}
-        age={user.age}
-      />
-    );
+    return <User dispatch={dispatch} modalSettings={modalSettings} key={user.id.toString()} userData={user} />;
   });
 
   return (
@@ -27,9 +15,7 @@ export default function Users({ dispatch, usersList, modal }) {
         <h2 className={classes.title}>
           Users <span>({`${usersList.length}`})</span>
         </h2>
-        <Button onClick={dispatch} toggler={modal.toggler} type={modal.types.memberCreate}>
-          Create
-        </Button>
+        <Button>Create</Button>
       </div>
       <div className={classes.content}>
         <div className={classes.subheader}>
@@ -43,13 +29,13 @@ export default function Users({ dispatch, usersList, modal }) {
         </div>
         {users}
       </div>
-      <Modal dispatch={dispatch} modal={modal} />
+      <Modal dispatch={dispatch} modalSettings={modalSettings} />
     </div>
   );
 }
 
 Users.propTypes = {
   usersList: PropType.instanceOf(Array).isRequired,
-  modal: PropType.instanceOf(Object).isRequired,
+  modalSettings: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
 };

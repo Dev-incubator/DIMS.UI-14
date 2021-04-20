@@ -6,6 +6,7 @@ import classes from './App.module.css';
 
 const TOGGLE_MENU = 'toggle-menu';
 const TOGGLE_MODAL = 'toggle-modal';
+// const MEMBER_DELETE = 'delete-current-member';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -23,6 +24,8 @@ export default class App extends React.Component {
           types: {
             memberDelete: 'member-delete',
             memberCreate: 'member-create',
+            memberProgress: 'member-progress',
+            memberEdit: 'member-edit',
           },
         },
       },
@@ -175,8 +178,17 @@ export default class App extends React.Component {
           },
         }));
         break;
+      // case MEMBER_DELETE:
+      //   this.setState((prevState) => ({
+      //     ...prevState,
+      //     data: {
+      //       ...prevState.data,
+      //       members: prevState.data.members.splice(action.deleteID, 1),
+      //     },
+      //   }));
+      //   break;
       default:
-        console.log('Something went wrong...');
+        break;
     }
   }
 

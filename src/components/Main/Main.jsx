@@ -10,7 +10,7 @@ export default function Main({ dispatch, settings: { menu, modal }, data: { user
     <main className={classes.main}>
       <Header dispatch={dispatch} menu={menu} />
       <div className={classes.screen}>
-        <Route path='/users' render={() => <Users usersList={usersList} modal={modal} dispatch={dispatch} />} />
+        <Route path='/users' render={() => <Users usersList={usersList} modalSettings={modal} dispatch={dispatch} />} />
         <Route path='/tasks' render={() => <Tasks tasksList={tasksList} />} />
       </div>
     </main>
