@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
 import classes from './Button.module.css';
 
-export default function Button({ children, onClick, modalSettings, roletag, type }) {
+export default function Button({ children, onClick, modalSettings, roletag, type, selectedID }) {
   const { toggler } = modalSettings;
-  const handleClick = () => onClick({ type: toggler, modaltype: type }); // default type = ''
+  const {
+    types: { selectID },
+  } = modalSettings;
+  const handleClick = () => {
+    onClick({ type: selectID, id: selectedID });
+    onClick({ type: toggler, modaltype: type }); // default type = ''
+  };
 
   return (
     <button className={`${classes.button} ${roletag ? classes[roletag] : ''}`} type='button' onClick={handleClick}>
@@ -18,10 +24,12 @@ Button.propTypes = {
   roletag: PropTypes.string,
   modalSettings: PropTypes.instanceOf(Object),
   type: PropTypes.string,
+  selectedID: PropTypes.number,
 };
 Button.defaultProps = {
   children: null,
   roletag: '',
   type: '',
   modalSettings: Object,
+  selectedID: '',
 };

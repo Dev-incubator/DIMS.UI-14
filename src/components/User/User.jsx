@@ -17,12 +17,16 @@ export default function User({ dispatch, modalSettings, userData }) {
       <div>{start}</div>
       <div>{age}</div>
       <div className={classes.buttons}>
-        <Button type={memberProgress}>Progress</Button>
-        <Button>Tasks</Button>
-        <Button type={memberEdit} roletag='edit'>
+        <Button modalSettings={modalSettings} type={memberProgress} onClick={dispatch}>
+          Progress
+        </Button>
+        <Button modalSettings={modalSettings} onClick={dispatch}>
+          Tasks
+        </Button>
+        <Button modalSettings={modalSettings} type={memberEdit} roletag='edit' onClick={dispatch}>
           Edit
         </Button>
-        <Button roletag='delete' modalSettings={modalSettings} type={memberDelete} onClick={dispatch}>
+        <Button selectedID={id} roletag='delete' modalSettings={modalSettings} type={memberDelete} onClick={dispatch}>
           Delete
         </Button>
       </div>

@@ -15,7 +15,9 @@ export default function Users({ dispatch, usersList, modalSettings }) {
         <h2 className={classes.title}>
           Users <span>({`${usersList.length}`})</span>
         </h2>
-        <Button>Create</Button>
+        <Button modalSettings={modalSettings} onClick={dispatch}>
+          Create
+        </Button>
       </div>
       <div className={classes.content}>
         <div className={classes.subheader}>
@@ -29,7 +31,7 @@ export default function Users({ dispatch, usersList, modalSettings }) {
         </div>
         {users}
       </div>
-      <Modal dispatch={dispatch} modalSettings={modalSettings} />
+      <Modal usersList={usersList} dispatch={dispatch} modalSettings={modalSettings} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import classes from './App.module.css';
 
 const TOGGLE_MENU = 'toggle-menu';
 const TOGGLE_MODAL = 'toggle-modal';
+const SELECT_ID = 'select-id';
 // const MEMBER_DELETE = 'delete-current-member';
 
 export default class App extends React.Component {
@@ -21,11 +22,13 @@ export default class App extends React.Component {
           isOpen: false,
           toggler: TOGGLE_MODAL,
           type: '',
+          selectedID: '',
           types: {
             memberDelete: 'member-delete',
             memberCreate: 'member-create',
             memberProgress: 'member-progress',
             memberEdit: 'member-edit',
+            selectID: SELECT_ID,
           },
         },
       },
@@ -174,6 +177,18 @@ export default class App extends React.Component {
               ...prevState.settings.modal,
               type: action.modaltype,
               isOpen: !prevState.settings.modal.isOpen,
+            },
+          },
+        }));
+        break;
+      case SELECT_ID:
+        this.setState((prevState) => ({
+          ...prevState,
+          settings: {
+            ...prevState.settings,
+            modal: {
+              ...prevState.settings.modal,
+              selectedID: action.id,
             },
           },
         }));

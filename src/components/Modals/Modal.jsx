@@ -2,12 +2,12 @@ import PropType from 'prop-types';
 import classes from './Modal.module.css';
 import DeleteMember from './Members/DeleteMember';
 
-export default function Modal({ dispatch, modalSettings }) {
+export default function Modal({ usersList, dispatch, modalSettings }) {
   let modal;
   const { isOpen, type } = modalSettings;
   switch (type) {
     case 'member-delete':
-      modal = <DeleteMember dispatch={dispatch} modalSettings={modalSettings} />;
+      modal = <DeleteMember usersList={usersList} dispatch={dispatch} modalSettings={modalSettings} />;
       break;
     default:
       break;
@@ -19,4 +19,5 @@ export default function Modal({ dispatch, modalSettings }) {
 Modal.propTypes = {
   modalSettings: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
 };
