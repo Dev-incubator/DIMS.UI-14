@@ -7,7 +7,7 @@ import classes from './App.module.css';
 const TOGGLE_MENU = 'toggle-menu';
 const TOGGLE_MODAL = 'toggle-modal';
 const SELECT_ID = 'select-id';
-// const MEMBER_DELETE = 'delete-current-member';
+const MEMBER_DELETE = 'delete-current-member';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -29,6 +29,7 @@ export default class App extends React.Component {
             memberProgress: 'member-progress',
             memberEdit: 'member-edit',
             selectID: SELECT_ID,
+            memberDeleteAction: MEMBER_DELETE,
           },
         },
       },
@@ -193,15 +194,15 @@ export default class App extends React.Component {
           },
         }));
         break;
-      // case MEMBER_DELETE:
-      //   this.setState((prevState) => ({
-      //     ...prevState,
-      //     data: {
-      //       ...prevState.data,
-      //       members: prevState.data.members.splice(action.deleteID, 1),
-      //     },
-      //   }));
-      //   break;
+      case MEMBER_DELETE:
+        this.setState((prevState) => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            usersList: prevState.data.usersList.filter((item) => item.id !== action.id),
+          },
+        }));
+        break;
       default:
         break;
     }

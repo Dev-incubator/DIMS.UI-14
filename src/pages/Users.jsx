@@ -5,8 +5,16 @@ import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
 
 export default function Users({ dispatch, usersList, modalSettings }) {
-  const users = usersList.map((user) => {
-    return <User dispatch={dispatch} modalSettings={modalSettings} key={user.id.toString()} userData={user} />;
+  const users = usersList.map((user, index) => {
+    return (
+      <User
+        dispatch={dispatch}
+        modalSettings={modalSettings}
+        key={user.id.toString()}
+        userData={user}
+        tableIndex={index + 1}
+      />
+    );
   });
 
   return (
@@ -15,9 +23,7 @@ export default function Users({ dispatch, usersList, modalSettings }) {
         <h2 className={classes.title}>
           Users <span>({`${usersList.length}`})</span>
         </h2>
-        <Button modalSettings={modalSettings} onClick={dispatch}>
-          Create
-        </Button>
+        <Button onClick={() => {}}>Create</Button>
       </div>
       <div className={classes.content}>
         <div className={classes.subheader}>
