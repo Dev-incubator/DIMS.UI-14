@@ -2,26 +2,39 @@ import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './Task.module.css';
 
-export default function Task({ id, taskName, description, startDate, deadline }) {
+export default function Task({ actionTypes, modalTypes, taskData, tableIndex, dispatch }) {
+  const { id, taskName, description, startDate, deadline } = taskData;
+
+  const { deleteTask } = modalTypes;
+  const { toggleModal } = actionTypes;
+
+  const openDeleteModal = () => {
+    dispatch({ type: toggleModal, modalType: deleteTask, selectedID: id });
+  };
+
   return (
     <div className={classes.item}>
-      <div>{id}</div>
+      <div>{tableIndex}</div>
       <div>{taskName}</div>
       <div>{description}</div>
       <div>{startDate}</div>
       <div>{deadline}</div>
       <div className={classes.buttons}>
-        <Button roletag='edit'>Edit</Button>
-        <Button roletag='delete'>Delete</Button>
+        <Button roleclass='edit' onClick={() => {}}>
+          Edit
+        </Button>
+        <Button roleclass='delete' onClick={openDeleteModal}>
+          Delete
+        </Button>
       </div>
     </div>
   );
 }
 
 Task.propTypes = {
-  id: PropType.number.isRequired,
-  taskName: PropType.string.isRequired,
-  description: PropType.string.isRequired,
-  startDate: PropType.string.isRequired,
-  deadline: PropType.string.isRequired,
+  dispatch: PropType.func.isRequired,
+  taskData: PropType.instanceOf(Object).isRequired,
+  tableIndex: PropType.number.isRequired,
+  modalTypes: PropType.instanceOf(Object).isRequired,
+  actionTypes: PropType.instanceOf(Object).isRequired,
 };

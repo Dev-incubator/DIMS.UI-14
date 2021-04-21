@@ -2,17 +2,14 @@ import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './User.module.css';
 
-export default function User({ userData, dispatch, modalSettings, tableIndex }) {
+export default function User({ actionTypes, modalTypes, userData, tableIndex, dispatch }) {
   const { id, fullname, direction, education, start, age } = userData;
 
-  const {
-    toggler,
-    types: { memberDelete, selectID },
-  } = modalSettings;
+  const { deleteUser } = modalTypes;
+  const { toggleModal } = actionTypes;
 
-  const toggleDeleteModal = () => {
-    dispatch({ type: toggler, modaltype: memberDelete });
-    dispatch({ type: selectID, id });
+  const openDeleteModal = () => {
+    dispatch({ type: toggleModal, modalType: deleteUser, selectedID: id });
   };
 
   return (
@@ -29,7 +26,7 @@ export default function User({ userData, dispatch, modalSettings, tableIndex }) 
         <Button roleclass='edit' onClick={() => {}}>
           Edit
         </Button>
-        <Button roleclass='delete' onClick={toggleDeleteModal}>
+        <Button roleclass='delete' onClick={openDeleteModal}>
           Delete
         </Button>
       </div>
@@ -38,8 +35,9 @@ export default function User({ userData, dispatch, modalSettings, tableIndex }) 
 }
 
 User.propTypes = {
-  userData: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
-  modalSettings: PropType.instanceOf(Object).isRequired,
+  userData: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
+  modalTypes: PropType.instanceOf(Object).isRequired,
+  actionTypes: PropType.instanceOf(Object).isRequired,
 };
