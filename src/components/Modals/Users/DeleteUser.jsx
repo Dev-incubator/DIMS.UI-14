@@ -2,28 +2,25 @@ import PropType from 'prop-types';
 import classes from './DeleteUser.module.css';
 import Button from '../../Button/Button';
 
-export default function DeleteUser({ usersList, dispatch, selectedID, actionTypes }) {
-  const { toggleModal, deleteUser } = actionTypes;
-
-  const selectedUser = usersList.find((item) => item.id === selectedID);
-
-  const deleteUserFunc = () => {
-    dispatch({ type: deleteUser });
-    closeDeleteModal();
-  };
+export default function DeleteUser({ user, dispatch, localActionTypes }) {
+  const { modal, deleteUser } = localActionTypes;
 
   const closeDeleteModal = () => {
-    dispatch({ type: toggleModal });
+    dispatch({ type: modal });
+  };
+
+  const deleteCurrentUser = () => {
+    dispatch({ type: deleteUser });
   };
 
   return (
     <div className={classes.modal}>
       <h3>Delete Member</h3>
       <div className={classes.text}>
-        Are you really want to delete <br /> <span>{selectedUser.fullname}</span> ?
+        Are you really want to delete <br /> <span>{user.fullname}</span> ?
       </div>
       <div className={classes.buttons}>
-        <Button onClick={deleteUserFunc} roleclass='delete'>
+        <Button onClick={deleteCurrentUser} roleclass='delete'>
           Delete
         </Button>
         <Button onClick={closeDeleteModal}>Close</Button>
@@ -33,8 +30,7 @@ export default function DeleteUser({ usersList, dispatch, selectedID, actionType
 }
 
 DeleteUser.propTypes = {
+  user: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
-  selectedID: PropType.number.isRequired,
-  actionTypes: PropType.instanceOf(Object).isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
+  localActionTypes: PropType.instanceOf(Object).isRequired,
 };

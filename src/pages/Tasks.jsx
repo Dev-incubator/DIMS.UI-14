@@ -3,28 +3,20 @@ import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
-import Modal from '../components/Modals/Modal';
 
 //  Function types
 const DELETE_TASK = 'delete-task';
-const TOGGLE_MODAL = 'toggle-modal';
+
 export default class Tasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalSettings: {
-        selectedID: '',
-        isOpen: false,
-        selectedModal: '',
-      },
       actionTypes: {
-        toggleModal: TOGGLE_MODAL,
         deleteTask: DELETE_TASK,
       },
       tasksList: [],
     };
     this.deleteTask = this.deleteTask.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -95,38 +87,22 @@ export default class Tasks extends React.Component {
   dispatch(action) {
     switch (action.type) {
       case DELETE_TASK:
-        this.deleteTask();
-        break;
-      case TOGGLE_MODAL:
-        this.toggleModal(action.modalType, action.selectedID);
+        this.deleteTask(action.selectedID);
         break;
       default:
-        console.log('something with dispatcher went wrong...');
         break;
     }
   }
 
-  deleteTask() {
+  deleteTask(selectedID) {
     this.setState((prevState) => ({
       ...prevState,
-      tasksList: prevState.tasksList.filter((item) => item.id !== prevState.modalSettings.selectedID),
-    }));
-  }
-
-  toggleModal(modalType = '', selectedID = '') {
-    this.setState((prevState) => ({
-      ...prevState,
-      modalSettings: {
-        ...prevState.modalSettings,
-        isOpen: !prevState.modalSettings.isOpen,
-        selectedModal: modalType,
-        selectedID,
-      },
+      tasksList: prevState.tasksList.filter((item) => item.id !== selectedID),
     }));
   }
 
   render() {
-    const { tasksList, actionTypes, modalSettings } = this.state;
+    const { tasksList, actionTypes } = this.state;
     const { modalTypes } = this.props;
 
     const tasks = tasksList.map((task, index) => {
@@ -161,13 +137,6 @@ export default class Tasks extends React.Component {
           </div>
           {tasks}
         </div>
-        <Modal
-          modalTypes={modalTypes}
-          actionTypes={actionTypes}
-          dispatch={this.dispatch}
-          list={tasksList}
-          modalSettings={modalSettings}
-        />
       </div>
     );
   }

@@ -2,28 +2,25 @@ import PropType from 'prop-types';
 import classes from './DeleteTask.module.css';
 import Button from '../../Button/Button';
 
-export default function DeleteTask({ tasksList, dispatch, selectedID, actionTypes }) {
-  const { toggleModal, deleteTask } = actionTypes;
-
-  const selectedTask = tasksList.find((item) => item.id === selectedID);
-
-  const deleteTaskFunc = () => {
-    dispatch({ type: deleteTask });
-    closeDeleteModal();
-  };
+export default function DeleteTask({ task, dispatch, localActionTypes }) {
+  const { modal, deleteTask } = localActionTypes;
 
   const closeDeleteModal = () => {
-    dispatch({ type: toggleModal });
+    dispatch({ type: modal });
+  };
+
+  const deleteCurrentTask = () => {
+    dispatch({ type: deleteTask });
   };
 
   return (
     <div className={classes.modal}>
       <h3>Delete Task</h3>
       <div className={classes.text}>
-        Are you really want to delete task <br /> <span>{selectedTask.taskName}</span> ?
+        Are you really want to delete task <br /> <span>{task.taskName}</span> ?
       </div>
       <div className={classes.buttons}>
-        <Button onClick={deleteTaskFunc} roleclass='delete'>
+        <Button onClick={deleteCurrentTask} roleclass='delete'>
           Delete
         </Button>
         <Button onClick={closeDeleteModal}>Close</Button>
@@ -33,8 +30,7 @@ export default function DeleteTask({ tasksList, dispatch, selectedID, actionType
 }
 
 DeleteTask.propTypes = {
+  task: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
-  selectedID: PropType.number.isRequired,
-  actionTypes: PropType.instanceOf(Object).isRequired,
-  tasksList: PropType.instanceOf(Array).isRequired,
+  localActionTypes: PropType.instanceOf(Object).isRequired,
 };

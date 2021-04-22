@@ -3,16 +3,19 @@ import classes from './Modal.module.css';
 import DeleteUser from './Users/DeleteUser';
 import DeleteTask from './Tasks/DeleteTask';
 
-export default function Modal({ modalTypes, actionTypes, dispatch, list, modalSettings }) {
+export default function Modal({ modalTypes, dispatch, item, modalSettingsAndActionTypes }) {
   let modal;
-  const { isOpen, selectedID, selectedModal } = modalSettings;
+
+  const { isOpen, selectedModal, localActionTypes } = modalSettingsAndActionTypes;
+
   const { deleteUser, deleteTask } = modalTypes;
+
   switch (selectedModal) {
     case deleteUser:
-      modal = <DeleteUser usersList={list} dispatch={dispatch} selectedID={selectedID} actionTypes={actionTypes} />;
+      modal = <DeleteUser user={item} dispatch={dispatch} localActionTypes={localActionTypes} />;
       break;
     case deleteTask:
-      modal = <DeleteTask tasksList={list} dispatch={dispatch} selectedID={selectedID} actionTypes={actionTypes} />;
+      modal = <DeleteTask task={item} dispatch={dispatch} localActionTypes={localActionTypes} />;
       break;
     default:
       break;
@@ -22,9 +25,8 @@ export default function Modal({ modalTypes, actionTypes, dispatch, list, modalSe
 }
 
 Modal.propTypes = {
-  modalSettings: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
-  list: PropType.instanceOf(Array).isRequired,
-  actionTypes: PropType.instanceOf(Object).isRequired,
+  item: PropType.instanceOf(Object).isRequired,
+  modalSettingsAndActionTypes: PropType.instanceOf(Object).isRequired,
   modalTypes: PropType.instanceOf(Object).isRequired,
 };

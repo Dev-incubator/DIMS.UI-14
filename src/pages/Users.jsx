@@ -3,28 +3,20 @@ import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
-import Modal from '../components/Modals/Modal';
 
 // Function Types
 const DELETE_USER = 'delete-user';
-const TOGGLE_MODAL = 'toggle-modal';
+
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalSettings: {
-        selectedID: '',
-        isOpen: false,
-        selectedModal: '',
-      },
       actionTypes: {
-        toggleModal: TOGGLE_MODAL,
         deleteUser: DELETE_USER,
       },
       usersList: [],
     };
     this.deleteUser = this.deleteUser.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -95,38 +87,22 @@ export default class Users extends React.Component {
   dispatch(action) {
     switch (action.type) {
       case DELETE_USER:
-        this.deleteUser();
-        break;
-      case TOGGLE_MODAL:
-        this.toggleModal(action.modalType, action.selectedID);
+        this.deleteUser(action.selectedID);
         break;
       default:
-        console.log('something with dispatcher went wrong...');
         break;
     }
   }
 
-  deleteUser() {
+  deleteUser(selectedID) {
     this.setState((prevState) => ({
       ...prevState,
-      usersList: prevState.usersList.filter((item) => item.id !== prevState.modalSettings.selectedID),
-    }));
-  }
-
-  toggleModal(modalType = '', selectedID = '') {
-    this.setState((prevState) => ({
-      ...prevState,
-      modalSettings: {
-        ...prevState.modalSettings,
-        isOpen: !prevState.modalSettings.isOpen,
-        selectedModal: modalType,
-        selectedID,
-      },
+      usersList: prevState.usersList.filter((item) => item.id !== selectedID),
     }));
   }
 
   render() {
-    const { usersList, actionTypes, modalSettings } = this.state;
+    const { usersList, actionTypes } = this.state;
     const { modalTypes } = this.props;
 
     const users = usersList.map((user, index) => {
@@ -162,13 +138,6 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        <Modal
-          modalTypes={modalTypes}
-          actionTypes={actionTypes}
-          dispatch={this.dispatch}
-          list={usersList}
-          modalSettings={modalSettings}
-        />
       </div>
     );
   }
