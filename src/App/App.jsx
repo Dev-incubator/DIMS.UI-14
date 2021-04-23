@@ -3,9 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Aside from '../components/Aside/Aside';
 import Main from '../components/Main/Main';
 import classes from './App.module.css';
-
-//  Function Types
-const TOGGLE_MENU = 'toggle-menu';
+import { TOGGLE_MENU } from '../utilities/ActionCreators';
 
 // Modal Types
 const MODAL_DELETE_USER = 'user-delete';
@@ -19,7 +17,6 @@ export default class App extends React.Component {
       settings: {
         menu: {
           isOpen: true,
-          toggler: TOGGLE_MENU,
         },
         modalTypes: {
           deleteUser: MODAL_DELETE_USER,
@@ -39,7 +36,6 @@ export default class App extends React.Component {
           settings: {
             ...prevState.settings,
             menu: {
-              ...prevState.settings.menu,
               isOpen: !prevState.settings.menu.isOpen,
             },
           },
