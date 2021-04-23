@@ -26,3 +26,11 @@ export const TASK_MODAL = 'modal-task';
 export const DELETE_TASK_MODAL = 'modal-task-delete'; //  Modal.jsx
 export const openDeleteTaskModal = () => ({ type: TASK_MODAL, modalType: DELETE_TASK_MODAL });
 export const closeAnyTaskModal = () => ({ type: TASK_MODAL, modalType: '' });
+
+//  CreateUser.jsx
+export const CREATE_USER_ONCHANGE = 'create-user-onchange';
+export const createUserHandleInputChange = (event) => ({
+  type: CREATE_USER_ONCHANGE,
+  name: event.target.name,
+  body: event.target.value,
+});
