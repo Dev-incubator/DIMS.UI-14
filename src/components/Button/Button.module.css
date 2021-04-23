@@ -33,3 +33,12 @@
   background-color: var(--button-edit-hover-color);
   box-shadow: 0 0 5px 0 var(--button-edit-hover-color);
 }
+
+.button.create {
+  background-color: var(--button-create-color);
+}
+
+.button.create:hover {
+  background-color: var(--button-create-hover-color);
+  box-shadow: 0 0 5px 0 var(--button-create-hover-color);
+}

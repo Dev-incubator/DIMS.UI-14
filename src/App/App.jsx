@@ -10,6 +10,7 @@ const TOGGLE_MENU = 'toggle-menu';
 // Modal Types
 const MODAL_DELETE_USER = 'user-delete';
 const MODAL_DELETE_TASK = 'task-delete';
+const MODAL_CREATE_USER = 'user-create';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -23,6 +24,7 @@ export default class App extends React.Component {
         modalTypes: {
           deleteUser: MODAL_DELETE_USER,
           deleteTask: MODAL_DELETE_TASK,
+          createUser: MODAL_CREATE_USER,
         },
       },
     };

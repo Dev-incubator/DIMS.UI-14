@@ -3,20 +3,28 @@ import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
+import Modal from '../components/Modals/Modal';
 
 // Function Types
 const DELETE_USER = 'delete-user';
+const CREATE_USER = 'create-user';
+const MODAL = 'MODAL';
 
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      actionTypes: {
+      isOpen: false,
+      selectedModal: '',
+      localActionTypes: {
+        modal: MODAL,
         deleteUser: DELETE_USER,
+        createUser: CREATE_USER,
       },
       usersList: [],
     };
     this.deleteUser = this.deleteUser.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -89,6 +97,9 @@ export default class Users extends React.Component {
       case DELETE_USER:
         this.deleteUser(action.selectedID);
         break;
+      case MODAL:
+        this.toggleModal(action.modalType);
+        break;
       default:
         break;
     }
@@ -101,14 +112,29 @@ export default class Users extends React.Component {
     }));
   }
 
+  toggleModal(modalType = '') {
+    this.setState((prevState) => ({
+      ...prevState,
+      isOpen: !prevState.isOpen,
+      selectedModal: modalType,
+    }));
+  }
+
   render() {
-    const { usersList, actionTypes } = this.state;
-    const { modalTypes } = this.props;
+    const {
+      usersList,
+      localActionTypes,
+      localActionTypes: { modal },
+    } = this.state;
+    const {
+      modalTypes,
+      modalTypes: { createUser },
+    } = this.props;
 
     const users = usersList.map((user, index) => {
       return (
         <User
-          actionTypes={actionTypes}
+          actionTypes={localActionTypes}
           modalTypes={modalTypes}
           dispatch={this.dispatch}
           key={user.id.toString()}
@@ -118,13 +144,19 @@ export default class Users extends React.Component {
       );
     });
 
+    const openCreateModal = () => {
+      this.dispatch({ type: modal, modalType: createUser });
+    };
+
     return (
       <div>
         <div className={classes.header}>
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={() => {}}>Create</Button>
+          <Button onClick={openCreateModal} roleclass='create'>
+            Create
+          </Button>
         </div>
         <div className={classes.content}>
           <div className={classes.subheader}>
@@ -138,6 +170,7 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
+        <Modal dispatch={this.dispatch} modalTypes={modalTypes} modalSettingsAndActionTypes={this.state} />
       </div>
     );
   }
