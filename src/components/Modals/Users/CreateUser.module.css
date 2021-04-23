@@ -59,8 +59,23 @@ input {
   border-radius: 10px;
   border: 1px solid var(--darkgray-color);
 }
+input[type='date'] {
+  padding: 8px 10px;
+}
 
 input:focus {
+  outline: none;
+  border: 1px solid var(--lightblue-color);
+}
+
+select {
+  border-radius: 10px;
+  border: 1px solid var(--darkgray-color);
+  padding: 10px;
+  width: 51%;
+}
+
+select:focus {
   outline: none;
   border: 1px solid var(--lightblue-color);
 }
