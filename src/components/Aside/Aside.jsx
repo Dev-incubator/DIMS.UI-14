@@ -2,11 +2,7 @@ import PropType from 'prop-types';
 import Menu from './Menu/Menu';
 import classes from './Aside.module.css';
 
-export default function Aside({
-  settings: {
-    menu: { isOpen },
-  },
-}) {
+export default function Aside({ menu: { isOpen } }) {
   return (
     <aside className={`${classes.aside} ${isOpen ? classes.active : ''}`}>
       <Menu />
@@ -15,5 +11,5 @@ export default function Aside({
 }
 
 Aside.propTypes = {
-  settings: PropType.instanceOf(Object).isRequired,
+  menu: PropType.instanceOf(Object).isRequired,
 };

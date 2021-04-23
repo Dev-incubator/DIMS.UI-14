@@ -5,19 +5,19 @@ import Header from './Header/Header';
 import Users from '../../pages/Users';
 import Tasks from '../../pages/Tasks';
 
-export default function Main({ dispatch, settings: { menu, modalTypes } }) {
+export default function Main({ dispatch, menu }) {
   return (
     <main className={classes.main}>
       <Header dispatch={dispatch} menu={menu} />
       <div className={classes.screen}>
-        <Route path='/users' render={() => <Users modalTypes={modalTypes} />} />
-        <Route path='/tasks' render={() => <Tasks modalTypes={modalTypes} />} />
+        <Route path='/users' render={() => <Users />} />
+        <Route path='/tasks' render={() => <Tasks />} />
       </div>
     </main>
   );
 }
 
 Main.propTypes = {
-  settings: PropType.instanceOf(Object).isRequired,
+  menu: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
 };

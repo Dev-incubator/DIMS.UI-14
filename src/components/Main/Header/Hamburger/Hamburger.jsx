@@ -1,6 +1,6 @@
 import PropType from 'prop-types';
 import classes from './Hamburger.module.css';
-import { toggleMenuAC } from '../../../../utilities/ActionCreators';
+import { toggleMenuAC } from '../../../../utilities/actionCreators';
 
 export default function Hamburger({ dispatch, menu: { isOpen } }) {
   const handleClick = () => dispatch(toggleMenuAC());

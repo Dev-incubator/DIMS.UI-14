@@ -1,14 +1,9 @@
-import PropType from 'prop-types';
 import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-
-// Function Types
-const DELETE_USER = 'delete-user';
-const CREATE_USER = 'create-user';
-const MODAL = 'MODAL';
+import { USERS_MODAL, DELETE_USER, openCreateUserModal } from '../utilities/actionCreators';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -16,15 +11,8 @@ export default class Users extends React.Component {
     this.state = {
       isOpen: false,
       selectedModal: '',
-      localActionTypes: {
-        modal: MODAL,
-        deleteUser: DELETE_USER,
-        createUser: CREATE_USER,
-      },
       usersList: [],
     };
-    this.deleteUser = this.deleteUser.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -95,57 +83,32 @@ export default class Users extends React.Component {
   dispatch(action) {
     switch (action.type) {
       case DELETE_USER:
-        this.deleteUser(action.selectedID);
+        this.setState((prevState) => ({
+          ...prevState,
+          usersList: prevState.usersList.filter((item) => item.id !== action.selectedID),
+        }));
         break;
-      case MODAL:
-        this.toggleModal(action.modalType);
+      case USERS_MODAL:
+        this.setState((prevState) => ({
+          ...prevState,
+          isOpen: !prevState.isOpen,
+          selectedModal: action.modalType,
+        }));
         break;
       default:
         break;
     }
   }
 
-  deleteUser(selectedID) {
-    this.setState((prevState) => ({
-      ...prevState,
-      usersList: prevState.usersList.filter((item) => item.id !== selectedID),
-    }));
-  }
-
-  toggleModal(modalType = '') {
-    this.setState((prevState) => ({
-      ...prevState,
-      isOpen: !prevState.isOpen,
-      selectedModal: modalType,
-    }));
-  }
-
   render() {
-    const {
-      usersList,
-      localActionTypes,
-      localActionTypes: { modal },
-    } = this.state;
-    const {
-      modalTypes,
-      modalTypes: { createUser },
-    } = this.props;
+    const { usersList } = this.state;
 
     const users = usersList.map((user, index) => {
-      return (
-        <User
-          actionTypes={localActionTypes}
-          modalTypes={modalTypes}
-          dispatch={this.dispatch}
-          key={user.id.toString()}
-          userData={user}
-          tableIndex={index + 1}
-        />
-      );
+      return <User dispatch={this.dispatch} key={user.id.toString()} userData={user} tableIndex={index + 1} />;
     });
 
     const openCreateModal = () => {
-      this.dispatch({ type: modal, modalType: createUser });
+      this.dispatch(openCreateUserModal());
     };
 
     return (
@@ -170,12 +133,8 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        <Modal dispatch={this.dispatch} modalTypes={modalTypes} modalSettingsAndActionTypes={this.state} />
+        <Modal dispatch={this.dispatch} settings={this.state} />
       </div>
     );
   }
 }
-
-Users.propTypes = {
-  modalTypes: PropType.instanceOf(Object).isRequired,
-};

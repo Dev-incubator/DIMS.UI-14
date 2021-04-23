@@ -3,9 +3,8 @@ import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './User.module.css';
 import Modal from '../Modals/Modal';
+import { USER_MODAL, DELETE_USER, openDeleteUserModal, deleteUser } from '../../utilities/actionCreators';
 
-const MODAL = 'MODAL';
-const DELETE = 'DELETE';
 export default class User extends React.Component {
   constructor(props) {
     super(props);
@@ -13,13 +12,7 @@ export default class User extends React.Component {
       selectedID: '',
       isOpen: false,
       selectedModal: '',
-      localActionTypes: {
-        modal: MODAL,
-        deleteUser: DELETE,
-      },
     };
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -33,31 +26,19 @@ export default class User extends React.Component {
     }));
   }
 
-  handleDelete() {
-    const {
-      dispatch,
-      actionTypes: { deleteUser },
-    } = this.props;
-    const { selectedID } = this.state;
-    dispatch({ type: deleteUser, selectedID });
-  }
-
-  toggleModal(modalType = '') {
-    this.setState((prevState) => ({
-      ...prevState,
-      isOpen: !prevState.isOpen,
-      selectedModal: modalType,
-    }));
-  }
-
   dispatch(action) {
+    const { dispatch } = this.props;
+    const { selectedID } = this.state;
     switch (action.type) {
-      case MODAL:
-        this.toggleModal(action.modalType);
+      case USER_MODAL:
+        this.setState((prevState) => ({
+          ...prevState,
+          isOpen: !prevState.isOpen,
+          selectedModal: action.modalType,
+        }));
         break;
-      case DELETE:
-        this.handleDelete();
-        this.toggleModal(action.modalType);
+      case DELETE_USER:
+        dispatch(deleteUser(selectedID));
         break;
       default:
         break;
@@ -66,19 +47,13 @@ export default class User extends React.Component {
 
   render() {
     const {
-      userData,
       tableIndex,
-      modalTypes,
-      modalTypes: { deleteUser },
+      userData,
       userData: { fullname, direction, education, start, age },
     } = this.props;
 
-    const {
-      localActionTypes: { modal },
-    } = this.state;
-
     const openDeleteModal = () => {
-      this.dispatch({ type: modal, modalType: deleteUser });
+      this.dispatch(openDeleteUserModal());
     };
 
     return (
@@ -101,21 +76,14 @@ export default class User extends React.Component {
             </Button>
           </div>
         </div>
-        <Modal
-          item={userData}
-          modalSettingsAndActionTypes={this.state}
-          modalTypes={modalTypes}
-          dispatch={this.dispatch}
-        />
+        <Modal item={userData} settings={this.state} dispatch={this.dispatch} />
       </>
     );
   }
 }
 
 User.propTypes = {
-  dispatch: PropType.func.isRequired,
   userData: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
-  modalTypes: PropType.instanceOf(Object).isRequired,
-  actionTypes: PropType.instanceOf(Object).isRequired,
+  dispatch: PropType.func.isRequired,
 };

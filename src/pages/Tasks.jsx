@@ -1,22 +1,17 @@
-import PropType from 'prop-types';
 import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
-
-//  Function types
-const DELETE_TASK = 'delete-task';
+import { DELETE_TASK } from '../utilities/actionCreators';
 
 export default class Tasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      actionTypes: {
-        deleteTask: DELETE_TASK,
-      },
+      isOpen: false,
+      selectedMoal: '',
       tasksList: [],
     };
-    this.deleteTask = this.deleteTask.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -87,35 +82,21 @@ export default class Tasks extends React.Component {
   dispatch(action) {
     switch (action.type) {
       case DELETE_TASK:
-        this.deleteTask(action.selectedID);
+        this.setState((prevState) => ({
+          ...prevState,
+          tasksList: prevState.tasksList.filter((item) => item.id !== action.selectedID),
+        }));
         break;
       default:
         break;
     }
   }
 
-  deleteTask(selectedID) {
-    this.setState((prevState) => ({
-      ...prevState,
-      tasksList: prevState.tasksList.filter((item) => item.id !== selectedID),
-    }));
-  }
-
   render() {
-    const { tasksList, actionTypes } = this.state;
-    const { modalTypes } = this.props;
+    const { tasksList } = this.state;
 
     const tasks = tasksList.map((task, index) => {
-      return (
-        <Task
-          actionTypes={actionTypes}
-          modalTypes={modalTypes}
-          dispatch={this.dispatch}
-          key={task.id.toString()}
-          taskData={task}
-          tableIndex={index + 1}
-        />
-      );
+      return <Task dispatch={this.dispatch} key={task.id.toString()} taskData={task} tableIndex={index + 1} />;
     });
 
     return (
@@ -141,7 +122,3 @@ export default class Tasks extends React.Component {
     );
   }
 }
-
-Tasks.propTypes = {
-  modalTypes: PropType.instanceOf(Object).isRequired,
-};

@@ -1,16 +1,14 @@
 import PropType from 'prop-types';
 import classes from './DeleteUser.module.css';
 import Button from '../../Button/Button';
+import { closeAnyUserModal, deleteUser } from '../../../utilities/actionCreators';
 
-export default function DeleteUser({ user, dispatch, localActionTypes }) {
-  const { modal, deleteUser } = localActionTypes;
-
+export default function DeleteUser({ user, dispatch }) {
   const closeDeleteModal = () => {
-    dispatch({ type: modal });
+    dispatch(closeAnyUserModal());
   };
-
-  const deleteCurrentUser = () => {
-    dispatch({ type: deleteUser });
+  const deleteSelectedUser = () => {
+    dispatch(deleteUser());
   };
 
   return (
@@ -20,7 +18,7 @@ export default function DeleteUser({ user, dispatch, localActionTypes }) {
         Are you really want to delete <br /> <span>{user.fullname}</span> ?
       </div>
       <div className={classes.buttons}>
-        <Button onClick={deleteCurrentUser} roleclass='delete'>
+        <Button onClick={deleteSelectedUser} roleclass='delete'>
           Delete
         </Button>
         <Button onClick={closeDeleteModal}>Close</Button>
@@ -32,5 +30,4 @@ export default function DeleteUser({ user, dispatch, localActionTypes }) {
 DeleteUser.propTypes = {
   user: PropType.instanceOf(Object).isRequired,
   dispatch: PropType.func.isRequired,
-  localActionTypes: PropType.instanceOf(Object).isRequired,
 };

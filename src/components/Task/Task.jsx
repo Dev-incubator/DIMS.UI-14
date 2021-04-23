@@ -3,9 +3,8 @@ import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
+import { TASK_MODAL, DELETE_TASK, openDeleteTaskModal, deleteTask } from '../../utilities/actionCreators';
 
-const MODAL = 'MODAL';
-const DELETE = 'DELETE';
 export default class Task extends React.Component {
   constructor(props) {
     super(props);
@@ -13,13 +12,7 @@ export default class Task extends React.Component {
       selectedID: '',
       isOpen: false,
       selectedModal: '',
-      localActionTypes: {
-        modal: MODAL,
-        deleteTask: DELETE,
-      },
     };
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
     this.dispatch = this.dispatch.bind(this);
   }
 
@@ -33,31 +26,19 @@ export default class Task extends React.Component {
     }));
   }
 
-  handleDelete() {
-    const {
-      dispatch,
-      actionTypes: { deleteTask },
-    } = this.props;
-    const { selectedID } = this.state;
-    dispatch({ type: deleteTask, selectedID });
-  }
-
-  toggleModal(modalType = '') {
-    this.setState((prevState) => ({
-      ...prevState,
-      isOpen: !prevState.isOpen,
-      selectedModal: modalType,
-    }));
-  }
-
   dispatch(action) {
+    const { dispatch } = this.props;
+    const { selectedID } = this.state;
     switch (action.type) {
-      case MODAL:
-        this.toggleModal(action.modalType);
+      case TASK_MODAL:
+        this.setState((prevState) => ({
+          ...prevState,
+          isOpen: !prevState.isOpen,
+          selectedModal: action.modalType,
+        }));
         break;
-      case DELETE:
-        this.handleDelete();
-        this.toggleModal(action.modalType);
+      case DELETE_TASK:
+        dispatch(deleteTask(selectedID));
         break;
       default:
         break;
@@ -68,17 +49,11 @@ export default class Task extends React.Component {
     const {
       taskData,
       tableIndex,
-      modalTypes,
-      modalTypes: { deleteTask },
       taskData: { taskName, description, startDate, deadline },
     } = this.props;
 
-    const {
-      localActionTypes: { modal },
-    } = this.state;
-
     const openDeleteModal = () => {
-      this.dispatch({ type: modal, modalType: deleteTask });
+      this.dispatch(openDeleteTaskModal());
     };
 
     return (
@@ -98,12 +73,7 @@ export default class Task extends React.Component {
             </Button>
           </div>
         </div>
-        <Modal
-          item={taskData}
-          modalSettingsAndActionTypes={this.state}
-          modalTypes={modalTypes}
-          dispatch={this.dispatch}
-        />
+        <Modal item={taskData} settings={this.state} dispatch={this.dispatch} />
       </>
     );
   }
@@ -113,6 +83,4 @@ Task.propTypes = {
   dispatch: PropType.func.isRequired,
   taskData: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
-  modalTypes: PropType.instanceOf(Object).isRequired,
-  actionTypes: PropType.instanceOf(Object).isRequired,
 };

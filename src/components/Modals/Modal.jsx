@@ -3,23 +3,21 @@ import classes from './Modal.module.css';
 import DeleteUser from './Users/DeleteUser';
 import DeleteTask from './Tasks/DeleteTask';
 import CreateUser from './Users/CreateUser';
+import { CREATE_USER_MODAL, DELETE_USER_MODAL, DELETE_TASK_MODAL } from '../../utilities/actionCreators';
 
-export default function Modal({ modalTypes, dispatch, item, modalSettingsAndActionTypes }) {
+export default function Modal({ item, dispatch, settings }) {
   let modal;
-
-  const { isOpen, selectedModal, localActionTypes } = modalSettingsAndActionTypes;
-
-  const { deleteUser, deleteTask, createUser } = modalTypes;
+  const { isOpen, selectedModal } = settings;
 
   switch (selectedModal) {
-    case deleteUser:
-      modal = <DeleteUser user={item} dispatch={dispatch} localActionTypes={localActionTypes} />;
+    case DELETE_USER_MODAL:
+      modal = <DeleteUser user={item} dispatch={dispatch} />;
       break;
-    case deleteTask:
-      modal = <DeleteTask task={item} dispatch={dispatch} localActionTypes={localActionTypes} />;
+    case DELETE_TASK_MODAL:
+      modal = <DeleteTask task={item} dispatch={dispatch} />;
       break;
-    case createUser:
-      modal = <CreateUser dispatch={dispatch} localActionTypes={localActionTypes} />;
+    case CREATE_USER_MODAL:
+      modal = <CreateUser dispatch={dispatch} />;
       break;
     default:
       break;
@@ -31,8 +29,7 @@ export default function Modal({ modalTypes, dispatch, item, modalSettingsAndActi
 Modal.propTypes = {
   item: PropType.instanceOf(Object),
   dispatch: PropType.func.isRequired,
-  modalSettingsAndActionTypes: PropType.instanceOf(Object).isRequired,
-  modalTypes: PropType.instanceOf(Object).isRequired,
+  settings: PropType.instanceOf(Object).isRequired,
 };
 
 Modal.defaultProps = {

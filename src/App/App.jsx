@@ -3,12 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Aside from '../components/Aside/Aside';
 import Main from '../components/Main/Main';
 import classes from './App.module.css';
-import { TOGGLE_MENU } from '../utilities/ActionCreators';
-
-// Modal Types
-const MODAL_DELETE_USER = 'user-delete';
-const MODAL_DELETE_TASK = 'task-delete';
-const MODAL_CREATE_USER = 'user-create';
+import { TOGGLE_MENU } from '../utilities/actionCreators';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -17,11 +12,6 @@ export default class App extends React.Component {
       settings: {
         menu: {
           isOpen: true,
-        },
-        modalTypes: {
-          deleteUser: MODAL_DELETE_USER,
-          deleteTask: MODAL_DELETE_TASK,
-          createUser: MODAL_CREATE_USER,
         },
       },
     };
@@ -47,13 +37,15 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { settings } = this.state;
+    const {
+      settings: { menu },
+    } = this.state;
 
     return (
       <BrowserRouter>
         <div className={classes.app}>
-          <Aside settings={settings} />
-          <Main settings={settings} dispatch={this.dispatch} />
+          <Aside menu={menu} />
+          <Main menu={menu} dispatch={this.dispatch} />
         </div>
       </BrowserRouter>
     );

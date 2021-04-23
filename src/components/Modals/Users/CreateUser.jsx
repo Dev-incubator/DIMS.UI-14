@@ -1,16 +1,11 @@
 import PropType from 'prop-types';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
+import { closeAnyUsersModal } from '../../../utilities/actionCreators';
 
-export default function CreateUser({ dispatch, localActionTypes }) {
-  const { modal, createUser } = localActionTypes;
-
-  const closeCreateModal = () => {
-    dispatch({ type: modal });
-  };
-
-  const createCurrentUser = () => {
-    dispatch({ type: createUser });
+export default function CreateUser({ dispatch }) {
+  const closeUserCreateModal = () => {
+    dispatch(closeAnyUsersModal());
   };
 
   return (
@@ -89,10 +84,10 @@ export default function CreateUser({ dispatch, localActionTypes }) {
         </div>
       </form>
       <div className={classes.buttons}>
-        <Button onClick={createCurrentUser} roleclass='create'>
+        <Button onClick={() => {}} roleclass='create'>
           Create
         </Button>
-        <Button onClick={closeCreateModal}>Close</Button>
+        <Button onClick={closeUserCreateModal}>Close</Button>
       </div>
     </div>
   );
@@ -100,5 +95,4 @@ export default function CreateUser({ dispatch, localActionTypes }) {
 
 CreateUser.propTypes = {
   dispatch: PropType.func.isRequired,
-  localActionTypes: PropType.instanceOf(Object).isRequired,
 };
