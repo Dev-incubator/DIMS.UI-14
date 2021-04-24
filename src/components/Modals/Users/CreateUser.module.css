@@ -2,7 +2,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 50%;
+  width: 55%;
   transform: translate(-50%, -50%);
   background-color: var(--white-color);
   padding: 30px;
@@ -33,7 +33,7 @@ h3 {
 }
 
 .wrapper {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -43,7 +43,6 @@ h3 {
 }
 
 .item {
-  padding: 10px 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -78,4 +77,14 @@ select {
 select:focus {
   outline: none;
   border: 1px solid var(--lightblue-color);
+}
+
+.requiredwarning {
+  font-size: 10px;
+  line-height: 10px;
+}
+
+.formwrapper {
+  display: block;
+  padding: 10px 0;
 }

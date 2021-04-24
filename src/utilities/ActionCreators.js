@@ -34,3 +34,20 @@ export const createUserHandleInputChange = (event) => ({
   name: event.target.name,
   body: event.target.value,
 });
+export const CREATE_USER_VALIDATE = 'create-user-validate';
+export const createUserFormValidate = (event) => ({
+  type: CREATE_USER_VALIDATE,
+  name: event.target.name,
+  body: event.target.value,
+});
+
+export const debounce = (func, time) => {
+  return function (args) {
+    const previousCall = this.lastCall;
+    this.lastCall = Date.now();
+    if (previousCall && this.lastCall - previousCall <= time) {
+      clearTimeout(this.lastCallTimer);
+    }
+    this.lastCallTimer = setTimeout(() => func(args), time);
+  };
+};
