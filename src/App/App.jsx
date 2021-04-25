@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Aside from '../components/Aside/Aside';
 import Main from '../components/Main/Main';
 import classes from './App.module.css';
-import { TOGGLE_MENU } from '../utilities/actionCreators';
+import { TOGGLE_MENU } from '../utilities/action-сreators';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -38,14 +38,16 @@ export default class App extends React.Component {
 
   render() {
     const {
-      settings: { menu },
+      settings: {
+        menu: { isOpen },
+      },
     } = this.state;
 
     return (
       <BrowserRouter>
         <div className={classes.app}>
-          <Aside menu={menu} />
-          <Main menu={menu} dispatch={this.dispatch} />
+          <Aside isOpen={isOpen} />
+          <Main isOpen={isOpen} dispatch={this.dispatch} />
         </div>
       </BrowserRouter>
     );

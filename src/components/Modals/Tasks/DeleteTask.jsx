@@ -1,7 +1,7 @@
 import PropType from 'prop-types';
 import classes from './DeleteTask.module.css';
 import Button from '../../Button/Button';
-import { closeAnyTaskModal, deleteTask } from '../../../utilities/actionCreators';
+import { closeAnyTaskModal, deleteTask } from '../../../utilities/action-сreators';
 
 export default function DeleteTask({ task, dispatch }) {
   const closeDeleteModal = () => {

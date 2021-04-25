@@ -3,7 +3,8 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import { USERS_MODAL, DELETE_USER, openCreateUserModal } from '../utilities/actionCreators';
+import reducerFunc from '../utilities/reducer';
+import { USERS_MODAL, DELETE_USER, openCreateUserModal } from '../utilities/action-сreators';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -83,17 +84,10 @@ export default class Users extends React.Component {
   dispatch(action) {
     switch (action.type) {
       case DELETE_USER:
-        this.setState((prevState) => ({
-          ...prevState,
-          usersList: prevState.usersList.filter((item) => item.id !== action.selectedID),
-        }));
+        this.setState((prevState) => reducerFunc(prevState, action));
         break;
       case USERS_MODAL:
-        this.setState((prevState) => ({
-          ...prevState,
-          isOpen: !prevState.isOpen,
-          selectedModal: action.modalType,
-        }));
+        this.setState((prevState) => reducerFunc(prevState, action));
         break;
       default:
         break;
@@ -101,7 +95,7 @@ export default class Users extends React.Component {
   }
 
   render() {
-    const { usersList } = this.state;
+    const { usersList, selectedModal, isOpen } = this.state;
 
     const users = usersList.map((user, index) => {
       return <User dispatch={this.dispatch} key={user.id.toString()} userData={user} tableIndex={index + 1} />;
@@ -133,7 +127,7 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        <Modal dispatch={this.dispatch} settings={this.state} />
+        {isOpen ? <Modal dispatch={this.dispatch} selectedModal={selectedModal} /> : null}
       </div>
     );
   }

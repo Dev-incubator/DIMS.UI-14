@@ -1,13 +1,12 @@
 import PropType from 'prop-types';
 import classes from './Modal.module.css';
-import DeleteUser from './Users/DeleteUser';
+import DeleteUser from './Users/DeleteUser/DeleteUser';
 import DeleteTask from './Tasks/DeleteTask';
-import CreateUser from './Users/CreateUser';
-import { CREATE_USER_MODAL, DELETE_USER_MODAL, DELETE_TASK_MODAL } from '../../utilities/actionCreators';
+import CreateUser from './Users/CreateUser/CreateUser';
+import { CREATE_USER_MODAL, DELETE_USER_MODAL, DELETE_TASK_MODAL } from '../../utilities/action-сreators';
 
-export default function Modal({ item, dispatch, settings }) {
+export default function Modal({ item, dispatch, selectedModal }) {
   let modal;
-  const { isOpen, selectedModal } = settings;
 
   switch (selectedModal) {
     case DELETE_USER_MODAL:
@@ -23,13 +22,13 @@ export default function Modal({ item, dispatch, settings }) {
       break;
   }
 
-  return <div className={`${classes.overlay} ${isOpen ? '' : classes.hidden}`}>{modal}</div>;
+  return <div className={classes.overlay}>{modal}</div>;
 }
 
 Modal.propTypes = {
   item: PropType.instanceOf(Object),
   dispatch: PropType.func.isRequired,
-  settings: PropType.instanceOf(Object).isRequired,
+  selectedModal: PropType.string.isRequired,
 };
 
 Modal.defaultProps = {

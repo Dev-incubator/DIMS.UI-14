@@ -1,7 +1,7 @@
 import PropType from 'prop-types';
 import classes from './DeleteUser.module.css';
-import Button from '../../Button/Button';
-import { closeAnyUserModal, deleteUser } from '../../../utilities/actionCreators';
+import Button from '../../../Button/Button';
+import { closeAnyUserModal, deleteUser } from '../../../../utilities/action-сreators';
 
 export default function DeleteUser({ user, dispatch }) {
   const closeDeleteModal = () => {

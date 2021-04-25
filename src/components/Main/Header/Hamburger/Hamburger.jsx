@@ -1,8 +1,8 @@
 import PropType from 'prop-types';
 import classes from './Hamburger.module.css';
-import { toggleMenuAC } from '../../../../utilities/actionCreators';
+import { toggleMenuAC } from '../../../../utilities/action-сreators';
 
-export default function Hamburger({ dispatch, menu: { isOpen } }) {
+export default function Hamburger({ dispatch, isOpen }) {
   const handleClick = () => dispatch(toggleMenuAC());
 
   return (
@@ -22,5 +22,5 @@ export default function Hamburger({ dispatch, menu: { isOpen } }) {
 
 Hamburger.propTypes = {
   dispatch: PropType.func.isRequired,
-  menu: PropType.instanceOf(Object).isRequired,
+  isOpen: PropType.bool.isRequired,
 };

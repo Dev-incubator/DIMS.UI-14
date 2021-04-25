@@ -3,7 +3,9 @@ import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
-import { TASK_MODAL, DELETE_TASK, openDeleteTaskModal, deleteTask } from '../../utilities/actionCreators';
+import noop from '../../shared/noop';
+import { TASK_MODAL, DELETE_TASK, openDeleteTaskModal, deleteTask } from '../../utilities/action-сreators';
+import reducerFunc from '../../utilities/reducer';
 
 export default class Task extends React.Component {
   constructor(props) {
@@ -31,11 +33,7 @@ export default class Task extends React.Component {
     const { selectedID } = this.state;
     switch (action.type) {
       case TASK_MODAL:
-        this.setState((prevState) => ({
-          ...prevState,
-          isOpen: !prevState.isOpen,
-          selectedModal: action.modalType,
-        }));
+        this.setState((prevState) => reducerFunc(prevState, action));
         break;
       case DELETE_TASK:
         dispatch(deleteTask(selectedID));
@@ -51,6 +49,7 @@ export default class Task extends React.Component {
       tableIndex,
       taskData: { taskName, description, startDate, deadline },
     } = this.props;
+    const { isOpen, selectedModal } = this.state;
 
     const openDeleteModal = () => {
       this.dispatch(openDeleteTaskModal());
@@ -65,7 +64,7 @@ export default class Task extends React.Component {
           <div>{startDate}</div>
           <div>{deadline}</div>
           <div className={classes.buttons}>
-            <Button roleclass='edit' onClick={() => {}}>
+            <Button roleclass='edit' onClick={noop}>
               Edit
             </Button>
             <Button roleclass='delete' onClick={openDeleteModal}>
@@ -73,7 +72,7 @@ export default class Task extends React.Component {
             </Button>
           </div>
         </div>
-        <Modal item={taskData} settings={this.state} dispatch={this.dispatch} />
+        {isOpen ? <Modal item={taskData} dispatch={this.dispatch} selectedModal={selectedModal} /> : null}
       </>
     );
   }

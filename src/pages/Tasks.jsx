@@ -2,7 +2,9 @@ import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
-import { DELETE_TASK } from '../utilities/actionCreators';
+import noop from '../shared/noop';
+import reducerFunc from '../utilities/reducer';
+import { DELETE_TASK } from '../utilities/action-сreators';
 
 export default class Tasks extends React.Component {
   constructor(props) {
@@ -82,10 +84,7 @@ export default class Tasks extends React.Component {
   dispatch(action) {
     switch (action.type) {
       case DELETE_TASK:
-        this.setState((prevState) => ({
-          ...prevState,
-          tasksList: prevState.tasksList.filter((item) => item.id !== action.selectedID),
-        }));
+        this.setState((prevState) => reducerFunc(prevState, action));
         break;
       default:
         break;
@@ -105,7 +104,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button>Create</Button>
+          <Button onClick={noop}>Create</Button>
         </div>
         <div className={classes.content}>
           <div className={classes.subheader}>

@@ -2,8 +2,10 @@ import React from 'react';
 import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './User.module.css';
+import noop from '../../shared/noop';
 import Modal from '../Modals/Modal';
-import { USER_MODAL, DELETE_USER, openDeleteUserModal, deleteUser } from '../../utilities/actionCreators';
+import { USER_MODAL, DELETE_USER, openDeleteUserModal, deleteUser } from '../../utilities/action-сreators';
+import reducerFunc from '../../utilities/reducer';
 
 export default class User extends React.Component {
   constructor(props) {
@@ -31,11 +33,7 @@ export default class User extends React.Component {
     const { selectedID } = this.state;
     switch (action.type) {
       case USER_MODAL:
-        this.setState((prevState) => ({
-          ...prevState,
-          isOpen: !prevState.isOpen,
-          selectedModal: action.modalType,
-        }));
+        this.setState((prevState) => reducerFunc(prevState, action));
         break;
       case DELETE_USER:
         dispatch(deleteUser(selectedID));
@@ -52,6 +50,8 @@ export default class User extends React.Component {
       userData: { fullname, direction, education, start, age },
     } = this.props;
 
+    const { isOpen, selectedModal } = this.state;
+
     const openDeleteModal = () => {
       this.dispatch(openDeleteUserModal());
     };
@@ -66,9 +66,9 @@ export default class User extends React.Component {
           <div>{start}</div>
           <div>{age}</div>
           <div className={classes.buttons}>
-            <Button onClick={() => {}}>Progress</Button>
-            <Button onClick={() => {}}>Tasks</Button>
-            <Button roleclass='edit' onClick={() => {}}>
+            <Button onClick={noop}>Progress</Button>
+            <Button onClick={noop}>Tasks</Button>
+            <Button roleclass='edit' onClick={noop}>
               Edit
             </Button>
             <Button roleclass='delete' onClick={openDeleteModal}>
@@ -76,7 +76,7 @@ export default class User extends React.Component {
             </Button>
           </div>
         </div>
-        <Modal item={userData} settings={this.state} dispatch={this.dispatch} />
+        {isOpen ? <Modal item={userData} dispatch={this.dispatch} selectedModal={selectedModal} /> : null}
       </>
     );
   }

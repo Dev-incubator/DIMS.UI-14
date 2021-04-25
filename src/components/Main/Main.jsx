@@ -5,19 +5,19 @@ import Header from './Header/Header';
 import Users from '../../pages/Users';
 import Tasks from '../../pages/Tasks';
 
-export default function Main({ dispatch, menu }) {
+export default function Main({ dispatch, isOpen }) {
   return (
     <main className={classes.main}>
-      <Header dispatch={dispatch} menu={menu} />
+      <Header dispatch={dispatch} isOpen={isOpen} />
       <div className={classes.screen}>
-        <Route path='/users' render={() => <Users />} />
-        <Route path='/tasks' render={() => <Tasks />} />
+        <Route path='/users' component={Users} />
+        <Route path='/tasks' component={Tasks} />
       </div>
     </main>
   );
 }
 
 Main.propTypes = {
-  menu: PropType.instanceOf(Object).isRequired,
+  isOpen: PropType.bool.isRequired,
   dispatch: PropType.func.isRequired,
 };
