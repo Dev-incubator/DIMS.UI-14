@@ -4,7 +4,7 @@ import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
 import reducerFunc from '../utilities/reducer';
-import { USERS_MODAL, DELETE_USER, openCreateUserModal } from '../utilities/action-сreators';
+import { openCreateUserModal } from '../utilities/action-сreators';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -82,16 +82,7 @@ export default class Users extends React.Component {
   }
 
   dispatch(action) {
-    switch (action.type) {
-      case DELETE_USER:
-        this.setState((prevState) => reducerFunc(prevState, action));
-        break;
-      case USERS_MODAL:
-        this.setState((prevState) => reducerFunc(prevState, action));
-        break;
-      default:
-        break;
-    }
+    this.setState((prevState) => reducerFunc(prevState, action));
   }
 
   render() {

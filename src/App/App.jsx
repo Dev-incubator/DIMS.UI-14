@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Aside from '../components/Aside/Aside';
 import Main from '../components/Main/Main';
 import classes from './App.module.css';
-import { TOGGLE_MENU } from '../utilities/action-сreators';
+import reducerFunc from '../utilities/reducer';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,21 +19,7 @@ export default class App extends React.Component {
   }
 
   dispatch(action) {
-    switch (action.type) {
-      case TOGGLE_MENU:
-        this.setState((prevState) => ({
-          ...prevState,
-          settings: {
-            ...prevState.settings,
-            menu: {
-              isOpen: !prevState.settings.menu.isOpen,
-            },
-          },
-        }));
-        break;
-      default:
-        break;
-    }
+    this.setState((prevState) => reducerFunc(prevState, action));
   }
 
   render() {

@@ -1,4 +1,12 @@
-import { USER_MODAL, TASK_MODAL, USERS_MODAL, DELETE_USER, DELETE_TASK } from './action-сreators';
+import {
+  CLOSE_MODAL,
+  USER_MODAL,
+  TASK_MODAL,
+  USERS_MODAL,
+  DELETE_USER,
+  DELETE_TASK,
+  TOGGLE_MENU,
+} from './action-сreators';
 
 export default function reducerFunc(prevState, action) {
   let state = {};
@@ -6,6 +14,7 @@ export default function reducerFunc(prevState, action) {
     case USER_MODAL:
     case TASK_MODAL:
     case USERS_MODAL:
+    case CLOSE_MODAL:
       state = {
         ...prevState,
         isOpen: !prevState.isOpen,
@@ -22,6 +31,17 @@ export default function reducerFunc(prevState, action) {
       state = {
         ...prevState,
         tasksList: prevState.tasksList.filter((item) => item.id !== action.selectedID),
+      };
+      return state;
+    case TOGGLE_MENU:
+      state = {
+        ...prevState,
+        settings: {
+          ...prevState.settings,
+          menu: {
+            isOpen: !prevState.settings.menu.isOpen,
+          },
+        },
       };
       return state;
     default:

@@ -34,5 +34,7 @@ code {
   --button-create-color: #1bc47d;
   --button-create-hover-color: #0ca52f;
 
+  --button-disabled-color: #ecedf1;
+
   --validator-color: #d50000;
 }

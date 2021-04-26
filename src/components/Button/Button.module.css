@@ -42,3 +42,12 @@
   background-color: var(--button-create-hover-color);
   box-shadow: 0 0 5px 0 var(--button-create-hover-color);
 }
+
+.button[disabled] {
+  background-color: var(--button-disabled-color);
+}
+
+.button[disabled]:hover {
+  background-color: var(--button-disabled-color);
+  box-shadow: 0 0 5px 0 var(--button-disabled-color);
+}

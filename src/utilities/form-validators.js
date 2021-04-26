@@ -7,7 +7,7 @@ import {
   regExpScoreCheck,
 } from './regExp-helpers';
 
-export default function validateInput(inputName, inputBody, password = '') {
+export function validateInput(inputName, inputBody, password = '') {
   let validatorField;
   let errorField;
 
@@ -75,4 +75,8 @@ export default function validateInput(inputName, inputBody, password = '') {
   }
 
   return { name: inputName, validity: validatorField, errorMsg: errorField };
+}
+
+export function checkAllFormValidity(validator) {
+  return !Object.values(validator).includes(false);
 }

@@ -4,11 +4,11 @@ import classes from './CreateUser.module.css';
 import Button from '../../../Button/Button';
 import noop from '../../../../shared/noop';
 import CraftInput from '../../CraftInput';
-import validateInput from '../../../../utilities/form-validators';
+import { validateInput, checkAllFormValidity } from '../../../../utilities/form-validators';
 
 import {
-  closeAnyUsersModal,
-  USERS_MODAL,
+  closeAnyModal,
+  CLOSE_MODAL,
   CREATE_USER_ONCHANGE,
   createUserHandleInputChange,
 } from '../../../../utilities/action-сreators';
@@ -51,6 +51,7 @@ export default class CreateUser extends React.Component {
         averageScore: false,
         mathScore: false,
       },
+      isValid: false,
       errors: {
         usernameError: '',
         surnameError: '',
@@ -78,8 +79,8 @@ export default class CreateUser extends React.Component {
     } = this.state;
     const { dispatch } = this.props;
     switch (action.type) {
-      case USERS_MODAL:
-        dispatch(closeAnyUsersModal());
+      case CLOSE_MODAL:
+        dispatch(closeAnyModal());
         break;
       case CREATE_USER_ONCHANGE:
         this.setState((prevState) => ({
@@ -103,6 +104,10 @@ export default class CreateUser extends React.Component {
             },
           }));
         }
+        this.setState((prevState) => ({
+          ...prevState,
+          isValid: checkAllFormValidity(prevState.validator),
+        }));
         break;
       default:
         break;
@@ -110,9 +115,10 @@ export default class CreateUser extends React.Component {
   }
 
   render() {
-    const closeModal = () => this.dispatch(closeAnyUsersModal());
+    const closeModal = () => this.dispatch(closeAnyModal());
 
     const {
+      isValid,
       data: {
         username,
         surname,
@@ -282,7 +288,7 @@ export default class CreateUser extends React.Component {
         </form>
         <div className={classes.requiredwarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
-          <Button onClick={noop} roleclass='create'>
+          <Button onClick={noop} roleclass='create' disabled={!isValid}>
             Create
           </Button>
           <Button onClick={closeModal}>Close</Button>

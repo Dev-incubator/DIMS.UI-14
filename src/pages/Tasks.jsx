@@ -4,7 +4,6 @@ import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import noop from '../shared/noop';
 import reducerFunc from '../utilities/reducer';
-import { DELETE_TASK } from '../utilities/action-сreators';
 
 export default class Tasks extends React.Component {
   constructor(props) {
@@ -82,13 +81,7 @@ export default class Tasks extends React.Component {
   }
 
   dispatch(action) {
-    switch (action.type) {
-      case DELETE_TASK:
-        this.setState((prevState) => reducerFunc(prevState, action));
-        break;
-      default:
-        break;
-    }
+    this.setState((prevState) => reducerFunc(prevState, action));
   }
 
   render() {
