@@ -123,6 +123,7 @@ export default class CreateUser extends React.Component {
     const { actFunc } = this.props;
     const { data } = this.state;
     const newUser = { ...data };
+    delete newUser.passwordRepeat;
     actFunc(newUserRef, newUser);
     this.closeModal();
   }
