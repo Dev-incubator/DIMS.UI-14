@@ -5,10 +5,10 @@ import Header from './Header/Header';
 import Users from '../../pages/Users';
 import Tasks from '../../pages/Tasks';
 
-export default function Main({ dispatch, isOpen }) {
+export default function Main({ toggleMenu, isOpen }) {
   return (
     <main className={classes.main}>
-      <Header dispatch={dispatch} isOpen={isOpen} />
+      <Header toggleMenu={toggleMenu} isOpen={isOpen} />
       <div className={classes.screen}>
         <Route path='/users' component={Users} />
         <Route path='/tasks' component={Tasks} />
@@ -19,5 +19,5 @@ export default function Main({ dispatch, isOpen }) {
 
 Main.propTypes = {
   isOpen: PropType.bool.isRequired,
-  dispatch: PropType.func.isRequired,
+  toggleMenu: PropType.func.isRequired,
 };

@@ -4,8 +4,7 @@ import Button from '../Button/Button';
 import classes from './User.module.css';
 import noop from '../../shared/noop';
 import Modal from '../Modals/Modal';
-import { USER_MODAL, DELETE_USER, openDeleteUserModal, deleteUser } from '../../utilities/action-сreators';
-import reducerFunc from '../../utilities/reducer';
+import { USER_MODAL_TOGGLE, USER_MODAL_DELETE_USER, reducerFunc } from './User-helpers';
 
 export default class User extends React.Component {
   constructor(props) {
@@ -15,7 +14,8 @@ export default class User extends React.Component {
       isOpen: false,
       selectedModal: '',
     };
-    this.dispatch = this.dispatch.bind(this);
+    this.liftUpDeleteUser = this.liftUpDeleteUser.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   componentDidMount() {
@@ -28,19 +28,14 @@ export default class User extends React.Component {
     }));
   }
 
-  dispatch(action) {
-    const { dispatch } = this.props;
+  toggleModal(modalType) {
+    this.setState((prevState) => reducerFunc(prevState, { type: USER_MODAL_TOGGLE, modalType }));
+  }
+
+  liftUpDeleteUser() {
+    const { deleteUser } = this.props;
     const { selectedID } = this.state;
-    switch (action.type) {
-      case USER_MODAL:
-        this.setState((prevState) => reducerFunc(prevState, action));
-        break;
-      case DELETE_USER:
-        dispatch(deleteUser(selectedID));
-        break;
-      default:
-        break;
-    }
+    deleteUser(selectedID);
   }
 
   render() {
@@ -52,8 +47,8 @@ export default class User extends React.Component {
 
     const { isOpen, selectedModal } = this.state;
 
-    const openDeleteModal = () => {
-      this.dispatch(openDeleteUserModal());
+    const toggleDeleteModal = () => {
+      this.toggleModal(USER_MODAL_DELETE_USER);
     };
 
     return (
@@ -71,12 +66,19 @@ export default class User extends React.Component {
             <Button roleclass='edit' onClick={noop}>
               Edit
             </Button>
-            <Button roleclass='delete' onClick={openDeleteModal}>
+            <Button roleclass='delete' onClick={toggleDeleteModal}>
               Delete
             </Button>
           </div>
         </div>
-        {isOpen ? <Modal item={userData} dispatch={this.dispatch} selectedModal={selectedModal} /> : null}
+        {isOpen ? (
+          <Modal
+            item={userData}
+            actFunc={this.liftUpDeleteUser}
+            closeFunc={toggleDeleteModal}
+            selectedModal={selectedModal}
+          />
+        ) : null}
       </>
     );
   }
@@ -85,5 +87,5 @@ export default class User extends React.Component {
 User.propTypes = {
   userData: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
-  dispatch: PropType.func.isRequired,
+  deleteUser: PropType.func.isRequired,
 };

@@ -3,8 +3,8 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import reducerFunc from '../utilities/reducer';
-import { openCreateUserModal } from '../utilities/action-сreators';
+import { USERS_DELETE_USER, USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
+import { setDataToDB } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -14,7 +14,8 @@ export default class Users extends React.Component {
       selectedModal: '',
       usersList: [],
     };
-    this.dispatch = this.dispatch.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   componentDidMount() {
@@ -81,20 +82,26 @@ export default class Users extends React.Component {
     }));
   }
 
-  dispatch(action) {
-    this.setState((prevState) => reducerFunc(prevState, action));
+  deleteUser(selectedID) {
+    this.setState((prevState) => reducerFunc(prevState, { type: USERS_DELETE_USER, selectedID }));
+  }
+
+  toggleModal(modalType) {
+    this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
   }
 
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
+    const toggleModal = () => {
+      this.toggleModal(USERS_MODAL_CREATE_USER);
+    };
+    const createUser = (newUserRef, newUser) => {
+      setDataToDB(newUserRef, newUser);
+    };
 
     const users = usersList.map((user, index) => {
-      return <User dispatch={this.dispatch} key={user.id.toString()} userData={user} tableIndex={index + 1} />;
+      return <User deleteUser={this.deleteUser} key={user.id.toString()} userData={user} tableIndex={index + 1} />;
     });
-
-    const openCreateModal = () => {
-      this.dispatch(openCreateUserModal());
-    };
 
     return (
       <div>
@@ -102,7 +109,7 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={openCreateModal} roleclass='create'>
+          <Button onClick={toggleModal} roleclass='create'>
             Create
           </Button>
         </div>
@@ -118,7 +125,7 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        {isOpen ? <Modal dispatch={this.dispatch} selectedModal={selectedModal} /> : null}
+        {isOpen ? <Modal closeFunc={toggleModal} actFunc={createUser} selectedModal={selectedModal} /> : null}
       </div>
     );
   }

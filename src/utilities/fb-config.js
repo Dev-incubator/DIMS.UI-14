@@ -1,5 +1,5 @@
 const projectId = process.env.REACT_APP_FIREBASE_PROJECTID;
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
   projectId,
   authDomain: `${projectId}.firebaseapp.com`,
@@ -8,3 +8,5 @@ export const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APPID,
   measurementId: 'G-2WLX00Z8TW',
 };
+
+export default firebaseConfig;

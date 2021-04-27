@@ -1,10 +1,11 @@
 import {
-  regExpNamesCheck,
-  regExpEmailCheck,
-  regExpPasswordCheck,
+  regExpNames,
+  regExpEmail,
+  regExpPassword,
+  regExpPhone,
+  regExpScore,
   regExpDateOfBirthCheck,
-  regExpPhoneCheck,
-  regExpScoreCheck,
+  regExpCheck,
 } from './regExp-helpers';
 
 export function validateInput(inputName, inputBody, password = '') {
@@ -13,62 +14,60 @@ export function validateInput(inputName, inputBody, password = '') {
 
   switch (inputName) {
     case 'username':
-      validatorField = regExpNamesCheck(inputBody);
-      errorField = validatorField ? '' : 'This field must contain at least 2 letters';
+      validatorField = regExpCheck(regExpNames, inputBody);
+      errorField = validatorField ? '' : errors.minTwo;
       break;
     case 'surname':
-      validatorField = regExpNamesCheck(inputBody);
-      errorField = validatorField ? '' : 'This field must contain at least 2 letters';
+      validatorField = regExpCheck(regExpNames, inputBody);
+      errorField = validatorField ? '' : errors.minTwo;
       break;
     case 'email':
-      validatorField = regExpEmailCheck(inputBody);
-      errorField = validatorField ? '' : 'The entered email is incorrect';
+      validatorField = regExpCheck(regExpEmail, inputBody);
+      errorField = validatorField ? '' : errors.email;
       break;
     case 'direction':
       validatorField = Boolean(inputBody);
-      errorField = validatorField ? '' : 'This field is required';
+      errorField = validatorField ? '' : errors.required;
       break;
     case 'role':
       validatorField = Boolean(inputBody);
-      errorField = validatorField ? '' : 'This field is required';
+      errorField = validatorField ? '' : errors.required;
       break;
     case 'password':
-      validatorField = regExpPasswordCheck(inputBody);
-      errorField = validatorField
-        ? ''
-        : 'Password must contain at least 8 characters, incl. at least 1 uppercase and lowercase letters, 1 number and 1 special character';
+      validatorField = regExpCheck(regExpPassword, inputBody);
+      errorField = validatorField ? '' : errors.passwordStrength;
       break;
     case 'passwordRepeat':
       validatorField = inputBody === password;
-      errorField = validatorField ? '' : "Passwords don't match";
+      errorField = validatorField ? '' : errors.passwordMatch;
       break;
     case 'dateOfBirth':
       validatorField = regExpDateOfBirthCheck(inputBody);
-      errorField = validatorField ? '' : 'User must be over 18 years old';
+      errorField = validatorField ? '' : errors.yearsOld;
       break;
     case 'phone':
-      validatorField = regExpPhoneCheck(inputBody);
-      errorField = validatorField ? '' : 'The entered phone is incorrect';
+      validatorField = regExpCheck(regExpPhone, inputBody);
+      errorField = validatorField ? '' : errors.phone;
       break;
     case 'skype':
       validatorField = Boolean(inputBody);
-      errorField = validatorField ? '' : 'This field is required';
+      errorField = validatorField ? '' : errors.required;
       break;
     case 'startDate':
       validatorField = Boolean(inputBody);
-      errorField = validatorField ? '' : 'This field is required';
+      errorField = validatorField ? '' : errors.required;
       break;
     case 'education':
       validatorField = Boolean(inputBody);
-      errorField = validatorField ? '' : 'This field is required';
+      errorField = validatorField ? '' : errors.required;
       break;
     case 'averageScore':
-      validatorField = regExpScoreCheck(inputBody);
-      errorField = validatorField ? '' : 'The entered number is incorrect';
+      validatorField = regExpCheck(regExpScore, inputBody);
+      errorField = validatorField ? '' : errors.score;
       break;
     case 'mathScore':
-      validatorField = regExpScoreCheck(inputBody);
-      errorField = validatorField ? '' : 'The entered number is incorrect';
+      validatorField = regExpCheck(regExpScore, inputBody);
+      errorField = validatorField ? '' : errors.score;
       break;
     default:
       break;
@@ -80,3 +79,15 @@ export function validateInput(inputName, inputBody, password = '') {
 export function checkAllFormValidity(validator) {
   return !Object.values(validator).includes(false);
 }
+
+const errors = {
+  score: 'The entered number is incorrect',
+  required: 'This field is required',
+  phone: 'The entered phone is incorrect',
+  yearsOld: 'User must be over 18 years old',
+  passwordMatch: "Passwords don't match",
+  passwordStrength:
+    'Password must contain at least 8 characters, incl. at least 1 uppercase and lowercase letters, 1 number and 1 special character',
+  email: 'The entered email is incorrect',
+  minTwo: 'This field must contain at least 2 letters',
+};

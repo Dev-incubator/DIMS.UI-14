@@ -3,7 +3,7 @@ import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import noop from '../shared/noop';
-import reducerFunc from '../utilities/reducer';
+import { TASKS_DELETE_TASK, TASKS_MODAL_TOGGLE, reducerFunc } from './Tasks-helpers';
 
 export default class Tasks extends React.Component {
   constructor(props) {
@@ -13,7 +13,8 @@ export default class Tasks extends React.Component {
       selectedMoal: '',
       tasksList: [],
     };
-    this.dispatch = this.dispatch.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   componentDidMount() {
@@ -80,15 +81,19 @@ export default class Tasks extends React.Component {
     }));
   }
 
-  dispatch(action) {
-    this.setState((prevState) => reducerFunc(prevState, action));
+  deleteTask(selectedID) {
+    this.setState((prevState) => reducerFunc(prevState, { type: TASKS_DELETE_TASK, selectedID }));
+  }
+
+  toggleModal(modalType) {
+    this.setState((prevState) => reducerFunc(prevState, { type: TASKS_MODAL_TOGGLE, modalType }));
   }
 
   render() {
     const { tasksList } = this.state;
 
     const tasks = tasksList.map((task, index) => {
-      return <Task dispatch={this.dispatch} key={task.id.toString()} taskData={task} tableIndex={index + 1} />;
+      return <Task deleteTask={this.deleteTask} key={task.id.toString()} taskData={task} tableIndex={index + 1} />;
     });
 
     return (

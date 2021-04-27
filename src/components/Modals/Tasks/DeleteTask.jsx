@@ -1,17 +1,8 @@
 import PropType from 'prop-types';
 import classes from './DeleteTask.module.css';
 import Button from '../../Button/Button';
-import { closeAnyModal, deleteTask } from '../../../utilities/action-сreators';
 
-export default function DeleteTask({ task, dispatch }) {
-  const closeDeleteModal = () => {
-    dispatch(closeAnyModal());
-  };
-
-  const deleteSelectedTask = () => {
-    dispatch(deleteTask());
-  };
-
+export default function DeleteTask({ task, closeFunc, actFunc }) {
   return (
     <div className={classes.modal}>
       <h3>Delete Task</h3>
@@ -19,10 +10,10 @@ export default function DeleteTask({ task, dispatch }) {
         Are you really want to delete task <br /> <span>{task.taskName}</span> ?
       </div>
       <div className={classes.buttons}>
-        <Button onClick={deleteSelectedTask} roleclass='delete'>
+        <Button onClick={actFunc} roleclass='delete'>
           Delete
         </Button>
-        <Button onClick={closeDeleteModal}>Close</Button>
+        <Button onClick={closeFunc}>Close</Button>
       </div>
     </div>
   );
@@ -30,5 +21,6 @@ export default function DeleteTask({ task, dispatch }) {
 
 DeleteTask.propTypes = {
   task: PropType.instanceOf(Object).isRequired,
-  dispatch: PropType.func.isRequired,
+  actFunc: PropType.func.isRequired,
+  closeFunc: PropType.func.isRequired,
 };

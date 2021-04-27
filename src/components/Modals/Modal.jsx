@@ -3,20 +3,23 @@ import classes from './Modal.module.css';
 import DeleteUser from './Users/DeleteUser/DeleteUser';
 import DeleteTask from './Tasks/DeleteTask';
 import CreateUser from './Users/CreateUser/CreateUser';
-import { CREATE_USER_MODAL, DELETE_USER_MODAL, DELETE_TASK_MODAL } from '../../utilities/action-сreators';
+import noop from '../../shared/noop';
+import { USER_MODAL_DELETE_USER } from '../User/User-helpers';
+import { TASK_MODAL_DELETE_TASK } from '../Task/Task-helpers';
+import { USERS_MODAL_CREATE_USER } from '../../pages/Users-helpers';
 
-export default function Modal({ item, dispatch, selectedModal }) {
+export default function Modal({ item, selectedModal, closeFunc, actFunc }) {
   let modal;
 
   switch (selectedModal) {
-    case DELETE_USER_MODAL:
-      modal = <DeleteUser user={item} dispatch={dispatch} />;
+    case USER_MODAL_DELETE_USER:
+      modal = <DeleteUser user={item} closeFunc={closeFunc} actFunc={actFunc} />;
       break;
-    case DELETE_TASK_MODAL:
-      modal = <DeleteTask task={item} dispatch={dispatch} />;
+    case TASK_MODAL_DELETE_TASK:
+      modal = <DeleteTask task={item} closeFunc={closeFunc} actFunc={actFunc} />;
       break;
-    case CREATE_USER_MODAL:
-      modal = <CreateUser dispatch={dispatch} />;
+    case USERS_MODAL_CREATE_USER:
+      modal = <CreateUser closeFunc={closeFunc} actFunc={actFunc} />;
       break;
     default:
       break;
@@ -27,10 +30,12 @@ export default function Modal({ item, dispatch, selectedModal }) {
 
 Modal.propTypes = {
   item: PropType.instanceOf(Object),
-  dispatch: PropType.func.isRequired,
+  closeFunc: PropType.func.isRequired,
+  actFunc: PropType.func,
   selectedModal: PropType.string.isRequired,
 };
 
 Modal.defaultProps = {
   item: {},
+  actFunc: noop,
 };

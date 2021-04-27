@@ -1,17 +1,14 @@
 import PropType from 'prop-types';
 import classes from './Hamburger.module.css';
-import { toggleMenuAC } from '../../../../utilities/action-сreators';
 
-export default function Hamburger({ dispatch, isOpen }) {
-  const handleClick = () => dispatch(toggleMenuAC());
-
+export default function Hamburger({ onClick, isOpen }) {
   return (
     <div
       tabIndex={0}
       role='button'
       className={`${classes.hamburger} ${isOpen ? classes.active : ''}`}
-      onClick={handleClick}
-      onKeyDown={handleClick}
+      onClick={onClick}
+      onKeyDown={onClick}
     >
       <span />
       <span />
@@ -21,6 +18,6 @@ export default function Hamburger({ dispatch, isOpen }) {
 }
 
 Hamburger.propTypes = {
-  dispatch: PropType.func.isRequired,
+  onClick: PropType.func.isRequired,
   isOpen: PropType.bool.isRequired,
 };

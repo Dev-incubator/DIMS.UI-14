@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Aside from '../components/Aside/Aside';
 import Main from '../components/Main/Main';
 import classes from './App.module.css';
-import reducerFunc from '../utilities/reducer';
+import { reducerFunc, TOGGLE_MENU } from './App-helpers';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,11 +15,11 @@ export default class App extends React.Component {
         },
       },
     };
-    this.dispatch = this.dispatch.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
 
-  dispatch(action) {
-    this.setState((prevState) => reducerFunc(prevState, action));
+  toggleMenu() {
+    this.setState((prevState) => reducerFunc(prevState, { type: TOGGLE_MENU }));
   }
 
   render() {
@@ -33,7 +33,7 @@ export default class App extends React.Component {
       <BrowserRouter>
         <div className={classes.app}>
           <Aside isOpen={isOpen} />
-          <Main isOpen={isOpen} dispatch={this.dispatch} />
+          <Main isOpen={isOpen} toggleMenu={this.toggleMenu} />
         </div>
       </BrowserRouter>
     );

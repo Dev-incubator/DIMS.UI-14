@@ -4,8 +4,7 @@ import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
 import noop from '../../shared/noop';
-import { TASK_MODAL, DELETE_TASK, openDeleteTaskModal, deleteTask } from '../../utilities/action-сreators';
-import reducerFunc from '../../utilities/reducer';
+import { TASK_MODAL_TOGGLE, TASK_MODAL_DELETE_TASK, reducerFunc } from './Task-helpers';
 
 export default class Task extends React.Component {
   constructor(props) {
@@ -15,7 +14,8 @@ export default class Task extends React.Component {
       isOpen: false,
       selectedModal: '',
     };
-    this.dispatch = this.dispatch.bind(this);
+    this.liftUpDeleteTask = this.liftUpDeleteTask.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   componentDidMount() {
@@ -28,19 +28,14 @@ export default class Task extends React.Component {
     }));
   }
 
-  dispatch(action) {
-    const { dispatch } = this.props;
+  toggleModal(modalType) {
+    this.setState((prevState) => reducerFunc(prevState, { type: TASK_MODAL_TOGGLE, modalType }));
+  }
+
+  liftUpDeleteTask() {
+    const { deleteTask } = this.props;
     const { selectedID } = this.state;
-    switch (action.type) {
-      case TASK_MODAL:
-        this.setState((prevState) => reducerFunc(prevState, action));
-        break;
-      case DELETE_TASK:
-        dispatch(deleteTask(selectedID));
-        break;
-      default:
-        break;
-    }
+    deleteTask(selectedID);
   }
 
   render() {
@@ -51,8 +46,8 @@ export default class Task extends React.Component {
     } = this.props;
     const { isOpen, selectedModal } = this.state;
 
-    const openDeleteModal = () => {
-      this.dispatch(openDeleteTaskModal());
+    const toggleDeleteModal = () => {
+      this.toggleModal(TASK_MODAL_DELETE_TASK);
     };
 
     return (
@@ -67,19 +62,26 @@ export default class Task extends React.Component {
             <Button roleclass='edit' onClick={noop}>
               Edit
             </Button>
-            <Button roleclass='delete' onClick={openDeleteModal}>
+            <Button roleclass='delete' onClick={toggleDeleteModal}>
               Delete
             </Button>
           </div>
         </div>
-        {isOpen ? <Modal item={taskData} dispatch={this.dispatch} selectedModal={selectedModal} /> : null}
+        {isOpen ? (
+          <Modal
+            item={taskData}
+            actFunc={this.liftUpDeleteTask}
+            closeFunc={toggleDeleteModal}
+            selectedModal={selectedModal}
+          />
+        ) : null}
       </>
     );
   }
 }
 
 Task.propTypes = {
-  dispatch: PropType.func.isRequired,
   taskData: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
+  deleteTask: PropType.func.isRequired,
 };
