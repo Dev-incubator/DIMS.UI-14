@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import classes from './CraftInput.module.css';
 import Validator from './Users/Validator';
+import noop from '../../shared/noop';
 
 const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, error, options }) => {
   let children;
@@ -72,18 +73,20 @@ CraftInput.propTypes = {
   error: PropTypes.string,
   value: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   isRequired: PropTypes.bool,
   readOnly: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
 };
 
 CraftInput.defaultProps = {
   isRequired: false,
   readOnly: false,
+  id: '',
   error: '',
   type: 'text',
   options: '',
+  onChange: noop,
 };
 
 export default CraftInput;

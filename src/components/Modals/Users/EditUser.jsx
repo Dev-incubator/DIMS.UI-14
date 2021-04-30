@@ -1,22 +1,14 @@
 import PropType from 'prop-types';
 import React from 'react';
-import classes from './CreateUser.module.css';
-import Button from '../../../Button/Button';
-import CraftInput from '../../CraftInput';
+import classes from './EditUser.module.css';
+import Button from '../../Button/Button';
+import CraftInput from '../CraftInput';
 
-import {
-  CREATE_USER_ONCHANGE,
-  CREATE_USER_VALIDATE_FIELDS,
-  CREATE_USER_VALIDATE_FORM,
-  reducerFunc,
-} from './CreateUser-helpers';
+import { EDIT_USER_ONCHANGE, EDIT_USER_VALIDATE_FIELDS, EDIT_USER_VALIDATE_FORM, reducerFunc } from './User-helpers';
 
-import { createRef, USERS } from '../../../../utilities/fb-helpers';
-import debounce from '../../../../utilities/debounce';
+import debounce from '../../../utilities/debounce';
 
-const newUserRef = createRef(USERS);
-
-export default class CreateUser extends React.Component {
+export default class EditUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,9 +16,9 @@ export default class CreateUser extends React.Component {
         username: '',
         surname: '',
         email: '',
-        direction: 'React',
+        direction: '',
         sex: '',
-        role: 'User',
+        role: '',
         password: '',
         passwordRepeat: '',
         dateOfBirth: '',
@@ -39,20 +31,20 @@ export default class CreateUser extends React.Component {
         mathScore: '',
       },
       validator: {
-        username: false,
-        surname: false,
-        email: false,
+        username: true,
+        surname: true,
+        email: true,
         direction: true,
         role: true,
         password: false,
         passwordRepeat: false,
-        dateOfBirth: false,
-        phone: false,
-        skype: false,
-        startDate: false,
-        education: false,
-        averageScore: false,
-        mathScore: false,
+        dateOfBirth: true,
+        phone: true,
+        skype: true,
+        startDate: true,
+        education: true,
+        averageScore: true,
+        mathScore: true,
       },
       isValid: false,
       errors: {
@@ -73,18 +65,20 @@ export default class CreateUser extends React.Component {
       },
     };
     this.onChange = this.onChange.bind(this);
-    this.liftUpCreateUser = this.liftUpCreateUser.bind(this);
+    this.liftUpEditUser = this.liftUpEditUser.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.validateFields = this.validateFields.bind(this);
     this.validateForm = this.validateForm.bind(this);
   }
 
   componentDidMount() {
+    const { user } = this.props;
     this.setState((prevState) => ({
       ...prevState,
       data: {
-        ...prevState.data,
-        id: newUserRef.id,
+        ...user,
+        password: '',
+        passwordRepeat: '',
       },
     }));
   }
@@ -94,7 +88,7 @@ export default class CreateUser extends React.Component {
     this.setState(
       (prevState) =>
         reducerFunc(prevState, {
-          type: CREATE_USER_ONCHANGE,
+          type: EDIT_USER_ONCHANGE,
           name,
           value,
         }),
@@ -105,12 +99,12 @@ export default class CreateUser extends React.Component {
   }
 
   validateFields(fieldName, fieldValue) {
-    const state = reducerFunc(this.state, { type: CREATE_USER_VALIDATE_FIELDS, fieldName, fieldValue });
+    const state = reducerFunc(this.state, { type: EDIT_USER_VALIDATE_FIELDS, fieldName, fieldValue });
     this.setState(state, this.validateForm);
   }
 
   validateForm() {
-    const state = reducerFunc(this.state, { type: CREATE_USER_VALIDATE_FORM });
+    const state = reducerFunc(this.state, { type: EDIT_USER_VALIDATE_FORM });
     this.setState(state);
   }
 
@@ -119,12 +113,12 @@ export default class CreateUser extends React.Component {
     closeFunc();
   }
 
-  liftUpCreateUser() {
+  liftUpEditUser() {
     const { actFunc } = this.props;
     const { data } = this.state;
-    const newUser = { ...data };
-    delete newUser.passwordRepeat;
-    actFunc(newUserRef, newUser);
+    const editedUser = { ...data };
+    delete editedUser.passwordRepeat;
+    actFunc(editedUser);
     this.closeModal();
   }
 
@@ -170,11 +164,12 @@ export default class CreateUser extends React.Component {
     const handleChange = (event) => {
       this.onChange(event);
     };
-    const createUser = () => this.liftUpCreateUser();
+
+    const editUser = () => this.liftUpEditUser();
 
     return (
       <div className={classes.modal}>
-        <h3>Create Member</h3>
+        <h3>Edit Member</h3>
         <form>
           <div className={classes.wrapper}>
             <div className={classes.column}>
@@ -315,8 +310,8 @@ export default class CreateUser extends React.Component {
         </form>
         <div className={classes.requiredwarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
-          <Button onClick={createUser} roleclass='create' disabled={!isValid}>
-            Create
+          <Button onClick={editUser} roleclass='edit' disabled={!isValid}>
+            Edit
           </Button>
           <Button onClick={this.closeModal}>Close</Button>
         </div>
@@ -325,7 +320,8 @@ export default class CreateUser extends React.Component {
   }
 }
 
-CreateUser.propTypes = {
+EditUser.propTypes = {
   closeFunc: PropType.func.isRequired,
   actFunc: PropType.func.isRequired,
+  user: PropType.instanceOf(Object).isRequired,
 };

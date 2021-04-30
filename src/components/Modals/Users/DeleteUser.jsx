@@ -1,6 +1,6 @@
 import PropType from 'prop-types';
 import classes from './DeleteUser.module.css';
-import Button from '../../../Button/Button';
+import Button from '../../Button/Button';
 
 export default function DeleteUser({ user, closeFunc, actFunc }) {
   return (

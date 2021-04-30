@@ -10,5 +10,5 @@ firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
 // helpers
-export const createRef = (collection) => db.collection(collection).doc();
+export const createUserRef = () => db.collection(USERS).doc();
 export const setDataToDB = (ref, data) => ref.set(data);
