@@ -11,3 +11,30 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+:root {
+  --white-color: #fff;
+  --background-color: #f6f7fb;
+  --black-color: #000;
+  --darkblue-color: #0e1935;
+  --lightgray-color: #ecedf1;
+  --darkgray-color: #7787ab;
+  --lightblue-color: #5385ff;
+  --menu-action-color: #122043;
+
+  --button-default-color: #5385ff;
+  --button-default-hover-color: #3855a5;
+
+  --button-delete-color: #d50000;
+  --button-delete-hover-color: #ae0000;
+
+  --button-edit-color: #ffa610;
+  --button-edit-hover-color: #ff7518;
+
+  --button-create-color: #1bc47d;
+  --button-create-hover-color: #0ca52f;
+
+  --button-disabled-color: #ecedf1;
+
+  --validator-color: #d50000;
+}

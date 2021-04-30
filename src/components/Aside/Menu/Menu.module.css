@@ -1,0 +1,28 @@
+.menu {
+  margin: 0;
+  padding: 0;
+  background-color: var(--darkblue-color);
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 80px auto;
+}
+.header {
+  padding: 15px 30px;
+  grid-row: 1 / 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--black-color);
+}
+
+.header img {
+  height: 100%;
+}
+
+.title {
+  margin-left: 25px;
+  width: 100%;
+  font-size: 25px;
+  color: var(--white-color);
+}

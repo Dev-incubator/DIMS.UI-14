@@ -1,0 +1,29 @@
+.item {
+  display: flex;
+  text-decoration: none;
+  color: var(--white-color);
+  padding: 25px 50px;
+  justify-content: flex-start;
+  font-size: 22px;
+  line-height: 22px;
+  align-items: center;
+  border-left: 6px solid var(--darkblue-color);
+  transition: background-color 0.3s all;
+  cursor: pointer;
+}
+
+.item:hover {
+  background-color: var(--menu-action-color);
+  border-color: var(--lightblue-color);
+}
+.item.active {
+  border-color: var(--lightblue-color);
+}
+
+.image {
+  height: 18px;
+}
+
+.title {
+  margin-left: 10px;
+}

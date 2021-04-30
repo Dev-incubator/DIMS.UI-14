@@ -1,19 +1,41 @@
-import { useEffect } from 'react';
-import { appTitle } from '../config';
-import logo from '../icons/logo.svg';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import Aside from '../components/Aside/Aside';
+import Main from '../components/Main/Main';
 import classes from './App.module.css';
+import { reducerFunc, TOGGLE_MENU } from './App-helpers';
 
-export const App = () => {
-  useEffect(() => {
-    document.title = appTitle;
-  }, []);
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      settings: {
+        menu: {
+          isOpen: true,
+        },
+      },
+    };
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
 
-  return (
-    <div className={classes.App}>
-      <header className={classes.Header}>
-        <img src={logo} className={classes.Logo} alt='logo' />
-        <h1 className={classes.Text}>Learn React with Dev Incubator</h1>
-      </header>
-    </div>
-  );
-};
+  toggleMenu() {
+    this.setState((prevState) => reducerFunc(prevState, { type: TOGGLE_MENU }));
+  }
+
+  render() {
+    const {
+      settings: {
+        menu: { isOpen },
+      },
+    } = this.state;
+
+    return (
+      <BrowserRouter>
+        <div className={classes.app}>
+          <Aside isOpen={isOpen} />
+          <Main isOpen={isOpen} toggleMenu={this.toggleMenu} />
+        </div>
+      </BrowserRouter>
+    );
+  }
+}

@@ -1,0 +1,38 @@
+.content {
+  display: grid;
+  height: min-content;
+  grid-template-rows: auto;
+}
+
+.subheader {
+  color: var(--darkgray-color);
+  background-color: var(--background-color);
+  display: grid;
+  grid-template-columns:
+    minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 100px) minmax(auto, 200px) minmax(auto, 100px)
+    minmax(auto, 100px) minmax(auto, 250px);
+  align-items: center;
+}
+
+.subheader div {
+  padding: 20px 15px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header button {
+  width: 100px;
+}
+
+.title {
+  margin: 0;
+  font-size: 25px;
+  line-height: 25px;
+}
+
+.title span {
+  color: var(--darkgray-color);
+}
