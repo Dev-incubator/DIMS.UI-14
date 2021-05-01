@@ -2,8 +2,9 @@ import React from 'react';
 import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
-import noop from '../shared/noop';
-import { TASKS_DELETE_TASK, TASKS_MODAL_TOGGLE, reducerFunc } from './Tasks-helpers';
+import Modal from '../components/Modals/Modal';
+import { TASKS_MODAL_TOGGLE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
+import { setElemToDB, deleteElemFromDB, editElemInDB, db, TASKS } from '../utilities/fb-helpers';
 
 export default class Tasks extends React.Component {
   constructor(props) {
@@ -14,86 +15,65 @@ export default class Tasks extends React.Component {
       tasksList: [],
     };
     this.deleteTask = this.deleteTask.bind(this);
+    this.createTask = this.createTask.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.editTask = this.editTask.bind(this);
+    this.updateData = this.updateData.bind(this);
   }
 
   componentDidMount() {
-    this.setState((prevState) => ({
-      ...prevState,
-      tasksList: [
-        {
-          id: 1,
-          taskName: 'Create database project',
-          description: 'Create database project in firebase',
-          startDate: '01.11.2020',
-          deadline: '07.11.2020',
-        },
-        {
-          id: 2,
-          taskName: 'Create repositories',
-          description: 'Create tasks, members, progress repositories',
-          startDate: '07.11.2020',
-          deadline: '14.11.2020',
-        },
-        {
-          id: 3,
-          taskName: 'Create unit tests for repositories',
-          description: '',
-          startDate: '07.11.2020',
-          deadline: '21.11.2020',
-        },
-        {
-          id: 4,
-          taskName: 'Create services',
-          description: '',
-          startDate: '18.11.2020',
-          deadline: '25.11.2020',
-        },
-        {
-          id: 5,
-          taskName: 'Create unit tests for services',
-          description: '',
-          startDate: '18.11.2020',
-          deadline: '30.11.2020',
-        },
-        {
-          id: 6,
-          taskName: 'Create controllers',
-          description: '',
-          startDate: '01.12.2020',
-          deadline: '07.12.2020',
-        },
-        {
-          id: 7,
-          taskName: 'Create unit tests for controllers',
-          description: '',
-          startDate: '01.12.2020',
-          deadline: '14.12.2020',
-        },
-        {
-          id: 8,
-          taskName: 'Create views',
-          description: '',
-          startDate: '14.12.2020',
-          deadline: '21.12.2020',
-        },
-      ],
-    }));
+    this.updateData();
   }
 
   deleteTask(selectedID) {
-    this.setState((prevState) => reducerFunc(prevState, { type: TASKS_DELETE_TASK, selectedID }));
+    deleteElemFromDB(TASKS, selectedID);
+    this.updateData();
+  }
+
+  editTask(editedTask) {
+    editElemInDB(TASKS, editedTask);
+    this.updateData();
+  }
+
+  createTask(newTaskRef, newTask) {
+    setElemToDB(newTaskRef, newTask);
+    this.updateData();
   }
 
   toggleModal(modalType) {
     this.setState((prevState) => reducerFunc(prevState, { type: TASKS_MODAL_TOGGLE, modalType }));
   }
 
+  updateData() {
+    db.collection(TASKS)
+      .get()
+      .then((querySnapshot) => {
+        const tasksList = [];
+        querySnapshot.forEach((doc) => {
+          tasksList.push(doc.data());
+        });
+        return tasksList;
+      })
+      .then((tasksList) =>
+        this.setState((prevState) => ({
+          ...prevState,
+          tasksList,
+        })),
+      )
+      .catch((error) => {
+        console.log('Error reading tasks collection: ', error);
+      });
+  }
+
   render() {
-    const { tasksList } = this.state;
+    const { tasksList, selectedModal, isOpen } = this.state;
+    const toggleModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
+    const createTask = (newTaskRef, newTask) => this.createTask(newTaskRef, newTask);
+    const editTask = (editedTask) => this.editTask(editedTask);
+    const deleteTask = (selectedID) => this.deleteTask(selectedID);
 
     const tasks = tasksList.map((task, index) => {
-      return <Task deleteTask={this.deleteTask} key={task.id.toString()} taskData={task} tableIndex={index + 1} />;
+      return <Task deleteTask={deleteTask} editTask={editTask} key={task.id} taskData={task} tableIndex={index + 1} />;
     });
 
     return (
@@ -102,7 +82,9 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button onClick={noop}>Create</Button>
+          <Button roleclass='create' onClick={toggleModal}>
+            Create
+          </Button>
         </div>
         <div className={classes.content}>
           <div className={classes.subheader}>
@@ -115,6 +97,7 @@ export default class Tasks extends React.Component {
           </div>
           {tasks}
         </div>
+        {isOpen ? <Modal closeFunc={toggleModal} actFunc={createTask} selectedModal={selectedModal} /> : null}
       </div>
     );
   }

@@ -2,6 +2,7 @@ import PropType from 'prop-types';
 import classes from './Modal.module.css';
 import DeleteUser from './Users/DeleteUser';
 import CreateUser from './Users/CreateUser';
+import CreateTask from './Tasks/CreateTask';
 import ShowUser from './Users/ShowUser';
 import EditUser from './Users/EditUser';
 import DeleteTask from './Tasks/DeleteTask';
@@ -9,6 +10,7 @@ import noop from '../../shared/noop';
 
 import { USER_MODAL_DELETE_USER, USER_MODAL_EDIT_USER, USER_MODAL_SHOW_USER } from '../User/User-helpers';
 import { USERS_MODAL_CREATE_USER } from '../../pages/Users-helpers';
+import { TASKS_MODAL_CREATE_TASK } from '../../pages/Tasks-helpers';
 import { TASK_MODAL_DELETE_TASK } from '../Task/Task-helpers';
 
 export default function Modal({ item, selectedModal, closeFunc, actFunc }) {
@@ -29,6 +31,9 @@ export default function Modal({ item, selectedModal, closeFunc, actFunc }) {
       break;
     case USERS_MODAL_CREATE_USER:
       modal = <CreateUser closeFunc={closeFunc} actFunc={actFunc} />;
+      break;
+    case TASKS_MODAL_CREATE_TASK:
+      modal = <CreateTask closeFunc={closeFunc} actFunc={actFunc} />;
       break;
     default:
       break;

@@ -65,6 +65,8 @@ const placeholderObj = {
   education: 'Enter univercity',
   averageScore: 'Enter univercity average score',
   mathScore: 'Enter math score',
+  title: 'Enter task title',
+  description: 'Enter task descriptions',
 };
 
 CraftInput.propTypes = {

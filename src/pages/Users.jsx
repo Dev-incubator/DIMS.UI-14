@@ -3,8 +3,8 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import { USERS_DELETE_USER, USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
-import { setDataToDB, db, USERS } from '../utilities/fb-helpers';
+import { USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
+import { setElemToDB, deleteElemFromDB, editElemInDB, db, USERS } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -14,16 +14,26 @@ export default class Users extends React.Component {
       selectedModal: '',
       usersList: [],
     };
-    this.deleteUser = this.deleteUser.bind(this);
+    this.updateData = this.updateData.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
     this.editUser = this.editUser.bind(this);
+    this.createUser = this.createUser.bind(this);
   }
 
   componentDidMount() {
-    const usersList = [];
+    this.updateData();
+  }
+
+  toggleModal(modalType) {
+    this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
+  }
+
+  updateData() {
     db.collection(USERS)
       .get()
       .then((querySnapshot) => {
+        const usersList = [];
         querySnapshot.forEach((doc) => {
           usersList.push(doc.data());
         });
@@ -41,64 +51,29 @@ export default class Users extends React.Component {
   }
 
   deleteUser(selectedID) {
-    this.setState((prevState) => reducerFunc(prevState, { type: USERS_DELETE_USER, selectedID }));
-  }
-
-  toggleModal(modalType) {
-    this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
+    deleteElemFromDB(USERS, selectedID);
+    this.updateData();
   }
 
   editUser(editedUser) {
-    const usersList = [];
+    editElemInDB(USERS, editedUser);
+    this.updateData();
+  }
 
-    db.collection(USERS)
-      .doc(editedUser.id)
-      .set(editedUser)
-      .then(function () {
-        console.log('Document successfully written!');
-      })
-      .catch(function (error) {
-        console.log('Error writting document: ', error);
-      });
-
-    db.collection(USERS)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading users collection: ', error);
-      });
+  createUser(newUserRef, newUser) {
+    setElemToDB(newUserRef, newUser);
+    this.updateData();
   }
 
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
-    const toggleModal = () => {
-      this.toggleModal(USERS_MODAL_CREATE_USER);
-    };
-    const createUser = (newUserRef, newUser) => {
-      setDataToDB(newUserRef, newUser);
-    };
+    const toggleModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
+    const createUser = (newUserRef, newUser) => this.createUser(newUserRef, newUser);
+    const editUser = (editedUser) => this.editUser(editedUser);
+    const deleteUser = (selectedID) => this.deleteUser(selectedID);
 
     const users = usersList.map((user, index) => {
-      return (
-        <User
-          deleteUser={this.deleteUser}
-          editUser={this.editUser}
-          key={user.id}
-          userData={user}
-          tableIndex={index + 1}
-        />
-      );
+      return <User deleteUser={deleteUser} editUser={editUser} key={user.id} userData={user} tableIndex={index + 1} />;
     });
 
     return (

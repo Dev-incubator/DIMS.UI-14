@@ -10,5 +10,30 @@ firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
 // helpers
-export const createUserRef = () => db.collection(USERS).doc();
-export const setDataToDB = (ref, data) => ref.set(data);
+export const createElemRef = (collection) => db.collection(collection).doc();
+
+export const setElemToDB = (ref, data) => ref.set(data);
+
+export const deleteElemFromDB = (collection, selectedID) => {
+  db.collection(collection)
+    .doc(selectedID)
+    .delete()
+    .then(() => {
+      console.log('Document successfully deleted!');
+    })
+    .catch((error) => {
+      console.error('Error removing document: ', error);
+    });
+};
+
+export const editElemInDB = (collection, editedElem) => {
+  db.collection(collection)
+    .doc(editedElem.id)
+    .set(editedElem)
+    .then(function () {
+      console.log('Document successfully written!');
+    })
+    .catch(function (error) {
+      console.log('Error writting document: ', error);
+    });
+};

@@ -8,12 +8,13 @@ import {
   regExpCheck,
 } from './regExp-helpers';
 
-export function validateInput(inputName, inputBody, password = '') {
+export function validateInput(inputName, inputBody, password = '', startDate = '') {
   let validatorField;
   let errorField;
 
   switch (inputName) {
     case 'username':
+    case 'title':
       validatorField = regExpCheck(regExpNames, inputBody);
       errorField = validatorField ? '' : errors.minTwo;
       break;
@@ -69,6 +70,10 @@ export function validateInput(inputName, inputBody, password = '') {
       validatorField = regExpCheck(regExpScore, inputBody);
       errorField = validatorField ? '' : errors.score;
       break;
+    case 'deadLine':
+      validatorField = new Date(inputBody) > new Date(startDate);
+      errorField = validatorField ? '' : errors.deadLine;
+      break;
     default:
       break;
   }
@@ -90,4 +95,5 @@ const errors = {
     'Password must contain at least 8 characters, incl. at least 1 uppercase and lowercase letters, 1 number and 1 special character',
   email: 'The entered email is incorrect',
   minTwo: 'This field must contain at least 2 letters',
+  deadLine: "The deadLine must be later than task's start date",
 };

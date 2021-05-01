@@ -11,10 +11,10 @@ import {
   reducerFunc,
 } from './User-helpers';
 
-import { createUserRef } from '../../../utilities/fb-helpers';
+import { USERS, createElemRef } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
-const newUserRef = createUserRef();
+const newUserRef = createElemRef(USERS);
 
 export default class CreateUser extends React.Component {
   constructor(props) {
@@ -167,10 +167,7 @@ export default class CreateUser extends React.Component {
       },
     } = this.state;
 
-    const handleChange = (event) => {
-      this.onChange(event);
-    };
-    const createUser = () => this.liftUpCreateUser();
+    const handleChange = (event) => this.onChange(event);
 
     return (
       <div className={classes.modal}>
@@ -315,7 +312,7 @@ export default class CreateUser extends React.Component {
         </form>
         <div className={classes.requiredwarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
-          <Button onClick={createUser} roleclass='create' disabled={!isValid}>
+          <Button onClick={this.liftUpCreateUser} roleclass='create' disabled={!isValid}>
             Create
           </Button>
           <Button onClick={this.closeModal}>Close</Button>
