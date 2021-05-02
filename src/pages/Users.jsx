@@ -37,6 +37,7 @@ export default class Users extends React.Component {
         querySnapshot.forEach((doc) => {
           usersList.push(doc.data());
         });
+
         return usersList;
       })
       .then((usersList) =>

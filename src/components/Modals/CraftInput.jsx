@@ -27,6 +27,20 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
         {children}
       </select>
     );
+  } else if (type === 'checkbox') {
+    children = options.map((item) => {
+      const isChecked = value.find((user) => user.id === item.id);
+
+      return (
+        <div key={item.id} className={classes.checkboxElem}>
+          <input type={type} id={item.id} name={item.id} value={item.id} checked={isChecked} onChange={onChange} />
+          <label htmlFor={item.id}>
+            {item.username} {item.surname}
+          </label>
+        </div>
+      );
+    });
+    input = <div className={`${classes.checkbox} ${readOnly ? classes.readOnly : null}`}>{children}</div>;
   } else {
     input = (
       <input
@@ -70,10 +84,10 @@ const placeholderObj = {
 };
 
 CraftInput.propTypes = {
-  options: PropTypes.string,
+  options: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Array)]),
   type: PropTypes.string,
   error: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Array)]).isRequired,
   title: PropTypes.string.isRequired,
   id: PropTypes.string,
   isRequired: PropTypes.bool,

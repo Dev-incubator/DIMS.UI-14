@@ -1,5 +1,6 @@
 // only for export
 export const TASK_MODAL_DELETE_TASK = 'modal-task-delete';
+export const TASK_MODAL_SHOW_TASK = 'modal-task-show';
 
 // export for local use
 export const TASK_MODAL_TOGGLE = 'modal-task';

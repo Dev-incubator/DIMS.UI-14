@@ -4,7 +4,9 @@ import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
 import noop from '../../shared/noop';
-import { TASK_MODAL_TOGGLE, TASK_MODAL_DELETE_TASK, reducerFunc } from './Task-helpers';
+import DivAnchor from '../DivAnchor';
+import { intDate } from '../../utilities/internationalization';
+import { TASK_MODAL_TOGGLE, TASK_MODAL_DELETE_TASK, TASK_MODAL_SHOW_TASK, reducerFunc } from './Task-helpers';
 
 export default class Task extends React.Component {
   constructor(props) {
@@ -28,7 +30,7 @@ export default class Task extends React.Component {
     }));
   }
 
-  toggleModal(modalType) {
+  toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: TASK_MODAL_TOGGLE, modalType }));
   }
 
@@ -42,22 +44,22 @@ export default class Task extends React.Component {
     const {
       taskData,
       tableIndex,
-      taskData: { taskName, description, startDate, deadline },
+      taskData: { title, description, startDate, deadLine },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
 
-    const toggleDeleteModal = () => {
-      this.toggleModal(TASK_MODAL_DELETE_TASK);
-    };
+    const toggleDeleteModal = () => this.toggleModal(TASK_MODAL_DELETE_TASK);
+    const openShowModal = () => this.toggleModal(TASK_MODAL_SHOW_TASK);
+    const closeAnyModal = () => this.toggleModal();
 
     return (
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <div>{taskName}</div>
+          <DivAnchor onClick={openShowModal}>{title}</DivAnchor>
           <div>{description}</div>
-          <div>{startDate}</div>
-          <div>{deadline}</div>
+          <div>{intDate(startDate)}</div>
+          <div>{intDate(deadLine)}</div>
           <div className={classes.buttons}>
             <Button roleclass='edit' onClick={noop}>
               Edit
@@ -71,7 +73,7 @@ export default class Task extends React.Component {
           <Modal
             item={taskData}
             actFunc={this.liftUpDeleteTask}
-            closeFunc={toggleDeleteModal}
+            closeFunc={closeAnyModal}
             selectedModal={selectedModal}
           />
         ) : null}

@@ -52,6 +52,7 @@ export default class Tasks extends React.Component {
         querySnapshot.forEach((doc) => {
           tasksList.push(doc.data());
         });
+
         return tasksList;
       })
       .then((tasksList) =>

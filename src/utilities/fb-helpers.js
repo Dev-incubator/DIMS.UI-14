@@ -30,10 +30,10 @@ export const editElemInDB = (collection, editedElem) => {
   db.collection(collection)
     .doc(editedElem.id)
     .set(editedElem)
-    .then(function () {
+    .then(() => {
       console.log('Document successfully written!');
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log('Error writting document: ', error);
     });
 };

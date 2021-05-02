@@ -10,7 +10,7 @@ import {
   CREATE_TASK_VALIDATE_FORM,
   reducerFunc,
 } from './Task-helpers';
-import { TASKS, createElemRef } from '../../../utilities/fb-helpers';
+import { TASKS, db, USERS, createElemRef } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 const newTaskRef = createElemRef(TASKS);
@@ -24,20 +24,21 @@ export default class CreateTask extends React.Component {
         description: '',
         startDate: '',
         deadLine: '',
-        usersList: [],
+        selectedUsers: [],
       },
       validator: {
         title: false,
         startDate: false,
         deadLine: false,
-        users: false,
+        selectedUsers: false,
       },
+      usersList: [],
       isValid: false,
       errors: {
         titleError: '',
         startDateError: '',
         deadLineError: '',
-        usersError: '',
+        selectedUsersError: '',
       },
     };
     this.onChange = this.onChange.bind(this);
@@ -48,35 +49,55 @@ export default class CreateTask extends React.Component {
   }
 
   componentDidMount() {
-    this.setState((prevState) => ({
-      ...prevState,
-      data: {
-        ...prevState.data,
-        id: newTaskRef.id,
-      },
-    }));
+    db.collection(USERS)
+      .get()
+      .then((querySnapshot) => {
+        const usersList = [];
+        querySnapshot.forEach((doc) => {
+          usersList.push(doc.data());
+        });
+
+        return usersList;
+      })
+      .then((usersList) =>
+        this.setState((prevState) => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            id: newTaskRef.id,
+          },
+          usersList,
+        })),
+      )
+      .catch((error) => {
+        console.log('Error reading users collection: ', error);
+      });
   }
 
   onChange(event) {
-    const { name, value } = event.target;
+    const { target } = event;
+    const { name, value } = target;
+    const targetType = target.type;
     this.setState(
       (prevState) =>
         reducerFunc(prevState, {
           type: CREATE_TASK_ONCHANGE,
           name,
           value,
+          targetType,
         }),
       debounce(() => {
-        this.validateFields(name, value);
+        this.validateFields(name, value, targetType);
       }, 1000),
     );
   }
 
-  validateFields(fieldName, fieldValue) {
+  validateFields(fieldName, fieldValue, targetType) {
     const state = reducerFunc(this.state, {
       type: CREATE_TASK_VALIDATE_FIELDS,
       fieldName,
       fieldValue,
+      targetType,
     });
     this.setState(state, this.validateForm);
   }
@@ -104,8 +125,9 @@ export default class CreateTask extends React.Component {
   render() {
     const {
       isValid,
-      data: { title, description, startDate, deadLine },
-      errors: { titleError, startDateError, deadLineError },
+      data: { title, description, startDate, deadLine, selectedUsers },
+      usersList,
+      errors: { titleError, startDateError, deadLineError, selectedUsersError },
     } = this.state;
 
     const handleChange = (event) => this.onChange(event);
@@ -134,6 +156,16 @@ export default class CreateTask extends React.Component {
               value={deadLine}
               onChange={handleChange}
               error={deadLineError}
+            />
+            <CraftInput
+              title='Users'
+              isRequired
+              id='selectedUsers'
+              type='checkbox'
+              value={selectedUsers}
+              options={usersList}
+              onChange={handleChange}
+              error={selectedUsersError}
             />
           </div>
           <div className={classes.requiredwarning}>* - these fields are required.</div>

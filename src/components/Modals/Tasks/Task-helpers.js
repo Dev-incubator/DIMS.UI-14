@@ -14,6 +14,32 @@ export const reducerFunc = (prevState, action) => {
   switch (action.type) {
     case CREATE_TASK_ONCHANGE:
     case EDIT_TASK_ONCHANGE:
+      if (action.targetType === 'checkbox') {
+        if (prevState.data.selectedUsers.find((item) => item.id === action.name)) {
+          const newSelectedUsers = prevState.data.selectedUsers.filter((item) => item.id !== action.name);
+          state = {
+            ...prevState,
+            data: {
+              ...prevState.data,
+              selectedUsers: newSelectedUsers,
+            },
+          };
+
+          return state;
+        }
+        const newSelectedUsers = prevState.data.selectedUsers.concat(
+          prevState.usersList.find((item) => item.id === action.name),
+        );
+        state = {
+          ...prevState,
+          data: {
+            ...prevState.data,
+            selectedUsers: newSelectedUsers,
+          },
+        };
+
+        return state;
+      }
       state = {
         ...prevState,
         data: {
@@ -25,6 +51,24 @@ export const reducerFunc = (prevState, action) => {
       return state;
     case CREATE_TASK_VALIDATE_FIELDS:
     case EDIT_TASK_VALIDATE_FIELDS:
+      if (action.targetType === 'checkbox') {
+        const validity = Boolean(prevState.data.selectedUsers.length);
+        const errorMsg = validity ? '' : 'At least one user must be selected';
+        state = {
+          ...prevState,
+          validator: {
+            ...prevState.validator,
+            selectedUsers: validity,
+          },
+          errors: {
+            ...prevState.errors,
+            selectedUsersError: errorMsg,
+          },
+        };
+
+        return state;
+      }
+
       if (action.fieldName in prevState.validator) {
         const { name, validity, errorMsg } = validateInput(
           action.fieldName,

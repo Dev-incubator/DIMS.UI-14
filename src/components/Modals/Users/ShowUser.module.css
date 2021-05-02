@@ -14,10 +14,6 @@
   box-shadow: 0 0 2px 0 var(--lightgray-color);
 }
 
-input:read-only {
-  background-color: var(--lightgray-color);
-}
-
 h3 {
   margin: 0;
   padding-bottom: 20px;

@@ -7,7 +7,7 @@ export default function DeleteTask({ task, closeFunc, actFunc }) {
     <div className={classes.modal}>
       <h3>Delete Task</h3>
       <div className={classes.text}>
-        Are you really want to delete task <br /> <span>{task.taskName}</span> ?
+        Are you really want to delete task <br /> <span>{task.title}</span> ?
       </div>
       <div className={classes.buttons}>
         <Button onClick={actFunc} roleclass='delete'>

@@ -4,6 +4,7 @@ import Button from '../../Button/Button';
 
 export default function DeleteUser({ user, closeFunc, actFunc }) {
   const { username, surname } = user;
+
   return (
     <div className={classes.modal}>
       <h3>Delete Member</h3>
