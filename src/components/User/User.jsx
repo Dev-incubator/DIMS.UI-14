@@ -61,7 +61,7 @@ export default class User extends React.Component {
     const { isOpen, selectedModal } = this.state;
 
     const openDeleteModal = () => this.toggleModal(USER_MODAL_DELETE_USER);
-    const openCreateModal = () => this.toggleModal(USER_MODAL_EDIT_USER);
+    const openEditModal = () => this.toggleModal(USER_MODAL_EDIT_USER);
     const openShowModal = () => this.toggleModal(USER_MODAL_SHOW_USER);
     const closeAnyModal = () => this.toggleModal();
     const selectActFunc = () => {
@@ -89,7 +89,7 @@ export default class User extends React.Component {
           <div className={classes.buttons}>
             <Button onClick={noop}>Progress</Button>
             <Button onClick={noop}>Tasks</Button>
-            <Button roleclass='edit' onClick={openCreateModal}>
+            <Button roleclass='edit' onClick={openEditModal}>
               Edit
             </Button>
             <Button roleclass='delete' onClick={openDeleteModal}>
