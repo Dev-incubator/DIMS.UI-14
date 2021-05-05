@@ -10,7 +10,6 @@ import {
   CREATE_TASK_VALIDATE_FORM,
   reducerFunc,
 } from './Task-helpers';
-import { db, USERS } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class EditTask extends React.Component {
@@ -30,14 +29,14 @@ export default class EditTask extends React.Component {
         deadLine: true,
         selectedUsers: true,
       },
-      usersList: [],
-      isValid: true,
       errors: {
         titleError: '',
         startDateError: '',
         deadLineError: '',
         selectedUsersError: '',
       },
+      usersList: [],
+      isValid: true,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpEditTask = this.liftUpEditTask.bind(this);
@@ -47,29 +46,14 @@ export default class EditTask extends React.Component {
   }
 
   componentDidMount() {
-    const { task } = this.props;
-    db.collection(USERS)
-      .get()
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          data: {
-            ...task,
-          },
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading USERS collection: ', error);
-      });
+    const { task, usersList } = this.props;
+    this.setState((prevState) => ({
+      ...prevState,
+      data: {
+        ...task,
+      },
+      usersList,
+    }));
   }
 
   onChange(event) {
@@ -183,4 +167,5 @@ EditTask.propTypes = {
   closeFunc: PropType.func.isRequired,
   actFunc: PropType.func.isRequired,
   task: PropType.instanceOf(Object).isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
 };

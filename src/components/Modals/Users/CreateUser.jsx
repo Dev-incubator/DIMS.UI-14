@@ -37,6 +37,7 @@ export default class CreateUser extends React.Component {
         education: '',
         averageScore: '',
         mathScore: '',
+        tasks: [],
       },
       validator: {
         username: false,

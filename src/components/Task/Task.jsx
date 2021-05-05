@@ -53,6 +53,7 @@ export default class Task extends React.Component {
 
   render() {
     const {
+      usersList,
       taskData,
       tableIndex,
       taskData: { title, description, startDate, deadLine },
@@ -92,7 +93,13 @@ export default class Task extends React.Component {
           </div>
         </div>
         {isOpen ? (
-          <Modal item={taskData} actFunc={selectActFunc()} closeFunc={closeAnyModal} selectedModal={selectedModal} />
+          <Modal
+            item={taskData}
+            list={usersList}
+            actFunc={selectActFunc()}
+            closeFunc={closeAnyModal}
+            selectedModal={selectedModal}
+          />
         ) : null}
       </>
     );
@@ -101,6 +108,7 @@ export default class Task extends React.Component {
 
 Task.propTypes = {
   taskData: PropType.instanceOf(Object).isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
   tableIndex: PropType.number.isRequired,
   deleteTask: PropType.func.isRequired,
   editTask: PropType.func.isRequired,

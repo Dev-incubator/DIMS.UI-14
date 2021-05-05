@@ -10,7 +10,7 @@ import {
   CREATE_TASK_VALIDATE_FORM,
   reducerFunc,
 } from './Task-helpers';
-import { TASKS, db, USERS, createElemRef } from '../../../utilities/fb-helpers';
+import { TASKS, createElemRef } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 const newTaskRef = createElemRef(TASKS);
@@ -32,14 +32,14 @@ export default class CreateTask extends React.Component {
         deadLine: false,
         selectedUsers: false,
       },
-      usersList: [],
-      isValid: false,
       errors: {
         titleError: '',
         startDateError: '',
         deadLineError: '',
         selectedUsersError: '',
       },
+      usersList: [],
+      isValid: false,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateTask = this.liftUpCreateTask.bind(this);
@@ -49,29 +49,15 @@ export default class CreateTask extends React.Component {
   }
 
   componentDidMount() {
-    db.collection(USERS)
-      .get()
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          data: {
-            ...prevState.data,
-            id: newTaskRef.id,
-          },
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading users collection: ', error);
-      });
+    const { usersList } = this.props;
+    this.setState((prevState) => ({
+      ...prevState,
+      data: {
+        ...prevState.data,
+        id: newTaskRef.id,
+      },
+      usersList,
+    }));
   }
 
   onChange(event) {
@@ -184,4 +170,5 @@ export default class CreateTask extends React.Component {
 CreateTask.propTypes = {
   closeFunc: PropType.func.isRequired,
   actFunc: PropType.func.isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
 };

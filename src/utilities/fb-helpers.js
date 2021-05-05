@@ -37,3 +37,57 @@ export const editElemInDB = (collection, editedElem) => {
       console.log('Error writting document: ', error);
     });
 };
+
+export const addTaskToUsers = (newTask) => {
+  const assignedUsersIDs = newTask.selectedUsers;
+  const newTaskID = newTask.id;
+  assignedUsersIDs.forEach((id) => {
+    db.collection(USERS)
+      .doc(id)
+      .update({
+        tasks: firebase.firestore.FieldValue.arrayUnion(newTaskID),
+      })
+      .then(() => {
+        console.log(`TASK id:${newTaskID} was succeffully added to USER id:${id}`);
+      })
+      .catch((error) => {
+        console.log('Error with adding TASK to USERS: ', error);
+      });
+  });
+};
+
+export const deleteTaskFromUsers = (taskToDelete) => {
+  const assignedUsers = taskToDelete.selectedUsers;
+  const taskID = taskToDelete.id;
+  assignedUsers.forEach((item) => {
+    db.collection(USERS)
+      .doc(item)
+      .update({
+        tasks: firebase.firestore.FieldValue.arrayRemove(taskID),
+      })
+      .then(() => {
+        console.log(`TASK id:${taskID} was succeffully deleted from USER id:${item}`);
+      })
+      .catch((error) => {
+        console.log('Error with deleting TASK from USERS: ', error);
+      });
+  });
+};
+
+export const editTaskInUsers = (prevTask, editedTask) => {
+  deleteTaskFromUsers(prevTask);
+  addTaskToUsers(editedTask);
+  console.log(`TASK was sucessfully edited in USERS`);
+};
+
+// export const deleteUserFromTasks = (userToDelete) => {
+//   const assignedTasks = userToDelete.tasks;
+//   console.log(assignedTasks);
+//   assignedTasks.forEach((item) => {
+//     db.collection(TASKS)
+//       .doc(item.id)
+//       .update({
+//         selectedUsers: firebase.firestore.FieldValue.arrayRemove(userToDelete),
+//       });
+//   });
+// };

@@ -52,6 +52,11 @@ export default class Users extends React.Component {
   }
 
   deleteUser(selectedID) {
+    // const { usersList } = this.state;
+    // const userToDelete = usersList.find((item) => item.id === selectedID);
+    // if (userToDelete.tasks.length) {
+    //   deleteUserFromTasks(userToDelete);
+    // }
     deleteElemFromDB(USERS, selectedID);
     this.updateData();
   }

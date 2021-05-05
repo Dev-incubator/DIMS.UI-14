@@ -4,7 +4,17 @@ import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import Modal from '../components/Modals/Modal';
 import { TASKS_MODAL_TOGGLE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
-import { setElemToDB, deleteElemFromDB, editElemInDB, db, TASKS } from '../utilities/fb-helpers';
+import {
+  setElemToDB,
+  deleteElemFromDB,
+  editElemInDB,
+  db,
+  TASKS,
+  USERS,
+  addTaskToUsers,
+  deleteTaskFromUsers,
+  editTaskInUsers,
+} from '../utilities/fb-helpers';
 
 export default class Tasks extends React.Component {
   constructor(props) {
@@ -13,6 +23,7 @@ export default class Tasks extends React.Component {
       isOpen: false,
       selectedMoal: '',
       tasksList: [],
+      usersList: [],
     };
     this.deleteTask = this.deleteTask.bind(this);
     this.createTask = this.createTask.bind(this);
@@ -22,21 +33,47 @@ export default class Tasks extends React.Component {
   }
 
   componentDidMount() {
+    db.collection(USERS)
+      .get()
+      .then((querySnapshot) => {
+        const usersList = [];
+        querySnapshot.forEach((doc) => {
+          usersList.push(doc.data());
+        });
+
+        return usersList;
+      })
+      .then((usersList) =>
+        this.setState((prevState) => ({
+          ...prevState,
+          usersList,
+        })),
+      )
+      .catch((error) => {
+        console.log('Error reading USERS collection: ', error);
+      });
     this.updateData();
   }
 
   deleteTask(selectedID) {
+    const { tasksList } = this.state;
+    const taskToDelete = tasksList.find((item) => item.id === selectedID);
     deleteElemFromDB(TASKS, selectedID);
+    deleteTaskFromUsers(taskToDelete);
     this.updateData();
   }
 
   editTask(editedTask) {
+    const { tasksList } = this.state;
+    const prevTask = tasksList.find((item) => item.id === editedTask.id);
     editElemInDB(TASKS, editedTask);
+    editTaskInUsers(prevTask, editedTask);
     this.updateData();
   }
 
   createTask(newTaskRef, newTask) {
     setElemToDB(newTaskRef, newTask);
+    addTaskToUsers(newTask);
     this.updateData();
   }
 
@@ -67,14 +104,23 @@ export default class Tasks extends React.Component {
   }
 
   render() {
-    const { tasksList, selectedModal, isOpen } = this.state;
+    const { tasksList, usersList, selectedModal, isOpen } = this.state;
     const toggleModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
     const createTask = (newTaskRef, newTask) => this.createTask(newTaskRef, newTask);
     const editTask = (editedTask) => this.editTask(editedTask);
     const deleteTask = (selectedID) => this.deleteTask(selectedID);
 
     const tasks = tasksList.map((task, index) => {
-      return <Task deleteTask={deleteTask} editTask={editTask} key={task.id} taskData={task} tableIndex={index + 1} />;
+      return (
+        <Task
+          usersList={usersList}
+          deleteTask={deleteTask}
+          editTask={editTask}
+          key={task.id}
+          taskData={task}
+          tableIndex={index + 1}
+        />
+      );
     });
 
     return (
@@ -98,7 +144,9 @@ export default class Tasks extends React.Component {
           </div>
           {tasks}
         </div>
-        {isOpen ? <Modal closeFunc={toggleModal} actFunc={createTask} selectedModal={selectedModal} /> : null}
+        {isOpen ? (
+          <Modal list={usersList} closeFunc={toggleModal} actFunc={createTask} selectedModal={selectedModal} />
+        ) : null}
       </div>
     );
   }
