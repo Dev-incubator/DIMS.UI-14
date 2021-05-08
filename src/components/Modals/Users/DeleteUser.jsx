@@ -2,12 +2,12 @@ import PropType from 'prop-types';
 import classes from './DeleteUser.module.css';
 import Button from '../../Button/Button';
 
-export default function DeleteUser({ user, closeFunc, actFunc }) {
+export default function DeleteUser({ user, closeFunc, liftUpDeleteUser }) {
   const { username, surname } = user;
 
   return (
     <div className={classes.modal}>
-      <h3>Delete Member</h3>
+      <h3 className={classes.title}>Delete Member</h3>
       <div className={classes.text}>
         Are you really want to delete <br />
         <span>
@@ -16,7 +16,7 @@ export default function DeleteUser({ user, closeFunc, actFunc }) {
         ?
       </div>
       <div className={classes.buttons}>
-        <Button onClick={actFunc} roleclass='delete'>
+        <Button onClick={liftUpDeleteUser} roleClass='delete'>
           Delete
         </Button>
         <Button onClick={closeFunc}>Close</Button>
@@ -27,6 +27,6 @@ export default function DeleteUser({ user, closeFunc, actFunc }) {
 
 DeleteUser.propTypes = {
   user: PropType.instanceOf(Object).isRequired,
-  actFunc: PropType.func.isRequired,
+  liftUpDeleteUser: PropType.func.isRequired,
   closeFunc: PropType.func.isRequired,
 };

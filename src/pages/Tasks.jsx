@@ -83,7 +83,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button roleclass='create' onClick={toggleModal}>
+          <Button roleClass='create' onClick={toggleModal}>
             Create
           </Button>
         </div>

@@ -83,7 +83,7 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={toggleModal} roleclass='create'>
+          <Button onClick={toggleModal} roleClass='create'>
             Create
           </Button>
         </div>

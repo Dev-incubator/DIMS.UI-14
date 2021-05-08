@@ -27,11 +27,11 @@ export function validateInput(inputName, inputBody, password = '', startDate = '
       errorField = validatorField ? '' : errors.email;
       break;
     case 'direction':
-      validatorField = Boolean(inputBody);
+      validatorField = !!inputBody;
       errorField = validatorField ? '' : errors.required;
       break;
     case 'role':
-      validatorField = Boolean(inputBody);
+      validatorField = !!inputBody;
       errorField = validatorField ? '' : errors.required;
       break;
     case 'password':
@@ -51,15 +51,15 @@ export function validateInput(inputName, inputBody, password = '', startDate = '
       errorField = validatorField ? '' : errors.phone;
       break;
     case 'skype':
-      validatorField = Boolean(inputBody);
+      validatorField = !!inputBody;
       errorField = validatorField ? '' : errors.required;
       break;
     case 'startDate':
-      validatorField = Boolean(inputBody);
+      validatorField = !!inputBody;
       errorField = validatorField ? '' : errors.required;
       break;
     case 'education':
-      validatorField = Boolean(inputBody);
+      validatorField = !!inputBody;
       errorField = validatorField ? '' : errors.required;
       break;
     case 'averageScore':

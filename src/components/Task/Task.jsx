@@ -5,7 +5,7 @@ import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
 import noop from '../../shared/noop';
 import DivAnchor from '../DivAnchor';
-import { intDate } from '../../utilities/internationalization';
+import { internationalizeDate } from '../../utilities/internationalization';
 import {
   TASK_MODAL_TOGGLE,
   TASK_MODAL_DELETE_TASK,
@@ -80,13 +80,13 @@ export default class Task extends React.Component {
           <div>{tableIndex}</div>
           <DivAnchor onClick={openShowModal}>{title}</DivAnchor>
           <div>{description}</div>
-          <div>{intDate(startDate)}</div>
-          <div>{intDate(deadLine)}</div>
+          <div>{internationalizeDate(startDate)}</div>
+          <div>{internationalizeDate(deadLine)}</div>
           <div className={classes.buttons}>
-            <Button roleclass='edit' onClick={openEditModal}>
+            <Button roleClass='edit' onClick={openEditModal}>
               Edit
             </Button>
-            <Button roleclass='delete' onClick={openDeleteModal}>
+            <Button roleClass='delete' onClick={openDeleteModal}>
               Delete
             </Button>
           </div>

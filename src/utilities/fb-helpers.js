@@ -10,6 +10,8 @@ firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
 // helpers
+export const getCollection = (collection) => db.collection(collection).get();
+
 export const createElemRef = (collection) => db.collection(collection).doc();
 
 export const setElemToDB = (ref, data) => ref.set(data);

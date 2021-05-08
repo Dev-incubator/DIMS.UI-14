@@ -1,9 +1,5 @@
 .modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
   width: 55%;
-  transform: translate(-50%, -50%);
   background-color: var(--white-color);
   padding: 30px;
   border: 1px solid var(--lightgray-color);
@@ -14,11 +10,11 @@
   box-shadow: 0 0 2px 0 var(--lightgray-color);
 }
 
-h3 {
+.title {
   margin: 0;
   padding-bottom: 20px;
-  font-size: 25px;
-  line-height: 25px;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
   text-align: center;
   border-bottom: 1px solid var(--lightgray-color);
 }
