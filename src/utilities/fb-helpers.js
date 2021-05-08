@@ -80,14 +80,19 @@ export const editTaskInUsers = (prevTask, editedTask) => {
   console.log(`TASK was sucessfully edited in USERS`);
 };
 
-// export const deleteUserFromTasks = (userToDelete) => {
-//   const assignedTasks = userToDelete.tasks;
-//   console.log(assignedTasks);
-//   assignedTasks.forEach((item) => {
-//     db.collection(TASKS)
-//       .doc(item.id)
-//       .update({
-//         selectedUsers: firebase.firestore.FieldValue.arrayRemove(userToDelete),
-//       });
-//   });
-// };
+export const deleteUserFromTasks = (userToDelete) => {
+  const assignedTasks = userToDelete.tasks;
+  const userID = userToDelete.id
+  assignedTasks.forEach((id) => {
+    db.collection(TASKS)
+      .doc(id)
+      .update({
+        selectedUsers: firebase.firestore.FieldValue.arrayRemove(userID),
+      })
+      .then(() => {
+        console.log(`USER id:${userID} was succeffully deleted from TASK id:${id}`);
+      }).catch((error) => {
+        console.log('Error with deleting USER from TASKS: ', error);
+      });
+  });
+};

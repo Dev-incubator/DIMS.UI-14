@@ -4,7 +4,7 @@ import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
 import { USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
-import { setElemToDB, deleteElemFromDB, editElemInDB, db, USERS } from '../utilities/fb-helpers';
+import { setElemToDB, deleteElemFromDB, deleteUserFromTasks, editElemInDB, db, USERS } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -52,11 +52,11 @@ export default class Users extends React.Component {
   }
 
   deleteUser(selectedID) {
-    // const { usersList } = this.state;
-    // const userToDelete = usersList.find((item) => item.id === selectedID);
-    // if (userToDelete.tasks.length) {
-    //   deleteUserFromTasks(userToDelete);
-    // }
+    const { usersList } = this.state;
+    const userToDelete = usersList.find((item) => item.id === selectedID);
+    if (userToDelete.tasks.length) {
+      deleteUserFromTasks(userToDelete);
+    }
     deleteElemFromDB(USERS, selectedID);
     this.updateData();
   }
