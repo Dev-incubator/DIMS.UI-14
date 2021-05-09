@@ -1,5 +1,6 @@
 import React from 'react';
 import PropType from 'prop-types';
+import { NavLink } from 'react-router-dom';
 import Button from '../Button/Button';
 import classes from './User.module.css';
 import noop from '../../shared/noop';
@@ -56,7 +57,7 @@ export default class User extends React.Component {
     const {
       tableIndex,
       userData,
-      userData: { username, surname, direction, education, startDate, dateOfBirth },
+      userData: { id, username, surname, direction, education, startDate, dateOfBirth },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
 
@@ -87,8 +88,12 @@ export default class User extends React.Component {
           <div>{internationalizeDate(startDate)}</div>
           <div>{new Date().getFullYear() - new Date(dateOfBirth).getFullYear()}</div>
           <div className={classes.buttons}>
-            <Button onClick={noop}>Progress</Button>
-            <Button onClick={noop}>Tasks</Button>
+            <NavLink className={classes.navLink} to={`/user-tasks/${id}`}>
+              <Button onClick={noop}>Tasks</Button>
+            </NavLink>
+            <NavLink className={classes.navLink} to={`/users/user-progress/${id}`}>
+              <Button onClick={noop}>Progress</Button>
+            </NavLink>
             <Button roleClass='edit' onClick={openEditModal}>
               Edit
             </Button>

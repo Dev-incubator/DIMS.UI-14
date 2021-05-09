@@ -25,3 +25,9 @@
 .item div {
   padding: 30px 20px;
 }
+
+.navLink {
+  display: inherit;
+  color: var(--white-color);
+  text-decoration: none;
+}
