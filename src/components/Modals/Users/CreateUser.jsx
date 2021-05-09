@@ -14,8 +14,6 @@ import {
 import { USERS, createElemRef } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
-const newUserRef = createElemRef(USERS);
-
 export default class CreateUser extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +36,7 @@ export default class CreateUser extends React.Component {
         averageScore: '',
         mathScore: '',
         tasks: [],
+        id: '',
       },
       validator: {
         username: false,
@@ -55,7 +54,6 @@ export default class CreateUser extends React.Component {
         averageScore: false,
         mathScore: false,
       },
-      isValid: false,
       errors: {
         usernameError: '',
         surnameError: '',
@@ -72,6 +70,8 @@ export default class CreateUser extends React.Component {
         averageScoreError: '',
         mathScoreError: '',
       },
+      isValid: false,
+      newUserRef: {},
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateUser = this.liftUpCreateUser.bind(this);
@@ -81,8 +81,10 @@ export default class CreateUser extends React.Component {
   }
 
   componentDidMount() {
+    const newUserRef = createElemRef(USERS);
     this.setState((prevState) => ({
       ...prevState,
+      newUserRef,
       data: {
         ...prevState.data,
         id: newUserRef.id,
@@ -121,11 +123,11 @@ export default class CreateUser extends React.Component {
   }
 
   liftUpCreateUser() {
-    const { actFunc } = this.props;
-    const { data } = this.state;
+    const { liftUpCreateUser } = this.props;
+    const { data, newUserRef } = this.state;
     const newUser = { ...data };
     delete newUser.passwordRepeat;
-    actFunc(newUserRef, newUser);
+    liftUpCreateUser(newUserRef, newUser);
     this.closeModal();
   }
 
@@ -168,11 +170,9 @@ export default class CreateUser extends React.Component {
       },
     } = this.state;
 
-    const handleChange = (event) => this.onChange(event);
-
     return (
       <div className={classes.modal}>
-        <h3>Create Member</h3>
+        <h3 className={classes.title}>Create Member</h3>
         <form>
           <div className={classes.wrapper}>
             <div className={classes.column}>
@@ -181,7 +181,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='username'
                 value={username}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={usernameError}
               />
               <CraftInput
@@ -189,7 +189,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='surname'
                 value={surname}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={surnameError}
               />
               <CraftInput
@@ -197,7 +197,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='email'
                 value={email}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={emailError}
               />
               <CraftInput
@@ -206,7 +206,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 type='select'
                 value={direction}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={directionError}
                 options='React, Angular, Java, .NET, Salesforce, PHP'
               />
@@ -215,7 +215,7 @@ export default class CreateUser extends React.Component {
                 type='select'
                 title='Sex'
                 value={sex}
-                onChange={handleChange}
+                onChange={this.onChange}
                 options='Male, Female'
               />
               <CraftInput
@@ -224,7 +224,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 type='select'
                 value={role}
-                onChange={handleChange}
+                onChange={this.onChange}
                 options='Admin, Mentor, User'
                 error={roleError}
               />
@@ -234,7 +234,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='password'
                 value={password}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={passwordError}
               />
               <CraftInput
@@ -243,7 +243,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='passwordRepeat'
                 value={passwordRepeat}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={passwordRepeatError}
               />
             </div>
@@ -254,17 +254,17 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='dateOfBirth'
                 value={dateOfBirth}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={dateOfBirthError}
               />
-              <CraftInput title='Address' id='address' value={address} onChange={handleChange} />
+              <CraftInput title='Address' id='address' value={address} onChange={this.onChange} />
               <CraftInput
                 title='Mobile phone'
                 type='tel'
                 isRequired
                 id='phone'
                 value={phone}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={phoneError}
               />
               <CraftInput
@@ -272,7 +272,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='skype'
                 value={skype}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={skypeError}
               />
               <CraftInput
@@ -281,7 +281,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='startDate'
                 value={startDate}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={startDateError}
               />
               <CraftInput
@@ -289,7 +289,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='education'
                 value={education}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={educationError}
               />
               <CraftInput
@@ -297,7 +297,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='averageScore'
                 value={averageScore}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={averageScoreError}
               />
               <CraftInput
@@ -305,7 +305,7 @@ export default class CreateUser extends React.Component {
                 isRequired
                 id='mathScore'
                 value={mathScore}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={mathScoreError}
               />
             </div>
@@ -313,7 +313,7 @@ export default class CreateUser extends React.Component {
         </form>
         <div className={classes.requiredwarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
-          <Button onClick={this.liftUpCreateUser} roleclass='create' disabled={!isValid}>
+          <Button onClick={this.liftUpCreateUser} roleClass='create' disabled={!isValid}>
             Create
           </Button>
           <Button onClick={this.closeModal}>Close</Button>
@@ -325,5 +325,5 @@ export default class CreateUser extends React.Component {
 
 CreateUser.propTypes = {
   closeFunc: PropType.func.isRequired,
-  actFunc: PropType.func.isRequired,
+  liftUpCreateUser: PropType.func.isRequired,
 };

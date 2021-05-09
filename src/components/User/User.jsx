@@ -5,7 +5,7 @@ import classes from './User.module.css';
 import noop from '../../shared/noop';
 import Modal from '../Modals/Modal';
 import DivAnchor from '../DivAnchor';
-import { intDate } from '../../utilities/internationalization';
+import { internationalizeDate } from '../../utilities/internationalization';
 import {
   USER_MODAL_TOGGLE,
   USER_MODAL_DELETE_USER,
@@ -84,15 +84,15 @@ export default class User extends React.Component {
           </DivAnchor>
           <div>{direction}</div>
           <div>{education}</div>
-          <div>{intDate(startDate)}</div>
+          <div>{internationalizeDate(startDate)}</div>
           <div>{new Date().getFullYear() - new Date(dateOfBirth).getFullYear()}</div>
           <div className={classes.buttons}>
             <Button onClick={noop}>Progress</Button>
             <Button onClick={noop}>Tasks</Button>
-            <Button roleclass='edit' onClick={openEditModal}>
+            <Button roleClass='edit' onClick={openEditModal}>
               Edit
             </Button>
-            <Button roleclass='delete' onClick={openDeleteModal}>
+            <Button roleClass='delete' onClick={openDeleteModal}>
               Delete
             </Button>
           </div>

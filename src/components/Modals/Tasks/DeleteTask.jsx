@@ -2,15 +2,15 @@ import PropType from 'prop-types';
 import classes from './DeleteTask.module.css';
 import Button from '../../Button/Button';
 
-export default function DeleteTask({ task, closeFunc, actFunc }) {
+export default function DeleteTask({ task, closeFunc, liftUpDeleteTask }) {
   return (
     <div className={classes.modal}>
-      <h3>Delete Task</h3>
+      <h3 className={classes.title}>Delete Task</h3>
       <div className={classes.text}>
         Are you really want to delete task <br /> <span>{task.title}</span> ?
       </div>
       <div className={classes.buttons}>
-        <Button onClick={actFunc} roleclass='delete'>
+        <Button onClick={liftUpDeleteTask} roleClass='delete'>
           Delete
         </Button>
         <Button onClick={closeFunc}>Close</Button>
@@ -21,6 +21,6 @@ export default function DeleteTask({ task, closeFunc, actFunc }) {
 
 DeleteTask.propTypes = {
   task: PropType.instanceOf(Object).isRequired,
-  actFunc: PropType.func.isRequired,
+  liftUpDeleteTask: PropType.func.isRequired,
   closeFunc: PropType.func.isRequired,
 };

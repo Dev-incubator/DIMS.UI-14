@@ -8,7 +8,7 @@ import {
   setElemToDB,
   deleteElemFromDB,
   editElemInDB,
-  db,
+  getCollection,
   TASKS,
   USERS,
   addTaskToUsers,
@@ -33,8 +33,7 @@ export default class Tasks extends React.Component {
   }
 
   componentDidMount() {
-    db.collection(USERS)
-      .get()
+    getCollection(USERS)
       .then((querySnapshot) => {
         const usersList = [];
         querySnapshot.forEach((doc) => {
@@ -82,8 +81,7 @@ export default class Tasks extends React.Component {
   }
 
   updateData() {
-    db.collection(TASKS)
-      .get()
+    getCollection(TASKS)
       .then((querySnapshot) => {
         const tasksList = [];
         querySnapshot.forEach((doc) => {
@@ -129,7 +127,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button roleclass='create' onClick={toggleModal}>
+          <Button roleClass='create' onClick={toggleModal}>
             Create
           </Button>
         </div>

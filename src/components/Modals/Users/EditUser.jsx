@@ -8,7 +8,7 @@ import { EDIT_USER_ONCHANGE, EDIT_USER_VALIDATE_FIELDS, EDIT_USER_VALIDATE_FORM,
 
 import debounce from '../../../utilities/debounce';
 
-export default class EditUser extends React.Component {
+export default class EditUser extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,6 +29,7 @@ export default class EditUser extends React.Component {
         education: '',
         averageScore: '',
         mathScore: '',
+        tasks: [],
       },
       validator: {
         username: true,
@@ -36,8 +37,8 @@ export default class EditUser extends React.Component {
         email: true,
         direction: true,
         role: true,
-        password: false,
-        passwordRepeat: false,
+        password: true,
+        passwordRepeat: true,
         dateOfBirth: true,
         phone: true,
         skype: true,
@@ -77,8 +78,7 @@ export default class EditUser extends React.Component {
       ...prevState,
       data: {
         ...user,
-        password: '',
-        passwordRepeat: '',
+        passwordRepeat: user.password,
       },
     }));
   }
@@ -114,11 +114,11 @@ export default class EditUser extends React.Component {
   }
 
   liftUpEditUser() {
-    const { actFunc } = this.props;
+    const { liftUpEditUser } = this.props;
     const { data } = this.state;
     const editedUser = { ...data };
     delete editedUser.passwordRepeat;
-    actFunc(editedUser);
+    liftUpEditUser(editedUser);
     this.closeModal();
   }
 
@@ -161,15 +161,9 @@ export default class EditUser extends React.Component {
       },
     } = this.state;
 
-    const handleChange = (event) => {
-      this.onChange(event);
-    };
-
-    const editUser = () => this.liftUpEditUser();
-
     return (
       <div className={classes.modal}>
-        <h3>Edit Member</h3>
+        <h3 className={classes.title}>Edit Member</h3>
         <form>
           <div className={classes.wrapper}>
             <div className={classes.column}>
@@ -178,7 +172,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='username'
                 value={username}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={usernameError}
               />
               <CraftInput
@@ -186,7 +180,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='surname'
                 value={surname}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={surnameError}
               />
               <CraftInput
@@ -194,7 +188,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='email'
                 value={email}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={emailError}
               />
               <CraftInput
@@ -203,7 +197,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 type='select'
                 value={direction}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={directionError}
                 options='React, Angular, Java, .NET, Salesforce, PHP'
               />
@@ -212,7 +206,7 @@ export default class EditUser extends React.Component {
                 type='select'
                 title='Sex'
                 value={sex}
-                onChange={handleChange}
+                onChange={this.onChange}
                 options='Male, Female'
               />
               <CraftInput
@@ -221,7 +215,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 type='select'
                 value={role}
-                onChange={handleChange}
+                onChange={this.onChange}
                 options='Admin, Mentor, User'
                 error={roleError}
               />
@@ -231,7 +225,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='password'
                 value={password}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={passwordError}
               />
               <CraftInput
@@ -240,7 +234,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='passwordRepeat'
                 value={passwordRepeat}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={passwordRepeatError}
               />
             </div>
@@ -251,17 +245,17 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='dateOfBirth'
                 value={dateOfBirth}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={dateOfBirthError}
               />
-              <CraftInput title='Address' id='address' value={address} onChange={handleChange} />
+              <CraftInput title='Address' id='address' value={address} onChange={this.onChange} />
               <CraftInput
                 title='Mobile phone'
                 type='tel'
                 isRequired
                 id='phone'
                 value={phone}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={phoneError}
               />
               <CraftInput
@@ -269,7 +263,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='skype'
                 value={skype}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={skypeError}
               />
               <CraftInput
@@ -278,7 +272,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='startDate'
                 value={startDate}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={startDateError}
               />
               <CraftInput
@@ -286,7 +280,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='education'
                 value={education}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={educationError}
               />
               <CraftInput
@@ -294,7 +288,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='averageScore'
                 value={averageScore}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={averageScoreError}
               />
               <CraftInput
@@ -302,7 +296,7 @@ export default class EditUser extends React.Component {
                 isRequired
                 id='mathScore'
                 value={mathScore}
-                onChange={handleChange}
+                onChange={this.onChange}
                 error={mathScoreError}
               />
             </div>
@@ -310,7 +304,7 @@ export default class EditUser extends React.Component {
         </form>
         <div className={classes.requiredwarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
-          <Button onClick={editUser} roleclass='edit' disabled={!isValid}>
+          <Button onClick={this.liftUpEditUser} roleClass='edit' disabled={!isValid}>
             Edit
           </Button>
           <Button onClick={this.closeModal}>Close</Button>
@@ -322,6 +316,6 @@ export default class EditUser extends React.Component {
 
 EditUser.propTypes = {
   closeFunc: PropType.func.isRequired,
-  actFunc: PropType.func.isRequired,
+  liftUpEditUser: PropType.func.isRequired,
   user: PropType.instanceOf(Object).isRequired,
 };

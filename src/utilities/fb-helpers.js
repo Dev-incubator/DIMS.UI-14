@@ -10,9 +10,19 @@ firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
 // helpers
+export const getCollection = (collection) => db.collection(collection).get();
+
 export const createElemRef = (collection) => db.collection(collection).doc();
 
-export const setElemToDB = (ref, data) => ref.set(data);
+export const setElemToDB = (ref, data) =>
+  ref
+    .set(data)
+    .then(() => {
+      console.log('Element was successfully created!');
+    })
+    .catch((error) => {
+      console.error('Error with creating document: ', error);
+    });
 
 export const deleteElemFromDB = (collection, selectedID) => {
   db.collection(collection)
@@ -31,10 +41,10 @@ export const editElemInDB = (collection, editedElem) => {
     .doc(editedElem.id)
     .set(editedElem)
     .then(() => {
-      console.log('Document successfully written!');
+      console.log('Document successfully edited!');
     })
     .catch((error) => {
-      console.log('Error writting document: ', error);
+      console.log('Error editing document: ', error);
     });
 };
 
@@ -77,12 +87,12 @@ export const deleteTaskFromUsers = (taskToDelete) => {
 export const editTaskInUsers = (prevTask, editedTask) => {
   deleteTaskFromUsers(prevTask);
   addTaskToUsers(editedTask);
-  console.log(`TASK was sucessfully edited in USERS`);
+  console.log(`TASK id:${prevTask.id} was sucessfully edited in assigned USERS`);
 };
 
 export const deleteUserFromTasks = (userToDelete) => {
   const assignedTasks = userToDelete.tasks;
-  const userID = userToDelete.id
+  const userID = userToDelete.id;
   assignedTasks.forEach((id) => {
     db.collection(TASKS)
       .doc(id)
@@ -91,7 +101,8 @@ export const deleteUserFromTasks = (userToDelete) => {
       })
       .then(() => {
         console.log(`USER id:${userID} was succeffully deleted from TASK id:${id}`);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log('Error with deleting USER from TASKS: ', error);
       });
   });

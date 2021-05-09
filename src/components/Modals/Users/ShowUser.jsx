@@ -2,7 +2,7 @@ import PropType from 'prop-types';
 import classes from './ShowUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import { intDate } from '../../../utilities/internationalization';
+import { internationalizeDate } from '../../../utilities/internationalization';
 
 export default function ShowUser({ user, closeFunc }) {
   const {
@@ -25,7 +25,7 @@ export default function ShowUser({ user, closeFunc }) {
 
   return (
     <div className={classes.modal}>
-      <h3>Member Details</h3>
+      <h3 className={classes.title}>Member Details</h3>
       <form>
         <div className={classes.wrapper}>
           <div className={classes.column}>
@@ -38,11 +38,11 @@ export default function ShowUser({ user, closeFunc }) {
             <CraftInput title='Password' readOnly value={password} />
           </div>
           <div className={classes.column}>
-            <CraftInput title='Date of Birth' readOnly value={intDate(dateOfBirth)} />
+            <CraftInput title='Date of Birth' readOnly value={internationalizeDate(dateOfBirth)} />
             <CraftInput title='Address' readOnly value={address} />
             <CraftInput title='Mobile phone' readOnly value={phone} />
             <CraftInput title='Skype' readOnly value={skype} />
-            <CraftInput title='Start date' readOnly value={intDate(startDate)} />
+            <CraftInput title='Start date' readOnly value={internationalizeDate(startDate)} />
             <CraftInput title='Education' readOnly value={education} />
             <CraftInput title='Univercity average score' readOnly value={averageScore} />
             <CraftInput title='Math score' readOnly value={mathScore} />

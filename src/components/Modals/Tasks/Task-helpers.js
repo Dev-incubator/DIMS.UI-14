@@ -16,12 +16,11 @@ export const reducerFunc = (prevState, action) => {
     case EDIT_TASK_ONCHANGE:
       if (action.targetType === 'checkbox') {
         if (prevState.data.selectedUsers.find((id) => id === action.name)) {
-          const newSelectedUsers = prevState.data.selectedUsers.filter((id) => id !== action.name);
           state = {
             ...prevState,
             data: {
               ...prevState.data,
-              selectedUsers: newSelectedUsers,
+              selectedUsers: prevState.data.selectedUsers.filter((id) => id !== action.name),
             },
           };
 
@@ -51,7 +50,7 @@ export const reducerFunc = (prevState, action) => {
     case CREATE_TASK_VALIDATE_FIELDS:
     case EDIT_TASK_VALIDATE_FIELDS:
       if (action.targetType === 'checkbox') {
-        const validity = Boolean(prevState.data.selectedUsers.length);
+        const validity = !!prevState.data.selectedUsers.length;
         const errorMsg = validity ? '' : 'At least one user must be selected';
         state = {
           ...prevState,

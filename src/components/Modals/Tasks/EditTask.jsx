@@ -4,15 +4,10 @@ import classes from './CreateTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 
-import {
-  CREATE_TASK_ONCHANGE,
-  CREATE_TASK_VALIDATE_FIELDS,
-  CREATE_TASK_VALIDATE_FORM,
-  reducerFunc,
-} from './Task-helpers';
+import { EDIT_TASK_ONCHANGE, EDIT_TASK_VALIDATE_FIELDS, EDIT_TASK_VALIDATE_FORM, reducerFunc } from './Task-helpers';
 import debounce from '../../../utilities/debounce';
 
-export default class EditTask extends React.Component {
+export default class EditTask extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,7 +58,7 @@ export default class EditTask extends React.Component {
     this.setState(
       (prevState) =>
         reducerFunc(prevState, {
-          type: CREATE_TASK_ONCHANGE,
+          type: EDIT_TASK_ONCHANGE,
           name,
           value,
           targetType,
@@ -76,7 +71,7 @@ export default class EditTask extends React.Component {
 
   validateFields(fieldName, fieldValue, targetType) {
     const state = reducerFunc(this.state, {
-      type: CREATE_TASK_VALIDATE_FIELDS,
+      type: EDIT_TASK_VALIDATE_FIELDS,
       fieldName,
       fieldValue,
       targetType,
@@ -86,7 +81,7 @@ export default class EditTask extends React.Component {
 
   validateForm() {
     const state = reducerFunc(this.state, {
-      type: CREATE_TASK_VALIDATE_FORM,
+      type: EDIT_TASK_VALIDATE_FORM,
     });
     this.setState(state);
   }
@@ -97,10 +92,10 @@ export default class EditTask extends React.Component {
   }
 
   liftUpEditTask() {
-    const { actFunc } = this.props;
+    const { liftUpEditTask } = this.props;
     const { data } = this.state;
     const editedTask = { ...data };
-    actFunc(editedTask);
+    liftUpEditTask(editedTask);
     this.closeModal();
   }
 
@@ -112,22 +107,20 @@ export default class EditTask extends React.Component {
       errors: { titleError, startDateError, deadLineError, selectedUsersError },
     } = this.state;
 
-    const handleChange = (event) => this.onChange(event);
-
     return (
       <div className={classes.modal}>
-        <h3>Create Task</h3>
+        <h3 className={classes.title}>Create Task</h3>
         <form>
           <div className={classes.wrapper}>
-            <CraftInput title='Title' isRequired id='title' value={title} onChange={handleChange} error={titleError} />
-            <CraftInput title='Description' id='description' value={description} onChange={handleChange} />
+            <CraftInput title='Title' isRequired id='title' value={title} onChange={this.onChange} error={titleError} />
+            <CraftInput title='Description' id='description' value={description} onChange={this.onChange} />
             <CraftInput
               title='Start Date'
               id='startDate'
               isRequired
               type='date'
               value={startDate}
-              onChange={handleChange}
+              onChange={this.onChange}
               error={startDateError}
             />
             <CraftInput
@@ -136,7 +129,7 @@ export default class EditTask extends React.Component {
               id='deadLine'
               type='date'
               value={deadLine}
-              onChange={handleChange}
+              onChange={this.onChange}
               error={deadLineError}
             />
             <CraftInput
@@ -146,13 +139,13 @@ export default class EditTask extends React.Component {
               type='checkbox'
               value={selectedUsers}
               options={usersList}
-              onChange={handleChange}
+              onChange={this.onChange}
               error={selectedUsersError}
             />
           </div>
           <div className={classes.requiredwarning}>* - these fields are required.</div>
           <div className={classes.buttons}>
-            <Button onClick={this.liftUpEditTask} roleclass='edit' disabled={!isValid}>
+            <Button onClick={this.liftUpEditTask} roleClass='edit' disabled={!isValid}>
               Edit
             </Button>
             <Button onClick={this.closeModal}>Close</Button>
@@ -165,7 +158,7 @@ export default class EditTask extends React.Component {
 
 EditTask.propTypes = {
   closeFunc: PropType.func.isRequired,
-  actFunc: PropType.func.isRequired,
+  liftUpEditTask: PropType.func.isRequired,
   task: PropType.instanceOf(Object).isRequired,
   usersList: PropType.instanceOf(Array).isRequired,
 };

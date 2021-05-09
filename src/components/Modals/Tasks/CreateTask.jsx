@@ -13,9 +13,7 @@ import {
 import { TASKS, createElemRef } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
-const newTaskRef = createElemRef(TASKS);
-
-export default class CreateTask extends React.Component {
+export default class CreateTask extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +23,7 @@ export default class CreateTask extends React.Component {
         startDate: '',
         deadLine: '',
         selectedUsers: [],
+        id: '',
       },
       validator: {
         title: false,
@@ -39,6 +38,7 @@ export default class CreateTask extends React.Component {
         selectedUsersError: '',
       },
       usersList: [],
+      newTaskRef: {},
       isValid: false,
     };
     this.onChange = this.onChange.bind(this);
@@ -49,6 +49,7 @@ export default class CreateTask extends React.Component {
   }
 
   componentDidMount() {
+    const newTaskRef = createElemRef(TASKS);
     const { usersList } = this.props;
     this.setState((prevState) => ({
       ...prevState,
@@ -56,14 +57,15 @@ export default class CreateTask extends React.Component {
         ...prevState.data,
         id: newTaskRef.id,
       },
+      newTaskRef,
       usersList,
     }));
   }
 
   onChange(event) {
-    const { target } = event;
-    const { name, value } = target;
-    const targetType = target.type;
+    const {
+      target: { name, value, type: targetType },
+    } = event;
     this.setState(
       (prevState) =>
         reducerFunc(prevState, {
@@ -101,10 +103,10 @@ export default class CreateTask extends React.Component {
   }
 
   liftUpCreateTask() {
-    const { actFunc } = this.props;
-    const { data } = this.state;
+    const { liftUpCreateTask } = this.props;
+    const { data, newTaskRef } = this.state;
     const newTask = { ...data };
-    actFunc(newTaskRef, newTask);
+    liftUpCreateTask(newTaskRef, newTask);
     this.closeModal();
   }
 
@@ -116,22 +118,20 @@ export default class CreateTask extends React.Component {
       errors: { titleError, startDateError, deadLineError, selectedUsersError },
     } = this.state;
 
-    const handleChange = (event) => this.onChange(event);
-
     return (
       <div className={classes.modal}>
-        <h3>Create Task</h3>
+        <h3 className={classes.title}>Create Task</h3>
         <form>
           <div className={classes.wrapper}>
-            <CraftInput title='Title' isRequired id='title' value={title} onChange={handleChange} error={titleError} />
-            <CraftInput title='Description' id='description' value={description} onChange={handleChange} />
+            <CraftInput title='Title' isRequired id='title' value={title} onChange={this.onChange} error={titleError} />
+            <CraftInput title='Description' id='description' value={description} onChange={this.onChange} />
             <CraftInput
               title='Start Date'
               id='startDate'
               isRequired
               type='date'
               value={startDate}
-              onChange={handleChange}
+              onChange={this.onChange}
               error={startDateError}
             />
             <CraftInput
@@ -140,7 +140,7 @@ export default class CreateTask extends React.Component {
               id='deadLine'
               type='date'
               value={deadLine}
-              onChange={handleChange}
+              onChange={this.onChange}
               error={deadLineError}
             />
             <CraftInput
@@ -150,13 +150,13 @@ export default class CreateTask extends React.Component {
               type='checkbox'
               value={selectedUsers}
               options={usersList}
-              onChange={handleChange}
+              onChange={this.onChange}
               error={selectedUsersError}
             />
           </div>
           <div className={classes.requiredwarning}>* - these fields are required.</div>
           <div className={classes.buttons}>
-            <Button onClick={this.liftUpCreateTask} roleclass='create' disabled={!isValid}>
+            <Button onClick={this.liftUpCreateTask} roleClass='create' disabled={!isValid}>
               Create
             </Button>
             <Button onClick={this.closeModal}>Close</Button>
@@ -169,6 +169,6 @@ export default class CreateTask extends React.Component {
 
 CreateTask.propTypes = {
   closeFunc: PropType.func.isRequired,
-  actFunc: PropType.func.isRequired,
   usersList: PropType.instanceOf(Array).isRequired,
+  liftUpCreateTask: PropType.func.isRequired,
 };
