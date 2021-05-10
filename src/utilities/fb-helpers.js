@@ -13,24 +13,27 @@ export const db = firebase.firestore();
 export const getCollection = (collection) => db.collection(collection).get();
 
 export const getElementFromCollection = (collection, id) => db.collection(collection).doc(id).get();
+export const getElementRefFromCollection = (collection, id) => db.collection(collection).doc(id);
 
 export const createElemRef = (collection) => db.collection(collection).doc();
 
-export const setElemToDB = (ref, data) =>
+export const setElemToDB = (ref, data, callback) =>
   ref
     .set(data)
     .then(() => {
+      callback();
       console.log('Element was successfully created!');
     })
     .catch((error) => {
       console.error('Error with creating document: ', error);
     });
 
-export const deleteElemFromDB = (collection, selectedID) => {
+export const deleteElemFromDB = (collection, selectedID, callback) => {
   db.collection(collection)
     .doc(selectedID)
     .delete()
     .then(() => {
+      callback();
       console.log('Document successfully deleted!');
     })
     .catch((error) => {
@@ -38,11 +41,12 @@ export const deleteElemFromDB = (collection, selectedID) => {
     });
 };
 
-export const editElemInDB = (collection, editedElem) => {
+export const editElemInDB = (collection, editedElem, callback) => {
   db.collection(collection)
     .doc(editedElem.id)
     .set(editedElem)
     .then(() => {
+      callback();
       console.log('Document successfully edited!');
     })
     .catch((error) => {
@@ -52,15 +56,18 @@ export const editElemInDB = (collection, editedElem) => {
 
 export const addTaskToUsers = (newTask) => {
   const assignedUsersIDs = newTask.selectedUsers;
-  const newTaskID = newTask.id;
-  assignedUsersIDs.forEach((id) => {
-    db.collection(USERS)
-      .doc(id)
+  const newTaskObj = {
+    status: 'Active',
+    id: newTask.id,
+    tracks: [],
+  };
+  assignedUsersIDs.forEach((userID) => {
+    getElementRefFromCollection(USERS, userID)
       .update({
-        tasks: firebase.firestore.FieldValue.arrayUnion(newTaskID),
+        tasks: firebase.firestore.FieldValue.arrayUnion(newTaskObj),
       })
       .then(() => {
-        console.log(`TASK id:${newTaskID} was succeffully added to USER id:${id}`);
+        console.log(`TASK id:${newTaskObj.id} was succeffully added to USER id:${userID}`);
       })
       .catch((error) => {
         console.log('Error with adding TASK to USERS: ', error);
@@ -69,19 +76,23 @@ export const addTaskToUsers = (newTask) => {
 };
 
 export const deleteTaskFromUsers = (taskToDelete) => {
-  const assignedUsers = taskToDelete.selectedUsers;
+  const assignedUsersIDs = taskToDelete.selectedUsers;
   const taskID = taskToDelete.id;
-  assignedUsers.forEach((item) => {
-    db.collection(USERS)
-      .doc(item)
-      .update({
-        tasks: firebase.firestore.FieldValue.arrayRemove(taskID),
+  assignedUsersIDs.forEach((userID) => {
+    const userRef = getElementRefFromCollection(USERS, userID);
+    userRef
+      .get()
+      .then((user) => {
+        const newTasks = user.data().tasks.filter((task) => task.id !== taskID);
+        userRef.update({
+          tasks: newTasks,
+        });
       })
       .then(() => {
-        console.log(`TASK id:${taskID} was succeffully deleted from USER id:${item}`);
+        console.log(`TASK id:${taskID} was succesfully deleted from USER:${userID}`);
       })
       .catch((error) => {
-        console.log('Error with deleting TASK from USERS: ', error);
+        console.log(`Error with deleting TASK id:${taskID} from USER id:${userID}`, error);
       });
   });
 };
@@ -95,14 +106,14 @@ export const editTaskInUsers = (prevTask, editedTask) => {
 export const deleteUserFromTasks = (userToDelete) => {
   const assignedTasks = userToDelete.tasks;
   const userID = userToDelete.id;
-  assignedTasks.forEach((id) => {
+  assignedTasks.forEach((taskObj) => {
     db.collection(TASKS)
-      .doc(id)
+      .doc(taskObj.id)
       .update({
         selectedUsers: firebase.firestore.FieldValue.arrayRemove(userID),
       })
       .then(() => {
-        console.log(`USER id:${userID} was succeffully deleted from TASK id:${id}`);
+        console.log(`USER id:${userID} was succeffully deleted from TASK id:${taskObj.id}`);
       })
       .catch((error) => {
         console.log('Error with deleting USER from TASKS: ', error);

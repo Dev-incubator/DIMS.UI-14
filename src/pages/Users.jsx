@@ -63,29 +63,31 @@ export default class Users extends React.Component {
     if (userToDelete.tasks.length) {
       deleteUserFromTasks(userToDelete);
     }
-    deleteElemFromDB(USERS, selectedID);
-    this.updateData();
+    deleteElemFromDB(USERS, selectedID, this.updateData);
   }
 
   editUser(editedUser) {
-    editElemInDB(USERS, editedUser);
-    this.updateData();
+    editElemInDB(USERS, editedUser, this.updateData);
   }
 
   createUser(newUserRef, newUser) {
-    setElemToDB(newUserRef, newUser);
-    this.updateData();
+    setElemToDB(newUserRef, newUser, this.updateData);
   }
 
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
-    const toggleModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
-    const createUser = (newUserRef, newUser) => this.createUser(newUserRef, newUser);
-    const editUser = (editedUser) => this.editUser(editedUser);
-    const deleteUser = (selectedID) => this.deleteUser(selectedID);
+    const openModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
 
     const users = usersList.map((user, index) => {
-      return <User deleteUser={deleteUser} editUser={editUser} key={user.id} userData={user} tableIndex={index + 1} />;
+      return (
+        <User
+          deleteUser={this.deleteUser}
+          editUser={this.editUser}
+          key={user.id}
+          userData={user}
+          tableIndex={index + 1}
+        />
+      );
     });
 
     return (
@@ -94,7 +96,7 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={toggleModal} roleClass='create'>
+          <Button onClick={openModal} roleClass='create'>
             Create
           </Button>
         </div>
@@ -110,7 +112,7 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        {isOpen ? <Modal closeFunc={toggleModal} actFunc={createUser} selectedModal={selectedModal} /> : null}
+        {isOpen ? <Modal closeFunc={this.toggleModal} actFunc={this.createUser} selectedModal={selectedModal} /> : null}
       </div>
     );
   }

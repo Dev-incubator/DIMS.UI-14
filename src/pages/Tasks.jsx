@@ -21,7 +21,7 @@ export default class Tasks extends React.Component {
     super(props);
     this.state = {
       isOpen: false,
-      selectedMoal: '',
+      selectedModal: '',
       tasksList: [],
       usersList: [],
     };
@@ -57,26 +57,23 @@ export default class Tasks extends React.Component {
   deleteTask(selectedID) {
     const { tasksList } = this.state;
     const taskToDelete = tasksList.find((item) => item.id === selectedID);
-    deleteElemFromDB(TASKS, selectedID);
+    deleteElemFromDB(TASKS, selectedID, this.updateData);
     deleteTaskFromUsers(taskToDelete);
-    this.updateData();
   }
 
   editTask(editedTask) {
     const { tasksList } = this.state;
     const prevTask = tasksList.find((item) => item.id === editedTask.id);
-    editElemInDB(TASKS, editedTask);
+    editElemInDB(TASKS, editedTask, this.updateData);
     editTaskInUsers(prevTask, editedTask);
-    this.updateData();
   }
 
   createTask(newTaskRef, newTask) {
-    setElemToDB(newTaskRef, newTask);
+    setElemToDB(newTaskRef, newTask, this.updateData);
     addTaskToUsers(newTask);
-    this.updateData();
   }
 
-  toggleModal(modalType) {
+  toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: TASKS_MODAL_TOGGLE, modalType }));
   }
 
@@ -103,17 +100,14 @@ export default class Tasks extends React.Component {
 
   render() {
     const { tasksList, usersList, selectedModal, isOpen } = this.state;
-    const toggleModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
-    const createTask = (newTaskRef, newTask) => this.createTask(newTaskRef, newTask);
-    const editTask = (editedTask) => this.editTask(editedTask);
-    const deleteTask = (selectedID) => this.deleteTask(selectedID);
+    const openModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
 
     const tasks = tasksList.map((task, index) => {
       return (
         <Task
           usersList={usersList}
-          deleteTask={deleteTask}
-          editTask={editTask}
+          deleteTask={this.deleteTask}
+          editTask={this.editTask}
           key={task.id}
           taskData={task}
           tableIndex={index + 1}
@@ -127,7 +121,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button roleClass='create' onClick={toggleModal}>
+          <Button roleClass='create' onClick={openModal}>
             Create
           </Button>
         </div>
@@ -143,7 +137,12 @@ export default class Tasks extends React.Component {
           {tasks}
         </div>
         {isOpen ? (
-          <Modal list={usersList} closeFunc={toggleModal} actFunc={createTask} selectedModal={selectedModal} />
+          <Modal
+            list={usersList}
+            closeFunc={this.toggleModal}
+            actFunc={this.createTask}
+            selectedModal={selectedModal}
+          />
         ) : null}
       </div>
     );
