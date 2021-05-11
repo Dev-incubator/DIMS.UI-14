@@ -47,7 +47,6 @@ export default class EditUser extends React.PureComponent {
         averageScore: true,
         mathScore: true,
       },
-      isValid: false,
       errors: {
         usernameError: '',
         surnameError: '',
@@ -64,6 +63,7 @@ export default class EditUser extends React.PureComponent {
         averageScoreError: '',
         mathScoreError: '',
       },
+      isValid: false,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpEditUser = this.liftUpEditUser.bind(this);

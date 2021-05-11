@@ -3,14 +3,14 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import { USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
+import { USERS_MODAL_TOGGLE, USERS_UPDATE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
 import {
   setElemToDB,
   deleteElemFromDB,
-  deleteUserFromTasks,
+  deleteUserFromTask,
   editElemInDB,
   USERS,
-  getCollection,
+  getAllElementsFromCollection,
 } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
@@ -37,33 +37,18 @@ export default class Users extends React.Component {
   }
 
   updateData() {
-    getCollection(USERS)
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading users collection: ', error);
-      });
+    getAllElementsFromCollection(USERS).then((usersList) =>
+      this.setState((prevState) => reducerFunc(prevState, { type: USERS_UPDATE, usersList })),
+    );
   }
 
   deleteUser(selectedID) {
     const { usersList } = this.state;
-    const userToDelete = usersList.find((item) => item.id === selectedID);
-    if (userToDelete.tasks.length) {
-      deleteUserFromTasks(userToDelete);
-    }
+    const assTasks = usersList.find((item) => item.id === selectedID).tasks;
     deleteElemFromDB(USERS, selectedID, this.updateData);
+    if (assTasks.length) {
+      assTasks.forEach((assTask) => deleteUserFromTask(selectedID, assTask.id));
+    }
   }
 
   editUser(editedUser) {

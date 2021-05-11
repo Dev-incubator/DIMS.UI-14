@@ -31,7 +31,7 @@ export default class EditTask extends React.PureComponent {
         selectedUsersError: '',
       },
       usersList: [],
-      isValid: true,
+      isValid: false,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpEditTask = this.liftUpEditTask.bind(this);
@@ -109,7 +109,7 @@ export default class EditTask extends React.PureComponent {
 
     return (
       <div className={classes.modal}>
-        <h3 className={classes.title}>Create Task</h3>
+        <h3 className={classes.title}>Edit Task</h3>
         <form>
           <div className={classes.wrapper}>
             <CraftInput title='Title' isRequired id='title' value={title} onChange={this.onChange} error={titleError} />
