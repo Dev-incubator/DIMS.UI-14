@@ -3,17 +3,17 @@ import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import Modal from '../components/Modals/Modal';
-import { TASKS_MODAL_TOGGLE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
+import { TASKS_MODAL_TOGGLE, TASKS_UPDATE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
 import {
   setElemToDB,
   deleteElemFromDB,
   editElemInDB,
-  getCollection,
   TASKS,
   USERS,
-  addTaskToUsers,
-  deleteTaskFromUsers,
+  addTaskToUser,
+  deleteTaskFromUser,
   editTaskInUsers,
+  getAllElementsFromCollection,
 } from '../utilities/fb-helpers';
 
 export default class Tasks extends React.Component {
@@ -33,44 +33,34 @@ export default class Tasks extends React.Component {
   }
 
   componentDidMount() {
-    getCollection(USERS)
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading USERS collection: ', error);
-      });
+    getAllElementsFromCollection(USERS).then((usersList) =>
+      this.setState((prevState) => reducerFunc(prevState, { type: TASKS_UPDATE, name: 'usersList', list: usersList })),
+    );
     this.updateData();
   }
 
   deleteTask(selectedID) {
     const { tasksList } = this.state;
-    const taskToDelete = tasksList.find((item) => item.id === selectedID);
+    const assUsers = tasksList.find((task) => task.id === selectedID).selectedUsers;
     deleteElemFromDB(TASKS, selectedID, this.updateData);
-    deleteTaskFromUsers(taskToDelete);
+    assUsers.forEach((assUserID) => deleteTaskFromUser(selectedID, assUserID));
   }
 
   editTask(editedTask) {
     const { tasksList } = this.state;
-    const prevTask = tasksList.find((item) => item.id === editedTask.id);
+    const prevAssUsers = tasksList.find((task) => task.id === editedTask.id).selectedUsers;
+    const newAssUsers = editedTask.selectedUsers;
+    const usersToUnassign = prevAssUsers.filter((assUserID) => !newAssUsers.includes(assUserID));
+    const usersToAssign = newAssUsers.filter((assUserID) => !prevAssUsers.includes(assUserID));
     editElemInDB(TASKS, editedTask, this.updateData);
-    editTaskInUsers(prevTask, editedTask);
+    editTaskInUsers(usersToAssign, usersToUnassign, editedTask.id);
   }
 
   createTask(newTaskRef, newTask) {
+    const newTaskID = newTask.id;
+    const assUsers = newTask.selectedUsers;
     setElemToDB(newTaskRef, newTask, this.updateData);
-    addTaskToUsers(newTask);
+    assUsers.forEach((assUserID) => addTaskToUser(newTaskID, assUserID));
   }
 
   toggleModal(modalType = '') {
@@ -78,24 +68,9 @@ export default class Tasks extends React.Component {
   }
 
   updateData() {
-    getCollection(TASKS)
-      .then((querySnapshot) => {
-        const tasksList = [];
-        querySnapshot.forEach((doc) => {
-          tasksList.push(doc.data());
-        });
-
-        return tasksList;
-      })
-      .then((tasksList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          tasksList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading tasks collection: ', error);
-      });
+    getAllElementsFromCollection(TASKS).then((tasksList) =>
+      this.setState((prevState) => reducerFunc(prevState, { type: TASKS_UPDATE, name: 'tasksList', list: tasksList })),
+    );
   }
 
   render() {
