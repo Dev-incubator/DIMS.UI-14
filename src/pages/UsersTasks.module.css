@@ -9,7 +9,7 @@
   background-color: var(--background-color);
   display: grid;
   grid-template-columns:
-    minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 150px) minmax(auto, 150px) minmax(auto, 100px)
+    minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 150px) minmax(auto, 150px) minmax(auto, 150px)
     minmax(auto, 150px);
   align-items: center;
 }

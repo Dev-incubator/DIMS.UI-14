@@ -129,3 +129,24 @@ export const deleteUserFromTask = (userID, assTaskID) => {
       console.log(`Error with deleting USER id:${userID} from TASK id:${assTaskID} `, error);
     });
 };
+
+export const updateStatus = (userID, taskID, newStatus, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userID);
+  userRef
+    .get()
+    .then((user) => {
+      const newTasks = user.data().tasks.map((task) => {
+        return task.id === taskID ? { ...task, status: newStatus } : task;
+      });
+      userRef.update({
+        tasks: newTasks,
+      });
+    })
+    .then(() => {
+      callback();
+      console.log(`TASK id:${taskID} status:${newStatus} was succeffully updated in USER id:${userID}`);
+    })
+    .catch((error) => {
+      console.log(`Error with updating status:${newStatus} in TASK id:${taskID} in USER id:${userID} `, error);
+    });
+};

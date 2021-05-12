@@ -5,7 +5,7 @@
   border-left: 1px solid var(--lightgray-color);
   display: grid;
   grid-template-columns:
-    minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 150px) minmax(auto, 150px) minmax(auto, 100px)
+    minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 150px) minmax(auto, 150px) minmax(auto, 150px)
     minmax(auto, 150px);
   align-items: center;
 }
@@ -23,4 +23,16 @@
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-gap: 10px;
+}
+
+.Active {
+  color: var(--status-active-color);
+}
+
+.Completed {
+  color: var(--status-complete-color);
+}
+
+.Failed {
+  color: var(--status-fail-color);
 }
