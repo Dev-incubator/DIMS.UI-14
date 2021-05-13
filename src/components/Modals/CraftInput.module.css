@@ -47,3 +47,28 @@ select:focus {
 .error:focus {
   border-color: var(--validator-color);
 }
+
+.checkbox {
+  padding: 10px;
+  border-radius: 10px;
+  width: 45%;
+  border: 1px solid gray;
+}
+
+input[type='checkbox'] {
+  width: auto;
+}
+
+.checkboxElem {
+  display: flex;
+  align-items: baseline;
+}
+
+.checkbox label {
+  margin-left: 10px;
+}
+
+input:read-only,
+.checkbox.readOnly {
+  background-color: var(--lightgray-color);
+}

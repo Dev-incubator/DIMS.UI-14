@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import classes from './CraftInput.module.css';
 import Validator from './Users/Validator';
+import noop from '../../shared/noop';
 
 const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, error, options }) => {
   let children;
@@ -26,6 +27,20 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
         {children}
       </select>
     );
+  } else if (type === 'checkbox') {
+    children = options.map((item) => {
+      const isChecked = value.find((user) => user.id === item.id);
+
+      return (
+        <div key={item.id} className={classes.checkboxElem}>
+          <input type={type} id={item.id} name={item.id} value={item.id} checked={isChecked} onChange={onChange} />
+          <label htmlFor={item.id}>
+            {item.username} {item.surname}
+          </label>
+        </div>
+      );
+    });
+    input = <div className={`${classes.checkbox} ${readOnly ? classes.readOnly : null}`}>{children}</div>;
   } else {
     input = (
       <input
@@ -64,26 +79,30 @@ const placeholderObj = {
   education: 'Enter univercity',
   averageScore: 'Enter univercity average score',
   mathScore: 'Enter math score',
+  title: 'Enter task title',
+  description: 'Enter task descriptions',
 };
 
 CraftInput.propTypes = {
-  options: PropTypes.string,
+  options: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Array)]),
   type: PropTypes.string,
   error: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Array)]).isRequired,
   title: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   isRequired: PropTypes.bool,
   readOnly: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
 };
 
 CraftInput.defaultProps = {
   isRequired: false,
   readOnly: false,
+  id: '',
   error: '',
   type: 'text',
   options: '',
+  onChange: noop,
 };
 
 export default CraftInput;

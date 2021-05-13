@@ -1,9 +1,9 @@
 .modal {
+  width: 30%;
   background-color: var(--white-color);
   padding: 30px;
   border: 1px solid var(--lightgray-color);
   border-radius: 20px;
-  width: 250px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,19 +19,24 @@
   border-bottom: 1px solid var(--lightgray-color);
 }
 
-.text {
+.wrapper {
   margin-top: 20px;
-  text-align: center;
-}
-.text span {
-  color: var(--lightblue-color);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .buttons {
   display: flex;
   justify-content: space-around;
-  margin-top: 25px;
+  margin-top: 30px;
 }
+
 .buttons button {
-  width: 35%;
+  width: 25%;
+}
+
+.requiredwarning {
+  font-size: 10px;
+  line-height: 10px;
 }

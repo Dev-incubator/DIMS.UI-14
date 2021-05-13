@@ -4,7 +4,15 @@ import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
 import noop from '../../shared/noop';
-import { TASK_MODAL_TOGGLE, TASK_MODAL_DELETE_TASK, reducerFunc } from './Task-helpers';
+import DivAnchor from '../DivAnchor';
+import { internationalizeDate } from '../../utilities/internationalization';
+import {
+  TASK_MODAL_TOGGLE,
+  TASK_MODAL_DELETE_TASK,
+  TASK_MODAL_SHOW_TASK,
+  TASK_MODAL_EDIT_TASK,
+  reducerFunc,
+} from './Task-helpers';
 
 export default class Task extends React.Component {
   constructor(props) {
@@ -28,7 +36,7 @@ export default class Task extends React.Component {
     }));
   }
 
-  toggleModal(modalType) {
+  toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: TASK_MODAL_TOGGLE, modalType }));
   }
 
@@ -38,42 +46,53 @@ export default class Task extends React.Component {
     deleteTask(selectedID);
   }
 
+  liftUpEditTask(editedTask) {
+    const { editTask } = this.props;
+    editTask(editedTask);
+  }
+
   render() {
     const {
       taskData,
       tableIndex,
-      taskData: { taskName, description, startDate, deadline },
+      taskData: { title, description, startDate, deadLine },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
 
-    const toggleDeleteModal = () => {
-      this.toggleModal(TASK_MODAL_DELETE_TASK);
+    const openDeleteModal = () => this.toggleModal(TASK_MODAL_DELETE_TASK);
+    const openShowModal = () => this.toggleModal(TASK_MODAL_SHOW_TASK);
+    const openEditModal = () => this.toggleModal(TASK_MODAL_EDIT_TASK);
+    const closeAnyModal = () => this.toggleModal();
+    const selectActFunc = () => {
+      switch (selectedModal) {
+        case TASK_MODAL_DELETE_TASK:
+          return (editedTask) => this.liftUpDeleteTask(editedTask);
+        case TASK_MODAL_EDIT_TASK:
+          return (editedTask) => this.liftUpEditTask(editedTask);
+        default:
+          return () => noop;
+      }
     };
 
     return (
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <div>{taskName}</div>
+          <DivAnchor onClick={openShowModal}>{title}</DivAnchor>
           <div>{description}</div>
-          <div>{startDate}</div>
-          <div>{deadline}</div>
+          <div>{internationalizeDate(startDate)}</div>
+          <div>{internationalizeDate(deadLine)}</div>
           <div className={classes.buttons}>
-            <Button roleclass='edit' onClick={noop}>
+            <Button roleClass='edit' onClick={openEditModal}>
               Edit
             </Button>
-            <Button roleclass='delete' onClick={toggleDeleteModal}>
+            <Button roleClass='delete' onClick={openDeleteModal}>
               Delete
             </Button>
           </div>
         </div>
         {isOpen ? (
-          <Modal
-            item={taskData}
-            actFunc={this.liftUpDeleteTask}
-            closeFunc={toggleDeleteModal}
-            selectedModal={selectedModal}
-          />
+          <Modal item={taskData} actFunc={selectActFunc()} closeFunc={closeAnyModal} selectedModal={selectedModal} />
         ) : null}
       </>
     );
@@ -84,4 +103,5 @@ Task.propTypes = {
   taskData: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
   deleteTask: PropType.func.isRequired,
+  editTask: PropType.func.isRequired,
 };

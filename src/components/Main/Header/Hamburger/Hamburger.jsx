@@ -6,7 +6,7 @@ export default function Hamburger({ onClick, isOpen }) {
     <div
       tabIndex={0}
       role='button'
-      className={`${classes.hamburger} ${isOpen ? classes.active : ''}`}
+      className={`${classes.hamburger} ${isOpen ? classes.active : null}`}
       onClick={onClick}
       onKeyDown={onClick}
     >

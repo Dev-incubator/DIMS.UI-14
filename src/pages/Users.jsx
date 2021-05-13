@@ -3,8 +3,8 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import { USERS_DELETE_USER, USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
-import { setDataToDB } from '../utilities/fb-helpers';
+import { USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
+import { setElemToDB, deleteElemFromDB, editElemInDB, db, USERS } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -14,93 +14,67 @@ export default class Users extends React.Component {
       selectedModal: '',
       usersList: [],
     };
-    this.deleteUser = this.deleteUser.bind(this);
+    this.updateData = this.updateData.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.editUser = this.editUser.bind(this);
+    this.createUser = this.createUser.bind(this);
   }
 
   componentDidMount() {
-    this.setState((prevState) => ({
-      ...prevState,
-      usersList: [
-        {
-          id: 1,
-          fullname: 'Aliaksandr Razumny',
-          direction: 'React',
-          education: 'BNTU',
-          start: '01.04.2021',
-          age: 25,
-        },
-        {
-          id: 2,
-          fullname: 'Joe Baiden',
-          direction: '.NET',
-          education: 'University of Pennsylvania',
-          start: '25.03.2021',
-          age: 78,
-        },
-        {
-          id: 3,
-          fullname: 'Vladimir Putin',
-          direction: 'Java',
-          education: 'LGU',
-          start: '15.04.2021',
-          age: 68,
-        },
-        {
-          id: 4,
-          fullname: 'Angela Merkel',
-          direction: 'Salesforce',
-          education: 'Hamburg Univercity',
-          start: '12.04.2021',
-          age: 66,
-        },
-        {
-          id: 5,
-          fullname: 'Barack Obama',
-          direction: 'PHP',
-          education: 'Harvard Univercity',
-          start: '29.03.2021',
-          age: 59,
-        },
-        {
-          id: 6,
-          fullname: 'Xí Jìnpíng',
-          direction: 'React',
-          education: 'Beijin Univercity',
-          start: '10.04.2021',
-          age: 67,
-        },
-        {
-          id: 7,
-          fullname: 'Emmanuel Makron',
-          direction: '.NET',
-          education: 'Paris Univercity',
-          start: '05.04.2021',
-          age: 43,
-        },
-      ],
-    }));
-  }
-
-  deleteUser(selectedID) {
-    this.setState((prevState) => reducerFunc(prevState, { type: USERS_DELETE_USER, selectedID }));
+    this.updateData();
   }
 
   toggleModal(modalType) {
     this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
   }
 
+  updateData() {
+    db.collection(USERS)
+      .get()
+      .then((querySnapshot) => {
+        const usersList = [];
+        querySnapshot.forEach((doc) => {
+          usersList.push(doc.data());
+        });
+
+        return usersList;
+      })
+      .then((usersList) =>
+        this.setState((prevState) => ({
+          ...prevState,
+          usersList,
+        })),
+      )
+      .catch((error) => {
+        console.log('Error reading users collection: ', error);
+      });
+  }
+
+  deleteUser(selectedID) {
+    deleteElemFromDB(USERS, selectedID);
+    this.updateData();
+  }
+
+  editUser(editedUser) {
+    editElemInDB(USERS, editedUser);
+    this.updateData();
+  }
+
+  createUser(newUserRef, newUser) {
+    setElemToDB(newUserRef, newUser);
+    this.updateData();
+  }
+
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
-    const toggleModal = () => {
-      this.toggleModal(USERS_MODAL_CREATE_USER);
-    };
-    const createUser = (newUserRef, newUser) => {
-      setDataToDB(newUserRef, newUser);
-    };
+    const toggleModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
+    const createUser = (newUserRef, newUser) => this.createUser(newUserRef, newUser);
+    const editUser = (editedUser) => this.editUser(editedUser);
+    const deleteUser = (selectedID) => this.deleteUser(selectedID);
 
     const users = usersList.map((user, index) => {
-      return <User deleteUser={this.deleteUser} key={user.id.toString()} userData={user} tableIndex={index + 1} />;
+      return <User deleteUser={deleteUser} editUser={editUser} key={user.id} userData={user} tableIndex={index + 1} />;
     });
 
     return (
@@ -109,7 +83,7 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={toggleModal} roleclass='create'>
+          <Button onClick={toggleModal} roleClass='create'>
             Create
           </Button>
         </div>

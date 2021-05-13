@@ -1,0 +1,13 @@
+.anchor {
+  color: var(--divanchor-color);
+  cursor: pointer;
+  transition: 0.7s all;
+}
+
+.anchor:focus {
+  outline: none;
+}
+
+.anchor:hover {
+  transform: scale(1.1);
+}
