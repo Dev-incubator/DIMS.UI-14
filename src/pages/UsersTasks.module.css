@@ -10,7 +10,7 @@
   display: grid;
   grid-template-columns:
     minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 150px) minmax(auto, 150px) minmax(auto, 150px)
-    minmax(auto, 150px);
+    minmax(auto, 130px);
   align-items: center;
 }
 
@@ -29,8 +29,8 @@
 
 .title {
   margin: 0;
-  font-size: 25px;
-  line-height: 25px;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
 }
 
 .title span {

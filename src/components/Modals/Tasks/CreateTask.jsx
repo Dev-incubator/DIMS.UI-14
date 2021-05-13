@@ -38,7 +38,7 @@ export default class CreateTask extends React.PureComponent {
         selectedUsersError: '',
       },
       usersList: [],
-      newTaskRef: {},
+      newTaskRef: createElemRef(TASKS),
       isValid: false,
     };
     this.onChange = this.onChange.bind(this);
@@ -49,15 +49,13 @@ export default class CreateTask extends React.PureComponent {
   }
 
   componentDidMount() {
-    const newTaskRef = createElemRef(TASKS);
     const { usersList } = this.props;
     this.setState((prevState) => ({
       ...prevState,
       data: {
         ...prevState.data,
-        id: newTaskRef.id,
+        id: prevState.newTaskRef.id,
       },
-      newTaskRef,
       usersList,
     }));
   }

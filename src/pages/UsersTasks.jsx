@@ -6,13 +6,13 @@ import noop from '../shared/noop';
 import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
 import { USERS, TASKS, getElementFromCollection, updateStatus } from '../utilities/fb-helpers';
+import { reducerFunc, STATUS_UPDATE, SET_DATA } from './Users-tasks-helpers';
 
 export default class UsersTasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userID: '',
-      isUser: false,
       userName: '',
       tasksList: [],
       tasksWithStatus: [],
@@ -44,14 +44,9 @@ export default class UsersTasks extends React.Component {
       return tasks;
     }
     const tasksList = await getTasksList(tasksWithStatus);
-    this.setState((prevState) => ({
-      ...prevState,
-      role: role === 'User',
-      userName,
-      tasksWithStatus,
-      tasksList,
-      userID,
-    }));
+    this.setState((prevState) =>
+      reducerFunc(prevState, { type: SET_DATA, userName, tasksWithStatus, tasksList, userID, role }),
+    );
   }
 
   changeStatus(taskID, newStatus) {
@@ -63,24 +58,18 @@ export default class UsersTasks extends React.Component {
     const { userID } = this.state;
     const user = await getElementFromCollection(USERS, userID);
     const tasksWithStatus = await user.data().tasks;
-    this.setState((prevState) => ({
-      ...prevState,
-      tasksWithStatus,
-    }));
+    this.setState((prevState) => reducerFunc(prevState, { type: STATUS_UPDATE, list: tasksWithStatus }));
   }
 
   render() {
-    const { userName, tasksWithStatus, tasksList, isUser } = this.state;
+    const { userName, tasksWithStatus, tasksList, isUser, userID } = this.state;
 
     const selectActFunc = () => {
-      switch (isUser) {
-        case true:
-          return () => noop;
-        case false:
-          return (id, status) => this.changeStatus(id, status);
-        default:
-          return () => noop;
+      if (isUser) {
+        return () => noop;
       }
+
+      return (id, status) => this.changeStatus(id, status);
     };
 
     const tasks = tasksWithStatus.map((task, index) => {
@@ -88,7 +77,8 @@ export default class UsersTasks extends React.Component {
 
       return (
         <UserTask
-          id={task.id}
+          userID={userID}
+          taskID={task.id}
           tableIndex={index + 1}
           key={task.id}
           status={task.status}
@@ -104,10 +94,15 @@ export default class UsersTasks extends React.Component {
     return (
       <div>
         <div className={classes.header}>
-          <h2 className={classes.title}>{`${userName}'s current tasks`}</h2>
-          <NavLink className={classes.navLink} to='/users'>
-            <Button onClick={noop}>Back</Button>
-          </NavLink>
+          <h2 className={classes.title}>
+            {`${userName}'s Tasks `}
+            <span>({`${tasks.length}`})</span>
+          </h2>
+          {isUser ? null : (
+            <NavLink className={classes.navLink} to='/users'>
+              <Button onClick={noop}>Back</Button>
+            </NavLink>
+          )}
         </div>
         <div className={classes.content}>
           <div className={classes.subheader}>
@@ -116,7 +111,7 @@ export default class UsersTasks extends React.Component {
             <div>Start Date</div>
             <div>Deadline</div>
             <div>Status</div>
-            <div>Update Status</div>
+            <div>{isUser ? 'Track' : 'Update Status'}</div>
           </div>
           {tasks}
         </div>

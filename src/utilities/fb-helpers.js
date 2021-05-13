@@ -95,12 +95,13 @@ export const deleteTaskFromUser = (taskID, assUserID) => {
     .get()
     .then((user) => {
       const newTasks = user.data().tasks.filter((task) => task.id !== taskID);
-      userRef.update({
-        tasks: newTasks,
-      });
-    })
-    .then(() => {
-      console.log(`TASK id:${taskID} was succesfully deleted from USER:${assUserID}`);
+      userRef
+        .update({
+          tasks: newTasks,
+        })
+        .then(() => {
+          console.log(`TASK id:${taskID} was succesfully deleted from USER:${assUserID}`);
+        });
     })
     .catch((error) => {
       console.log(`Error with deleting TASK id:${taskID} from USER id:${assUserID}`, error);
@@ -138,13 +139,14 @@ export const updateStatus = (userID, taskID, newStatus, callback) => {
       const newTasks = user.data().tasks.map((task) => {
         return task.id === taskID ? { ...task, status: newStatus } : task;
       });
-      userRef.update({
-        tasks: newTasks,
-      });
-    })
-    .then(() => {
-      callback();
-      console.log(`TASK id:${taskID} status:${newStatus} was succeffully updated in USER id:${userID}`);
+      userRef
+        .update({
+          tasks: newTasks,
+        })
+        .then(() => {
+          callback();
+          console.log(`TASK id:${taskID} status:${newStatus} was succeffully updated in USER id:${userID}`);
+        });
     })
     .catch((error) => {
       console.log(`Error with updating status:${newStatus} in TASK id:${taskID} in USER id:${userID} `, error);

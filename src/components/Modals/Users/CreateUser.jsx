@@ -71,7 +71,7 @@ export default class CreateUser extends React.Component {
         mathScoreError: '',
       },
       isValid: false,
-      newUserRef: {},
+      newUserRef: createElemRef(USERS),
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateUser = this.liftUpCreateUser.bind(this);
@@ -81,13 +81,11 @@ export default class CreateUser extends React.Component {
   }
 
   componentDidMount() {
-    const newUserRef = createElemRef(USERS);
     this.setState((prevState) => ({
       ...prevState,
-      newUserRef,
       data: {
         ...prevState.data,
-        id: newUserRef.id,
+        id: prevState.newUserRef.id,
       },
     }));
   }

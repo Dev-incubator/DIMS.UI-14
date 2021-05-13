@@ -5,6 +5,7 @@ import Header from './Header/Header';
 import Users from '../../pages/Users';
 import Tasks from '../../pages/Tasks';
 import UsersTasks from '../../pages/UsersTasks';
+import UsersTracks from '../../pages/UsersTracks';
 
 export default function Main({ toggleMenu, isOpen }) {
   return (
@@ -13,7 +14,8 @@ export default function Main({ toggleMenu, isOpen }) {
       <div className={classes.screen}>
         <Route exact path='/users' component={Users} />
         <Route exact path='/tasks' component={Tasks} />
-        <Route exact path='/user-tasks/:userID' component={UsersTasks} />
+        <Route exact path='/users/:userID/tasks' component={UsersTasks} />
+        <Route exact path='/users/:userID/tasks/:taskID/track' component={UsersTracks} />
       </div>
     </main>
   );
