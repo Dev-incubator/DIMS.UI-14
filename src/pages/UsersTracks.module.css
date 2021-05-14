@@ -36,3 +36,14 @@
   .title span {
     color: var(--darkgray-color);
   }
+
+  .buttonsWrapper {
+    display: flex;
+  }
+
+  .navLink {
+    margin-right: 10px;
+    display: block;
+    color: var(--white-color);
+    text-decoration: none;
+  }

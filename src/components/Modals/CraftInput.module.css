@@ -69,6 +69,20 @@ input[type='checkbox'] {
 }
 
 input:read-only,
-.checkbox.readOnly {
+.checkbox.readOnly,
+.textArea:read-only {
   background-color: var(--lightgray-color);
+}
+
+.textArea {
+  width: 45%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--darkgray-color);
+  resize: none;
+}
+
+.textArea:focus {
+  outline: none;
+  border: 1px solid var(--lightblue-color);
 }

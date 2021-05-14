@@ -74,6 +74,10 @@ export function validateInput(inputName, inputBody, password = '', startDate = '
       validatorField = new Date(inputBody) > new Date(startDate);
       errorField = validatorField ? '' : errors.deadLine;
       break;
+    case 'date':
+      validatorField = new Date(inputBody) > new Date(startDate);
+      errorField = validatorField ? '' : errors.track;
+      break;
     default:
       break;
   }
@@ -96,4 +100,5 @@ const errors = {
   email: 'The entered email is incorrect',
   minTwo: 'This field must contain at least 2 letters',
   deadLine: "The deadLine must be later than task's start date",
+  track: "The date must be later than task's start date",
 };

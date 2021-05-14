@@ -46,7 +46,7 @@ export default function Modal({ item, list, selectedModal, closeFunc, actFunc })
       modal = <EditTask task={item} usersList={list} closeFunc={closeFunc} liftUpEditTask={actFunc} />;
       break;
     case TRACKS_MODAL_CREATE_TRACK:
-      modal = <CreateTrack closeFunc={closeFunc} liftUpCreateTrack={actFunc} />;
+      modal = <CreateTrack task={item} closeFunc={closeFunc} liftUpCreateTrack={actFunc} />;
       break;
     default:
       break;

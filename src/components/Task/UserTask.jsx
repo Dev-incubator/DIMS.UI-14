@@ -11,7 +11,7 @@ export default function UserTask({ userID, taskID, tableIndex, status, isUser, s
 
   const buttonGroup = isUser ? (
     <NavLink className={classes.navLink} to={`/users/${userID}/tasks/${taskID}/track`}>
-      <Button onClick={actFunc}>Create</Button>
+      <Button onClick={actFunc}>Tracks</Button>
     </NavLink>
   ) : (
     <>

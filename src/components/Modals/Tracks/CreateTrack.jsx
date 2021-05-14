@@ -4,29 +4,82 @@ import classes from './CreateTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 
+import { TRACKS, createElemRef } from '../../../utilities/fb-helpers';
+import {
+  CREATE_TRACK_ONCHANGE,
+  CREATE_TRACK_VALIDATE_FIELDS,
+  CREATE_TRACK_VALIDATE_FORM,
+  reducerFunc,
+} from './Track-helpers';
+import debounce from '../../../utilities/debounce';
+
 export default class CreateTrack extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      title: '',
+      startDate: '',
       data: {
+        id: createElemRef(TRACKS).id,
         date: '',
         note: '',
       },
-      // validator: {
-      //   date: false,
-      // },
-      // errors: {
-      //   dateError: '',
-      // },
+      validator: {
+        date: false,
+      },
+      errors: {
+        dateError: '',
+      },
       isValid: false,
     };
     this.liftUpCreateTrack = this.liftUpCreateTrack.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.validateFields = this.validateFields.bind(this);
+    this.validateForm = this.validateForm.bind(this);
+  }
+
+  componentDidMount() {
+    const {
+      task: { startDate, title },
+    } = this.props;
+    this.setState((prevState) => ({
+      ...prevState,
+      title,
+      startDate,
+    }));
+  }
+
+  onChange(event) {
+    const { name, value } = event.target;
+    this.setState(
+      (prevState) =>
+        reducerFunc(prevState, {
+          type: CREATE_TRACK_ONCHANGE,
+          name,
+          value,
+        }),
+      debounce(() => {
+        this.validateFields(name, value);
+      }, 1000),
+    );
+  }
+
+  validateFields(fieldName, fieldValue) {
+    const state = reducerFunc(this.state, { type: CREATE_TRACK_VALIDATE_FIELDS, fieldName, fieldValue });
+    this.setState(state, this.validateForm);
+  }
+
+  validateForm() {
+    const state = reducerFunc(this.state, { type: CREATE_TRACK_VALIDATE_FORM });
+    this.setState(state);
   }
 
   liftUpCreateTrack() {
     const { liftUpCreateTrack } = this.props;
-    liftUpCreateTrack();
+    const { data } = this.state;
+    const newTrack = { ...data };
+    liftUpCreateTrack(newTrack);
   }
 
   closeModal() {
@@ -37,7 +90,9 @@ export default class CreateTrack extends React.Component {
   render() {
     const {
       isValid,
-      data: { date },
+      title,
+      data: { date, note },
+      errors: { dateError },
     } = this.state;
 
     return (
@@ -45,7 +100,17 @@ export default class CreateTrack extends React.Component {
         <h3 className={classes.title}>Create New Track</h3>
         <form>
           <div className={classes.wrapper}>
-            <CraftInput title='Date' isRequired id='date' type='date' value={date} />
+            <CraftInput title='Task Name' readOnly value={title} />
+            <CraftInput
+              title='Date'
+              isRequired
+              id='date'
+              type='date'
+              value={date}
+              error={dateError}
+              onChange={this.onChange}
+            />
+            <CraftInput title='Note' id='note' type='textarea' value={note} onChange={this.onChange} />
           </div>
           <div className={classes.requiredwarning}>* - these fields are required.</div>
           <div className={classes.buttons}>
@@ -61,6 +126,7 @@ export default class CreateTrack extends React.Component {
 }
 
 CreateTrack.propTypes = {
+  task: PropType.instanceOf(Object).isRequired,
   closeFunc: PropType.func.isRequired,
   liftUpCreateTrack: PropType.func.isRequired,
 };

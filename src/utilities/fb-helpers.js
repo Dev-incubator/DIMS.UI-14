@@ -4,6 +4,7 @@ import firebaseConfig from './fb-config';
 // collection names
 export const USERS = 'users';
 export const TASKS = 'tasks';
+export const TRACKS = 'tracks';
 
 // init
 firebase.initializeApp(firebaseConfig);
@@ -150,5 +151,34 @@ export const updateStatus = (userID, taskID, newStatus, callback) => {
     })
     .catch((error) => {
       console.log(`Error with updating status:${newStatus} in TASK id:${taskID} in USER id:${userID} `, error);
+    });
+};
+
+export const createTrack = (userID, taskID, newTrack, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userID);
+  userRef
+    .get()
+    .then((user) => {
+      const { tasks } = user.data();
+      const { tracks } = tasks.find((item) => item.id === taskID);
+      tracks.push(newTrack);
+      const newTasks = tasks.map((task) => {
+        return task.id === taskID ? { ...task, tracks } : task;
+      });
+
+      return newTasks;
+    })
+    .then((newTasks) => {
+      userRef
+        .update({
+          tasks: newTasks,
+        })
+        .then(() => {
+          callback();
+          console.log(`TRACK id:${newTrack.id} from task id:${taskID} was succeffully added to USER id:${userID}`);
+        });
+    })
+    .catch((error) => {
+      console.log(`Error with adding TRACK id:${newTrack.id} from task id:${taskID} to USER id:${userID}`, error);
     });
 };
