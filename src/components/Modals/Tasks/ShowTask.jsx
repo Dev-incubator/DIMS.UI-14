@@ -4,7 +4,7 @@ import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { internationalizeDate } from '../../../utilities/internationalization';
 
-export default function ShowTask({ task, closeFunc }) {
+export default function ShowTask({ task, closeFunc, usersList }) {
   const { title, startDate, description, deadLine, selectedUsers } = task;
 
   return (
@@ -16,7 +16,7 @@ export default function ShowTask({ task, closeFunc }) {
           <CraftInput title='Description' value={description} readOnly />
           <CraftInput title='Start Date' value={internationalizeDate(startDate)} readOnly />
           <CraftInput title='DeadLine' value={internationalizeDate(deadLine)} readOnly />
-          <CraftInput title='Users' type='checkbox' options={selectedUsers} value={selectedUsers} readOnly />
+          <CraftInput title='Users' type='checkbox' options={usersList} value={selectedUsers} readOnly />
         </div>
         <div className={classes.buttons}>
           <Button onClick={closeFunc}>Close</Button>
@@ -29,4 +29,5 @@ export default function ShowTask({ task, closeFunc }) {
 ShowTask.propTypes = {
   task: PropType.instanceOf(Object).isRequired,
   closeFunc: PropType.func.isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
 };

@@ -3,8 +3,15 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import { USERS_MODAL_TOGGLE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
-import { setElemToDB, deleteElemFromDB, editElemInDB, db, USERS } from '../utilities/fb-helpers';
+import { USERS_MODAL_TOGGLE, USERS_UPDATE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
+import {
+  setElemToDB,
+  deleteElemFromDB,
+  deleteUserFromTask,
+  editElemInDB,
+  USERS,
+  getAllElementsFromCollection,
+} from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -30,51 +37,42 @@ export default class Users extends React.Component {
   }
 
   updateData() {
-    db.collection(USERS)
-      .get()
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading users collection: ', error);
-      });
+    getAllElementsFromCollection(USERS).then((usersList) =>
+      this.setState((prevState) => reducerFunc(prevState, { type: USERS_UPDATE, usersList })),
+    );
   }
 
   deleteUser(selectedID) {
-    deleteElemFromDB(USERS, selectedID);
-    this.updateData();
+    const { usersList } = this.state;
+    const assTasks = usersList.find((item) => item.id === selectedID).tasks;
+    deleteElemFromDB(USERS, selectedID, this.updateData);
+    if (assTasks.length) {
+      assTasks.forEach((assTask) => deleteUserFromTask(selectedID, assTask.id));
+    }
   }
 
   editUser(editedUser) {
-    editElemInDB(USERS, editedUser);
-    this.updateData();
+    editElemInDB(USERS, editedUser, this.updateData);
   }
 
   createUser(newUserRef, newUser) {
-    setElemToDB(newUserRef, newUser);
-    this.updateData();
+    setElemToDB(newUserRef, newUser, this.updateData);
   }
 
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
-    const toggleModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
-    const createUser = (newUserRef, newUser) => this.createUser(newUserRef, newUser);
-    const editUser = (editedUser) => this.editUser(editedUser);
-    const deleteUser = (selectedID) => this.deleteUser(selectedID);
+    const openModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
 
     const users = usersList.map((user, index) => {
-      return <User deleteUser={deleteUser} editUser={editUser} key={user.id} userData={user} tableIndex={index + 1} />;
+      return (
+        <User
+          deleteUser={this.deleteUser}
+          editUser={this.editUser}
+          key={user.id}
+          userData={user}
+          tableIndex={index + 1}
+        />
+      );
     });
 
     return (
@@ -83,7 +81,7 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={toggleModal} roleClass='create'>
+          <Button onClick={openModal} roleClass='create'>
             Create
           </Button>
         </div>
@@ -99,7 +97,7 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        {isOpen ? <Modal closeFunc={toggleModal} actFunc={createUser} selectedModal={selectedModal} /> : null}
+        {isOpen ? <Modal closeFunc={this.toggleModal} actFunc={this.createUser} selectedModal={selectedModal} /> : null}
       </div>
     );
   }

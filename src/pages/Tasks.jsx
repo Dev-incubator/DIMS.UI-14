@@ -3,16 +3,27 @@ import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import Modal from '../components/Modals/Modal';
-import { TASKS_MODAL_TOGGLE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
-import { setElemToDB, deleteElemFromDB, editElemInDB, db, TASKS } from '../utilities/fb-helpers';
+import { TASKS_MODAL_TOGGLE, TASKS_UPDATE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
+import {
+  setElemToDB,
+  deleteElemFromDB,
+  editElemInDB,
+  TASKS,
+  USERS,
+  addTaskToUser,
+  deleteTaskFromUser,
+  editTaskInUsers,
+  getAllElementsFromCollection,
+} from '../utilities/fb-helpers';
 
 export default class Tasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
-      selectedMoal: '',
+      selectedModal: '',
       tasksList: [],
+      usersList: [],
     };
     this.deleteTask = this.deleteTask.bind(this);
     this.createTask = this.createTask.bind(this);
@@ -22,59 +33,61 @@ export default class Tasks extends React.Component {
   }
 
   componentDidMount() {
+    getAllElementsFromCollection(USERS).then((usersList) =>
+      this.setState((prevState) => reducerFunc(prevState, { type: TASKS_UPDATE, name: 'usersList', list: usersList })),
+    );
     this.updateData();
   }
 
   deleteTask(selectedID) {
-    deleteElemFromDB(TASKS, selectedID);
-    this.updateData();
+    const { tasksList } = this.state;
+    const assUsers = tasksList.find((task) => task.id === selectedID).selectedUsers;
+    deleteElemFromDB(TASKS, selectedID, this.updateData);
+    assUsers.forEach((assUserID) => deleteTaskFromUser(selectedID, assUserID));
   }
 
   editTask(editedTask) {
-    editElemInDB(TASKS, editedTask);
-    this.updateData();
+    const { tasksList } = this.state;
+    const prevAssUsers = tasksList.find((task) => task.id === editedTask.id).selectedUsers;
+    const newAssUsers = editedTask.selectedUsers;
+    const usersToUnassign = prevAssUsers.filter((assUserID) => !newAssUsers.includes(assUserID));
+    const usersToAssign = newAssUsers.filter((assUserID) => !prevAssUsers.includes(assUserID));
+    editElemInDB(TASKS, editedTask, this.updateData);
+    editTaskInUsers(usersToAssign, usersToUnassign, editedTask.id);
   }
 
   createTask(newTaskRef, newTask) {
-    setElemToDB(newTaskRef, newTask);
-    this.updateData();
+    const newTaskID = newTask.id;
+    const assUsers = newTask.selectedUsers;
+    setElemToDB(newTaskRef, newTask, this.updateData);
+    assUsers.forEach((assUserID) => addTaskToUser(newTaskID, assUserID));
   }
 
-  toggleModal(modalType) {
+  toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: TASKS_MODAL_TOGGLE, modalType }));
   }
 
   updateData() {
-    db.collection(TASKS)
-      .get()
-      .then((querySnapshot) => {
-        const tasksList = [];
-        querySnapshot.forEach((doc) => {
-          tasksList.push(doc.data());
-        });
-
-        return tasksList;
-      })
-      .then((tasksList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          tasksList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading tasks collection: ', error);
-      });
+    getAllElementsFromCollection(TASKS).then((tasksList) =>
+      this.setState((prevState) => reducerFunc(prevState, { type: TASKS_UPDATE, name: 'tasksList', list: tasksList })),
+    );
   }
 
   render() {
-    const { tasksList, selectedModal, isOpen } = this.state;
-    const toggleModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
-    const createTask = (newTaskRef, newTask) => this.createTask(newTaskRef, newTask);
-    const editTask = (editedTask) => this.editTask(editedTask);
-    const deleteTask = (selectedID) => this.deleteTask(selectedID);
+    const { tasksList, usersList, selectedModal, isOpen } = this.state;
+    const openModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
 
     const tasks = tasksList.map((task, index) => {
-      return <Task deleteTask={deleteTask} editTask={editTask} key={task.id} taskData={task} tableIndex={index + 1} />;
+      return (
+        <Task
+          usersList={usersList}
+          deleteTask={this.deleteTask}
+          editTask={this.editTask}
+          key={task.id}
+          taskData={task}
+          tableIndex={index + 1}
+        />
+      );
     });
 
     return (
@@ -83,7 +96,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button roleClass='create' onClick={toggleModal}>
+          <Button roleClass='create' onClick={openModal}>
             Create
           </Button>
         </div>
@@ -98,7 +111,14 @@ export default class Tasks extends React.Component {
           </div>
           {tasks}
         </div>
-        {isOpen ? <Modal closeFunc={toggleModal} actFunc={createTask} selectedModal={selectedModal} /> : null}
+        {isOpen ? (
+          <Modal
+            list={usersList}
+            closeFunc={this.toggleModal}
+            actFunc={this.createTask}
+            selectedModal={selectedModal}
+          />
+        ) : null}
       </div>
     );
   }

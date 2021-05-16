@@ -5,7 +5,6 @@ import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 
 import { EDIT_TASK_ONCHANGE, EDIT_TASK_VALIDATE_FIELDS, EDIT_TASK_VALIDATE_FORM, reducerFunc } from './Task-helpers';
-import { db, USERS } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class EditTask extends React.PureComponent {
@@ -25,14 +24,14 @@ export default class EditTask extends React.PureComponent {
         deadLine: true,
         selectedUsers: true,
       },
-      usersList: [],
-      isValid: true,
       errors: {
         titleError: '',
         startDateError: '',
         deadLineError: '',
         selectedUsersError: '',
       },
+      usersList: [],
+      isValid: false,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpEditTask = this.liftUpEditTask.bind(this);
@@ -42,29 +41,14 @@ export default class EditTask extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { task } = this.props;
-    db.collection(USERS)
-      .get()
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          data: {
-            ...task,
-          },
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading USERS collection: ', error);
-      });
+    const { task, usersList } = this.props;
+    this.setState((prevState) => ({
+      ...prevState,
+      data: {
+        ...task,
+      },
+      usersList,
+    }));
   }
 
   onChange(event) {
@@ -125,7 +109,7 @@ export default class EditTask extends React.PureComponent {
 
     return (
       <div className={classes.modal}>
-        <h3 className={classes.title}>Create Task</h3>
+        <h3 className={classes.title}>Edit Task</h3>
         <form>
           <div className={classes.wrapper}>
             <CraftInput title='Title' isRequired id='title' value={title} onChange={this.onChange} error={titleError} />
@@ -176,4 +160,5 @@ EditTask.propTypes = {
   closeFunc: PropType.func.isRequired,
   liftUpEditTask: PropType.func.isRequired,
   task: PropType.instanceOf(Object).isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
 };

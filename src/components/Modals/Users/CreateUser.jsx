@@ -35,7 +35,8 @@ export default class CreateUser extends React.Component {
         education: '',
         averageScore: '',
         mathScore: '',
-        id: createElemRef(USERS),
+        tasks: [],
+        id: '',
       },
       validator: {
         username: false,
@@ -53,7 +54,6 @@ export default class CreateUser extends React.Component {
         averageScore: false,
         mathScore: false,
       },
-      isValid: false,
       errors: {
         usernameError: '',
         surnameError: '',
@@ -70,12 +70,26 @@ export default class CreateUser extends React.Component {
         averageScoreError: '',
         mathScoreError: '',
       },
+      isValid: false,
+      newUserRef: {},
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateUser = this.liftUpCreateUser.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.validateFields = this.validateFields.bind(this);
     this.validateForm = this.validateForm.bind(this);
+  }
+
+  componentDidMount() {
+    const newUserRef = createElemRef(USERS);
+    this.setState((prevState) => ({
+      ...prevState,
+      newUserRef,
+      data: {
+        ...prevState.data,
+        id: newUserRef.id,
+      },
+    }));
   }
 
   onChange(event) {
@@ -110,10 +124,10 @@ export default class CreateUser extends React.Component {
 
   liftUpCreateUser() {
     const { liftUpCreateUser } = this.props;
-    const { data, data:{id} } = this.state;
+    const { data, newUserRef } = this.state;
     const newUser = { ...data };
     delete newUser.passwordRepeat;
-    liftUpCreateUser(id, newUser);
+    liftUpCreateUser(newUserRef, newUser);
     this.closeModal();
   }
 

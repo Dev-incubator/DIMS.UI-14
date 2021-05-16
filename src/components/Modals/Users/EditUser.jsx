@@ -29,6 +29,7 @@ export default class EditUser extends React.PureComponent {
         education: '',
         averageScore: '',
         mathScore: '',
+        tasks: [],
       },
       validator: {
         username: true,
@@ -36,8 +37,8 @@ export default class EditUser extends React.PureComponent {
         email: true,
         direction: true,
         role: true,
-        password: false,
-        passwordRepeat: false,
+        password: true,
+        passwordRepeat: true,
         dateOfBirth: true,
         phone: true,
         skype: true,
@@ -46,7 +47,6 @@ export default class EditUser extends React.PureComponent {
         averageScore: true,
         mathScore: true,
       },
-      isValid: false,
       errors: {
         usernameError: '',
         surnameError: '',
@@ -63,6 +63,7 @@ export default class EditUser extends React.PureComponent {
         averageScoreError: '',
         mathScoreError: '',
       },
+      isValid: false,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpEditUser = this.liftUpEditUser.bind(this);
@@ -77,8 +78,7 @@ export default class EditUser extends React.PureComponent {
       ...prevState,
       data: {
         ...user,
-        password: '',
-        passwordRepeat: '',
+        passwordRepeat: user.password,
       },
     }));
   }

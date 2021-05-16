@@ -15,7 +15,7 @@ import { USERS_MODAL_CREATE_USER } from '../../pages/Users-helpers';
 import { TASKS_MODAL_CREATE_TASK } from '../../pages/Tasks-helpers';
 import { TASK_MODAL_DELETE_TASK, TASK_MODAL_SHOW_TASK, TASK_MODAL_EDIT_TASK } from '../Task/Task-helpers';
 
-export default function Modal({ item, selectedModal, closeFunc, actFunc }) {
+export default function Modal({ item, list, selectedModal, closeFunc, actFunc }) {
   let modal;
 
   switch (selectedModal) {
@@ -35,13 +35,13 @@ export default function Modal({ item, selectedModal, closeFunc, actFunc }) {
       modal = <CreateUser closeFunc={closeFunc} liftUpCreateUser={actFunc} />;
       break;
     case TASKS_MODAL_CREATE_TASK:
-      modal = <CreateTask closeFunc={closeFunc} liftUpCreateTask={actFunc} />;
+      modal = <CreateTask closeFunc={closeFunc} liftUpCreateTask={actFunc} usersList={list} />;
       break;
     case TASK_MODAL_SHOW_TASK:
-      modal = <ShowTask task={item} closeFunc={closeFunc} />;
+      modal = <ShowTask task={item} usersList={list} closeFunc={closeFunc} />;
       break;
     case TASK_MODAL_EDIT_TASK:
-      modal = <EditTask task={item} closeFunc={closeFunc} liftUpEditTask={actFunc} />;
+      modal = <EditTask task={item} usersList={list} closeFunc={closeFunc} liftUpEditTask={actFunc} />;
       break;
     default:
       break;
@@ -52,12 +52,14 @@ export default function Modal({ item, selectedModal, closeFunc, actFunc }) {
 
 Modal.propTypes = {
   item: PropType.instanceOf(Object),
+  list: PropType.instanceOf(Array),
   closeFunc: PropType.func.isRequired,
   actFunc: PropType.func,
   selectedModal: PropType.string.isRequired,
 };
 
 Modal.defaultProps = {
+  list: [],
   item: {},
   actFunc: noop,
 };

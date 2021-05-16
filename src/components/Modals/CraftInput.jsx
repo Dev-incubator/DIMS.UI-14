@@ -29,11 +29,19 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
     );
   } else if (type === 'checkbox') {
     children = options.map((item) => {
-      const isChecked = value.find((user) => user.id === item.id);
+      const isChecked = value.find((userID) => userID === item.id);
 
       return (
         <div key={item.id} className={classes.checkboxElem}>
-          <input type={type} id={item.id} name={item.id} value={item.id} checked={isChecked} onChange={onChange} />
+          <input
+            type={type}
+            id={item.id}
+            name={item.id}
+            value={item.id}
+            disabled={readOnly}
+            checked={isChecked}
+            onChange={onChange}
+          />
           <label htmlFor={item.id}>
             {item.username} {item.surname}
           </label>

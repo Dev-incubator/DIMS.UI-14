@@ -15,20 +15,19 @@ export const reducerFunc = (prevState, action) => {
     case CREATE_TASK_ONCHANGE:
     case EDIT_TASK_ONCHANGE:
       if (action.targetType === 'checkbox') {
-        if (prevState.data.selectedUsers.find((item) => item.id === action.name)) {
+        if (prevState.data.selectedUsers.find((id) => id === action.name)) {
           state = {
             ...prevState,
             data: {
               ...prevState.data,
-              selectedUsers: prevState.data.selectedUsers.filter((item) => item.id !== action.name),
+              selectedUsers: prevState.data.selectedUsers.filter((id) => id !== action.name),
             },
           };
 
           return state;
         }
-        const newSelectedUsers = prevState.data.selectedUsers.concat(
-          prevState.usersList.find((item) => item.id === action.name),
-        );
+        const newSelectedUser = prevState.usersList.find((item) => item.id === action.name).id;
+        const newSelectedUsers = prevState.data.selectedUsers.concat(newSelectedUser);
         state = {
           ...prevState,
           data: {

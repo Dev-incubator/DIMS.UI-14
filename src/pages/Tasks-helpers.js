@@ -3,6 +3,7 @@ export const TASKS_MODAL_CREATE_TASK = 'modal-tasks-create'; // not used now
 
 // export for local use
 export const TASKS_MODAL_TOGGLE = 'tasks-modal-toggle';
+export const TASKS_UPDATE = 'tasks-update';
 
 export const reducerFunc = (prevState, action) => {
   let state;
@@ -12,6 +13,13 @@ export const reducerFunc = (prevState, action) => {
         ...prevState,
         isOpen: !prevState.isOpen,
         selectedModal: action.modalType,
+      };
+
+      return state;
+    case TASKS_UPDATE:
+      state = {
+        ...prevState,
+        [action.name]: action.list,
       };
 
       return state;

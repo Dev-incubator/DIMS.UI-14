@@ -10,7 +10,7 @@ import {
   CREATE_TASK_VALIDATE_FORM,
   reducerFunc,
 } from './Task-helpers';
-import { TASKS, USERS, createElemRef, getCollection } from '../../../utilities/fb-helpers';
+import { TASKS, createElemRef } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class CreateTask extends React.PureComponent {
@@ -23,7 +23,7 @@ export default class CreateTask extends React.PureComponent {
         startDate: '',
         deadLine: '',
         selectedUsers: [],
-        id: createElemRef(TASKS),
+        id: '',
       },
       validator: {
         title: false,
@@ -31,14 +31,15 @@ export default class CreateTask extends React.PureComponent {
         deadLine: false,
         selectedUsers: false,
       },
-      usersList: [],
-      isValid: false,
       errors: {
         titleError: '',
         startDateError: '',
         deadLineError: '',
         selectedUsersError: '',
       },
+      usersList: [],
+      newTaskRef: {},
+      isValid: false,
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateTask = this.liftUpCreateTask.bind(this);
@@ -48,27 +49,17 @@ export default class CreateTask extends React.PureComponent {
   }
 
   componentDidMount() {
-    getCollection(USERS)
-      .then((querySnapshot) => {
-        const usersList = [];
-        querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
-        });
-
-        return usersList;
-      })
-      .then((usersList) =>
-        this.setState((prevState) => ({
-          ...prevState,
-          data: {
-            ...prevState.data,
-          },
-          usersList,
-        })),
-      )
-      .catch((error) => {
-        console.log('Error reading users collection: ', error);
-      });
+    const newTaskRef = createElemRef(TASKS);
+    const { usersList } = this.props;
+    this.setState((prevState) => ({
+      ...prevState,
+      data: {
+        ...prevState.data,
+        id: newTaskRef.id,
+      },
+      newTaskRef,
+      usersList,
+    }));
   }
 
   onChange(event) {
@@ -113,9 +104,9 @@ export default class CreateTask extends React.PureComponent {
 
   liftUpCreateTask() {
     const { liftUpCreateTask } = this.props;
-    const { data, data:{id} } = this.state;
+    const { data, newTaskRef } = this.state;
     const newTask = { ...data };
-    liftUpCreateTask(id, newTask);
+    liftUpCreateTask(newTaskRef, newTask);
     this.closeModal();
   }
 
@@ -178,5 +169,6 @@ export default class CreateTask extends React.PureComponent {
 
 CreateTask.propTypes = {
   closeFunc: PropType.func.isRequired,
+  usersList: PropType.instanceOf(Array).isRequired,
   liftUpCreateTask: PropType.func.isRequired,
 };
