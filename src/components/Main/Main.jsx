@@ -14,7 +14,7 @@ export default function Main({ toggleMenu, isOpen }) {
       <Header toggleMenu={toggleMenu} isOpen={isOpen} />
       <div className={classes.screen}>
         <Route exact path='/users' component={Users} />
-        <Route exact path='/tasks' component={Tasks} />
+        <Route path='/tasks' component={Tasks} />
         <Route exact path='/users/:userId/tasks' component={UsersTasks} />
         <Route exact path='/users/:userId/tasks/:taskId/track' component={UsersTracks} />
         <Route exact path='/users/:userId/progress' component={UsersProgress} />
