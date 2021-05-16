@@ -182,3 +182,63 @@ export const createTrack = (userID, taskID, newTrack, callback) => {
       console.log(`Error with adding TRACK id:${newTrack.id} from task id:${taskID} to USER id:${userID}`, error);
     });
 };
+
+export const editTrack = (userID, taskID, editedTrack, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userID);
+  userRef
+    .get()
+    .then((user) => {
+      const { tasks } = user.data();
+      const { tracks } = tasks.find((item) => item.id === taskID);
+      const newTracks = tracks.map((track) => {
+        return track.id === editedTrack.id ? editedTrack : track;
+      });
+      const newTasks = tasks.map((task) => {
+        return task.id === taskID ? { ...task, tracks: newTracks } : task;
+      });
+
+      return newTasks;
+    })
+    .then((newTasks) => {
+      userRef
+        .update({
+          tasks: newTasks,
+        })
+        .then(() => {
+          callback();
+          console.log(`TRACK id:${editedTrack.id} from task id:${taskID} was succeffully updated in USER id:${userID}`);
+        });
+    })
+    .catch((error) => {
+      console.log(`Error with updating TRACK id:${editedTrack.id} from task id:${taskID} in USER id:${userID}`, error);
+    });
+};
+
+export const deleteTrack = (userID, taskID, trackID, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userID);
+  userRef
+    .get()
+    .then((user) => {
+      const { tasks } = user.data();
+      const { tracks } = tasks.find((item) => item.id === taskID);
+      const newTracks = tracks.filter((track) => track.id !== trackID);
+      const newTasks = tasks.map((task) => {
+        return task.id === taskID ? { ...task, tracks: newTracks } : task;
+      });
+
+      return newTasks;
+    })
+    .then((newTasks) => {
+      userRef
+        .update({
+          tasks: newTasks,
+        })
+        .then(() => {
+          callback();
+          console.log(`TRACK id:${trackID} from task id:${taskID} was succeffully deleted from USER id:${userID}`);
+        });
+    })
+    .catch((error) => {
+      console.log(`Error with deleting TRACK id:${trackID} from task id:${taskID} in USER id:${userID}`, error);
+    });
+};

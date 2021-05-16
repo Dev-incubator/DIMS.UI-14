@@ -80,6 +80,7 @@ export default class CreateTrack extends React.Component {
     const { data } = this.state;
     const newTrack = { ...data };
     liftUpCreateTrack(newTrack);
+    this.closeModal();
   }
 
   closeModal() {

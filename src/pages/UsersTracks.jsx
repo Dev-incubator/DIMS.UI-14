@@ -5,7 +5,7 @@ import noop from '../shared/noop';
 import Button from '../components/Button/Button';
 import classes from './UsersTracks.module.css';
 import Modal from '../components/Modals/Modal';
-import { USERS, TASKS, getElementFromCollection, createTrack } from '../utilities/fb-helpers';
+import { USERS, TASKS, getElementFromCollection, createTrack, editTrack, deleteTrack } from '../utilities/fb-helpers';
 import Track from '../components/Track/Track';
 import { TRACKS_MODAL_CREATE_TRACK, TRACKS_MODAL_TOGGLE, reducerFunc } from './UsersTracks-helpers';
 
@@ -22,8 +22,8 @@ export default class UsersTracks extends React.Component {
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.createTrack = this.createTrack.bind(this);
-    // this.editTrack = this.editTrack.bind(this);
-    // this.deleteTrack = this.deleteTrack.bind(this);
+    this.editTrack = this.editTrack.bind(this);
+    this.deleteTrack = this.deleteTrack.bind(this);
     this.updateData = this.updateData.bind(this);
   }
 
@@ -63,13 +63,15 @@ export default class UsersTracks extends React.Component {
     createTrack(userID, taskID, newTrack, this.updateData);
   }
 
-  // editTrack() {
-  //   return noop;
-  // }
+  editTrack(editedTrack) {
+    const { userID, taskID } = this.state;
+    editTrack(userID, taskID, editedTrack, this.updateData);
+  }
 
-  // deleteTrack() {
-  //   return noop;
-  // }
+  deleteTrack(trackID) {
+    const { userID, taskID } = this.state;
+    deleteTrack(userID, taskID, trackID, this.updateData);
+  }
 
   toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: TRACKS_MODAL_TOGGLE, modalType }));
@@ -84,9 +86,9 @@ export default class UsersTracks extends React.Component {
           track={track}
           tableIndex={index + 1}
           key={track.id}
-          deleteTrack={noop}
-          editTrack={noop}
-          title={taskData.title}
+          deleteTrack={this.deleteTrack}
+          editTrack={this.editTrack}
+          taskData={taskData}
         />
       );
     });

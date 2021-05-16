@@ -2,17 +2,10 @@ import React from 'react';
 import PropType from 'prop-types';
 import classes from './Track.module.css';
 import noop from '../../shared/noop';
-import DivAnchor from '../DivAnchor';
 import Button from '../Button/Button';
 import Modal from '../Modals/Modal';
 import { internationalizeDate } from '../../utilities/internationalization';
-import {
-  TRACK_MODAL_TOGGLE,
-  TRACK_MODAL_DELETE_TRACK,
-  TRACK_MODAL_SHOW_TRACK,
-  TRACK_MODAL_EDIT_TRACK,
-  reducerFunc,
-} from './Track-helpers';
+import { TRACK_MODAL_TOGGLE, TRACK_MODAL_DELETE_TRACK, TRACK_MODAL_EDIT_TRACK, reducerFunc } from './Track-helpers';
 
 export default class Track extends React.Component {
   constructor(props) {
@@ -22,6 +15,21 @@ export default class Track extends React.Component {
       selectedModal: '',
     };
     this.toggleModal = this.toggleModal.bind(this);
+    this.liftUpDeleteTrack = this.liftUpDeleteTrack.bind(this);
+    this.liftUpEditTrack = this.liftUpEditTrack.bind(this);
+  }
+
+  liftUpDeleteTrack() {
+    const {
+      deleteTrack,
+      track: { id },
+    } = this.props;
+    deleteTrack(id);
+  }
+
+  liftUpEditTrack(editedTrack) {
+    const { editTrack } = this.props;
+    editTrack(editedTrack);
   }
 
   toggleModal(modalType = '') {
@@ -31,20 +39,33 @@ export default class Track extends React.Component {
   render() {
     const {
       tableIndex,
+      track,
       track: { date, note },
-      title,
+      taskData: { title, startDate },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
     const openDeleteModal = () => this.toggleModal(TRACK_MODAL_DELETE_TRACK);
-    const openShowModal = () => this.toggleModal(TRACK_MODAL_SHOW_TRACK);
     const openEditModal = () => this.toggleModal(TRACK_MODAL_EDIT_TRACK);
     const closeAnyModal = () => this.toggleModal();
+
+    const selectActFunc = () => {
+      switch (selectedModal) {
+        case TRACK_MODAL_DELETE_TRACK:
+          return () => this.liftUpDeleteTrack();
+        case TRACK_MODAL_EDIT_TRACK:
+          return (editedTrack) => this.liftUpEditTrack(editedTrack);
+        default:
+          return () => noop;
+      }
+    };
+
+    const trackCopy = { ...track, title, startDate };
 
     return (
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <DivAnchor onClick={openShowModal}>{title}</DivAnchor>
+          <div>{title}</div>
           <div>{note}</div>
           <div>{internationalizeDate(date)}</div>
           <div className={classes.buttons}>
@@ -56,7 +77,9 @@ export default class Track extends React.Component {
             </Button>
           </div>
         </div>
-        {isOpen ? <Modal closeFunc={closeAnyModal} actFunc={noop} selectedModal={selectedModal} /> : null}
+        {isOpen ? (
+          <Modal item={trackCopy} closeFunc={closeAnyModal} actFunc={selectActFunc()} selectedModal={selectedModal} />
+        ) : null}
       </>
     );
   }
@@ -64,9 +87,12 @@ export default class Track extends React.Component {
 
 Track.propTypes = {
   tableIndex: PropType.number.isRequired,
-  title: PropType.string.isRequired,
+  taskData: PropType.instanceOf(Object).isRequired,
   track: PropType.shape({
+    id: PropType.string,
     date: PropType.string,
     note: PropType.string,
   }).isRequired,
+  editTrack: PropType.func.isRequired,
+  deleteTrack: PropType.func.isRequired,
 };

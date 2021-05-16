@@ -111,7 +111,7 @@ export default class UsersTasks extends React.Component {
             <div>Start Date</div>
             <div>Deadline</div>
             <div>Status</div>
-            <div>{isUser ? 'Tracks' : 'Update Status'}</div>
+            <div>{isUser ? 'View Tracks' : 'Update Status'}</div>
           </div>
           {tasks}
         </div>

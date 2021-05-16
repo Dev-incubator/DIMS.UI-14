@@ -1,6 +1,5 @@
 // only for export
 export const TRACK_MODAL_DELETE_TRACK = 'modal-track-delete';
-export const TRACK_MODAL_SHOW_TRACK = 'modal-track-show';
 export const TRACK_MODAL_EDIT_TRACK = 'modal-track-edit';
 
 // export for local use

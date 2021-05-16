@@ -19,7 +19,6 @@ export default class User extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedID: '',
       isOpen: false,
       selectedModal: '',
     };
@@ -28,24 +27,16 @@ export default class User extends React.Component {
     this.toggleModal = this.toggleModal.bind(this);
   }
 
-  componentDidMount() {
-    const {
-      userData: { id },
-    } = this.props;
-    this.setState((prevState) => ({
-      ...prevState,
-      selectedID: id,
-    }));
-  }
-
   toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: USER_MODAL_TOGGLE, modalType }));
   }
 
   liftUpDeleteUser() {
-    const { deleteUser } = this.props;
-    const { selectedID } = this.state;
-    deleteUser(selectedID);
+    const {
+      deleteUser,
+      userData: { id },
+    } = this.props;
+    deleteUser(id);
   }
 
   liftUpEditUser(editedUser) {
@@ -68,7 +59,7 @@ export default class User extends React.Component {
     const selectActFunc = () => {
       switch (selectedModal) {
         case USER_MODAL_DELETE_USER:
-          return (editedUser) => this.liftUpDeleteUser(editedUser);
+          return () => this.liftUpDeleteUser();
         case USER_MODAL_EDIT_USER:
           return (editedUser) => this.liftUpEditUser(editedUser);
         default:
@@ -91,7 +82,7 @@ export default class User extends React.Component {
             <NavLink className={classes.navLink} to={`/users/${id}/tasks`}>
               <Button onClick={noop}>Tasks</Button>
             </NavLink>
-            <NavLink className={classes.navLink} to={`/users/user-progress/${id}`}>
+            <NavLink className={classes.navLink} to={`/users/${id}/progress`}>
               <Button onClick={noop}>Progress</Button>
             </NavLink>
             <Button roleClass='edit' onClick={openEditModal}>

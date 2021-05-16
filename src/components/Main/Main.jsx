@@ -6,6 +6,7 @@ import Users from '../../pages/Users';
 import Tasks from '../../pages/Tasks';
 import UsersTasks from '../../pages/UsersTasks';
 import UsersTracks from '../../pages/UsersTracks';
+import UsersProgress from '../../pages/UsersProgress';
 
 export default function Main({ toggleMenu, isOpen }) {
   return (
@@ -16,6 +17,7 @@ export default function Main({ toggleMenu, isOpen }) {
         <Route exact path='/tasks' component={Tasks} />
         <Route exact path='/users/:userID/tasks' component={UsersTasks} />
         <Route exact path='/users/:userID/tasks/:taskID/track' component={UsersTracks} />
+        <Route exact path='/users/:userID/progress' component={UsersProgress} />
       </div>
     </main>
   );

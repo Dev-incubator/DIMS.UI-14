@@ -1,0 +1,37 @@
+.modal {
+  background-color: var(--white-color);
+  padding: 30px;
+  border: 1px solid var(--lightgray-color);
+  border-radius: 20px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 0 2px 0 var(--lightgray-color);
+}
+
+.title {
+  margin: 0;
+  padding-bottom: 20px;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--lightgray-color);
+}
+
+.text {
+  margin-top: 20px;
+  text-align: center;
+}
+.text span {
+  color: var(--lightblue-color);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 25px;
+}
+.buttons button {
+  width: 35%;
+}

@@ -18,22 +18,12 @@ export default class Task extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedID: '',
       isOpen: false,
       selectedModal: '',
     };
     this.liftUpDeleteTask = this.liftUpDeleteTask.bind(this);
+    this.liftUpEditTask = this.liftUpEditTask.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
-  }
-
-  componentDidMount() {
-    const {
-      taskData: { id },
-    } = this.props;
-    this.setState((prevState) => ({
-      ...prevState,
-      selectedID: id,
-    }));
   }
 
   toggleModal(modalType = '') {
@@ -41,9 +31,11 @@ export default class Task extends React.Component {
   }
 
   liftUpDeleteTask() {
-    const { deleteTask } = this.props;
-    const { selectedID } = this.state;
-    deleteTask(selectedID);
+    const {
+      deleteTask,
+      taskData: { id },
+    } = this.props;
+    deleteTask(id);
   }
 
   liftUpEditTask(editedTask) {
@@ -67,7 +59,7 @@ export default class Task extends React.Component {
     const selectActFunc = () => {
       switch (selectedModal) {
         case TASK_MODAL_DELETE_TASK:
-          return (editedTask) => this.liftUpDeleteTask(editedTask);
+          return () => this.liftUpDeleteTask();
         case TASK_MODAL_EDIT_TASK:
           return (editedTask) => this.liftUpEditTask(editedTask);
         default:
