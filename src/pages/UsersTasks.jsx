@@ -12,7 +12,7 @@ export default class UsersTasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userID: '',
+      userId: '',
       userName: '',
       tasksList: [],
       tasksWithStatus: [],
@@ -24,11 +24,11 @@ export default class UsersTasks extends React.Component {
   async componentDidMount() {
     const {
       match: {
-        params: { userID },
+        params: { userId },
       },
     } = this.props;
 
-    const user = await getElementFromCollection(USERS, userID);
+    const user = await getElementFromCollection(USERS, userId);
     const userName = `${user.data().username} ${user.data().surname}`;
     const { role } = user.data();
     const tasksWithStatus = user.data().tasks;
@@ -45,24 +45,24 @@ export default class UsersTasks extends React.Component {
     }
     const tasksList = await getTasksList(tasksWithStatus);
     this.setState((prevState) =>
-      reducerFunc(prevState, { type: SET_DATA, userName, tasksWithStatus, tasksList, userID, role }),
+      reducerFunc(prevState, { type: SET_DATA, userName, tasksWithStatus, tasksList, userId, role }),
     );
   }
 
-  changeStatus(taskID, newStatus) {
-    const { userID } = this.state;
-    updateStatus(userID, taskID, newStatus, this.updateData);
+  changeStatus(taskId, newStatus) {
+    const { userId } = this.state;
+    updateStatus(userId, taskId, newStatus, this.updateData);
   }
 
   async updateData() {
-    const { userID } = this.state;
-    const user = await getElementFromCollection(USERS, userID);
+    const { userId } = this.state;
+    const user = await getElementFromCollection(USERS, userId);
     const tasksWithStatus = await user.data().tasks;
     this.setState((prevState) => reducerFunc(prevState, { type: STATUS_UPDATE, list: tasksWithStatus }));
   }
 
   render() {
-    const { userName, tasksWithStatus, tasksList, isUser, userID } = this.state;
+    const { userName, tasksWithStatus, tasksList, isUser, userId } = this.state;
 
     const selectActFunc = () => {
       if (isUser) {
@@ -77,8 +77,8 @@ export default class UsersTasks extends React.Component {
 
       return (
         <UserTask
-          userID={userID}
-          taskID={task.id}
+          userId={userId}
+          taskId={task.id}
           tableIndex={index + 1}
           key={task.id}
           status={task.status}

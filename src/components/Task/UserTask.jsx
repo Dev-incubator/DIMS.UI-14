@@ -4,13 +4,13 @@ import classes from './UserTask.module.css';
 import Button from '../Button/Button';
 import { internationalizeDate } from '../../utilities/internationalization';
 
-export default function UserTask({ userID, taskID, tableIndex, status, isUser, startDate, deadLine, title, actFunc }) {
-  const liftUpChangeStatus = (newStatus) => actFunc(taskID, newStatus);
+export default function UserTask({ userId, taskId, tableIndex, status, isUser, startDate, deadLine, title, actFunc }) {
+  const liftUpChangeStatus = (newStatus) => actFunc(taskId, newStatus);
   const handleFail = () => liftUpChangeStatus('Failed');
   const handleComplete = () => (status === 'Active' ? liftUpChangeStatus('Completed') : liftUpChangeStatus('Active'));
 
   const buttonGroup = isUser ? (
-    <NavLink className={classes.navLink} to={`/users/${userID}/tasks/${taskID}/track`}>
+    <NavLink className={classes.navLink} to={`/users/${userId}/tasks/${taskId}/track`}>
       <Button onClick={actFunc}>Tracks</Button>
     </NavLink>
   ) : (
@@ -39,8 +39,8 @@ export default function UserTask({ userID, taskID, tableIndex, status, isUser, s
 UserTask.propTypes = {
   tableIndex: PropType.number.isRequired,
   isUser: PropType.bool.isRequired,
-  taskID: PropType.string.isRequired,
-  userID: PropType.string.isRequired,
+  taskId: PropType.string.isRequired,
+  userId: PropType.string.isRequired,
   startDate: PropType.string.isRequired,
   deadLine: PropType.string.isRequired,
   title: PropType.string.isRequired,

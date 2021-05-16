@@ -19,10 +19,10 @@ export default class UsersProgress extends React.Component {
   async componentDidMount() {
     const {
       match: {
-        params: { userID },
+        params: { userId },
       },
     } = this.props;
-    const user = await getElementFromCollection(USERS, userID);
+    const user = await getElementFromCollection(USERS, userId);
     const { tasks } = user.data();
     const userName = `${user.data().username} ${user.data().surname}`;
     const allTracks = await tasks.reduce(async (tempArr, task) => {
@@ -33,6 +33,7 @@ export default class UsersProgress extends React.Component {
           return { ...track, title };
         }),
       );
+
       return (await tempArr).concat(extendedTracks);
     }, []);
     this.setState((prevState) => ({

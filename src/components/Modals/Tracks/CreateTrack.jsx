@@ -4,7 +4,7 @@ import classes from './CreateTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 
-import { TRACKS, createElemRef } from '../../../utilities/fb-helpers';
+import { TRACKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import {
   CREATE_TRACK_ONCHANGE,
   CREATE_TRACK_VALIDATE_FIELDS,
@@ -20,7 +20,7 @@ export default class CreateTrack extends React.Component {
       title: '',
       startDate: '',
       data: {
-        id: createElemRef(TRACKS).id,
+        id: createElemRefOnDB(TRACKS).id,
         date: '',
         note: '',
       },

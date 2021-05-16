@@ -15,8 +15,8 @@ export default class UsersTracks extends React.Component {
     this.state = {
       isOpen: false,
       selectedModal: '',
-      userID: '',
-      taskID: '',
+      userId: '',
+      taskId: '',
       taskData: {},
       tracks: [],
     };
@@ -30,28 +30,28 @@ export default class UsersTracks extends React.Component {
   async componentDidMount() {
     const {
       match: {
-        params: { userID, taskID },
+        params: { userId, taskId },
       },
     } = this.props;
 
-    const task = await getElementFromCollection(TASKS, taskID);
+    const task = await getElementFromCollection(TASKS, taskId);
     const taskData = task.data();
-    const user = await getElementFromCollection(USERS, userID);
-    const { tracks } = await user.data().tasks.find((item) => item.id === taskID);
+    const user = await getElementFromCollection(USERS, userId);
+    const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
 
     this.setState((prevState) => ({
       ...prevState,
-      userID,
-      taskID,
+      userId,
+      taskId,
       taskData,
       tracks,
     }));
   }
 
   async updateData() {
-    const { userID, taskID } = this.state;
-    const user = await getElementFromCollection(USERS, userID);
-    const { tracks } = await user.data().tasks.find((item) => item.id === taskID);
+    const { userId, taskId } = this.state;
+    const user = await getElementFromCollection(USERS, userId);
+    const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
     this.setState((prevState) => ({
       ...prevState,
       tracks,
@@ -59,18 +59,18 @@ export default class UsersTracks extends React.Component {
   }
 
   createTrack(newTrack) {
-    const { userID, taskID } = this.state;
-    createTrack(userID, taskID, newTrack, this.updateData);
+    const { userId, taskId } = this.state;
+    createTrack(userId, taskId, newTrack, this.updateData);
   }
 
   editTrack(editedTrack) {
-    const { userID, taskID } = this.state;
-    editTrack(userID, taskID, editedTrack, this.updateData);
+    const { userId, taskId } = this.state;
+    editTrack(userId, taskId, editedTrack, this.updateData);
   }
 
-  deleteTrack(trackID) {
-    const { userID, taskID } = this.state;
-    deleteTrack(userID, taskID, trackID, this.updateData);
+  deleteTrack(trackId) {
+    const { userId, taskId } = this.state;
+    deleteTrack(userId, taskId, trackId, this.updateData);
   }
 
   toggleModal(modalType = '') {
@@ -79,7 +79,7 @@ export default class UsersTracks extends React.Component {
 
   render() {
     const openModal = () => this.toggleModal(TRACKS_MODAL_CREATE_TRACK);
-    const { userID, taskData, isOpen, selectedModal, tracks } = this.state;
+    const { userId, taskData, isOpen, selectedModal, tracks } = this.state;
     const tracksList = tracks.map((track, index) => {
       return (
         <Track
@@ -100,7 +100,7 @@ export default class UsersTracks extends React.Component {
             {`${taskData.title}'s task tracks`} <span>({`${tracks.length}`})</span>
           </h2>
           <div className={classes.buttonsWrapper}>
-            <NavLink className={classes.navLink} to={`/users/${userID}/tasks`}>
+            <NavLink className={classes.navLink} to={`/users/${userId}/tasks`}>
               <Button onClick={noop}>Back</Button>
             </NavLink>
             <Button onClick={openModal} roleClass='create'>

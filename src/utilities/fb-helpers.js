@@ -13,26 +13,22 @@ export const db = firebase.firestore();
 // common
 export const getCollection = (collection) => db.collection(collection).get();
 
-export const getElementFromCollection = (collection, id) => db.collection(collection).doc(id).get();
+export const getElementFromCollection = (collection, id) => getElementRefFromCollection(collection, id).get();
 
 export const getElementRefFromCollection = (collection, id) => db.collection(collection).doc(id);
 
-export const getAllElementsFromCollection = (collection) => {
-  return getCollection(collection)
-    .then((elements) => {
-      const elementsList = [];
-      elements.forEach((element) => {
-        elementsList.push(element.data());
-      });
+export async function getAllElementsFromCollection(collection) {
+  const elements = await getCollection(collection);
+  console.log(elements);
+  const elementsList = [];
+  elements.forEach((element) => {
+    elementsList.push(element.data());
+  });
 
-      return elementsList;
-    })
-    .catch((error) => {
-      console.log(`Error reading collection:${collection} from DB`, error);
-    });
-};
+  return elementsList;
+}
 
-export const createElemRef = (collection) => db.collection(collection).doc();
+export const createElemRefOnDB = (collection) => db.collection(collection).doc();
 
 export const setElemToDB = (ref, data, callback) =>
   ref
@@ -45,9 +41,9 @@ export const setElemToDB = (ref, data, callback) =>
       console.error('Error with creating document: ', error);
     });
 
-export const deleteElemFromDB = (collection, selectedID, callback) => {
+export const deleteElemFromDB = (collection, selectedId, callback) => {
   db.collection(collection)
-    .doc(selectedID)
+    .doc(selectedId)
     .delete()
     .then(() => {
       callback();
@@ -72,73 +68,73 @@ export const editElemInDB = (collection, editedElem, callback) => {
 };
 
 // only for tasks
-export const addTaskToUser = (newTaskID, assUserID) => {
+export const addTaskToUser = (newTaskId, assignedUserId) => {
   const newTaskObj = {
     status: 'Active',
-    id: newTaskID,
+    id: newTaskId,
     tracks: [],
   };
-  getElementRefFromCollection(USERS, assUserID)
+  getElementRefFromCollection(USERS, assignedUserId)
     .update({
       tasks: firebase.firestore.FieldValue.arrayUnion(newTaskObj),
     })
     .then(() => {
-      console.log(`TASK id:${newTaskID} was succeffully added to USER id:${assUserID}`);
+      console.log(`TASK id:${newTaskId} was succeffully added to USER id:${assignedUserId}`);
     })
     .catch((error) => {
       console.log('Error with adding TASK to USERS: ', error);
     });
 };
 
-export const deleteTaskFromUser = (taskID, assUserID) => {
-  const userRef = getElementRefFromCollection(USERS, assUserID);
+export const deleteTaskFromUser = (taskId, assignedUserId) => {
+  const userRef = getElementRefFromCollection(USERS, assignedUserId);
   userRef
     .get()
     .then((user) => {
-      const newTasks = user.data().tasks.filter((task) => task.id !== taskID);
+      const newTasks = user.data().tasks.filter((task) => task.id !== taskId);
       userRef
         .update({
           tasks: newTasks,
         })
         .then(() => {
-          console.log(`TASK id:${taskID} was succesfully deleted from USER:${assUserID}`);
+          console.log(`TASK id:${taskId} was succesfully deleted from USER:${assignedUserId}`);
         });
     })
     .catch((error) => {
-      console.log(`Error with deleting TASK id:${taskID} from USER id:${assUserID}`, error);
+      console.log(`Error with deleting TASK id:${taskId} from USER id:${assignedUserId}`, error);
     });
 };
 
-export const editTaskInUsers = (usersToAssign, usersToUnassign, taskID) => {
-  usersToUnassign.forEach((assUserID) => {
-    deleteTaskFromUser(taskID, assUserID);
+export const editTaskInUsers = (usersToAssign, usersToUnassign, taskId) => {
+  usersToUnassign.forEach((assignedUserId) => {
+    deleteTaskFromUser(taskId, assignedUserId);
   });
-  usersToAssign.forEach((assUserID) => {
-    addTaskToUser(taskID, assUserID);
+  usersToAssign.forEach((assignedUserId) => {
+    addTaskToUser(taskId, assignedUserId);
   });
 };
 
 // only for users
-export const deleteUserFromTask = (userID, assTaskID) => {
-  getElementRefFromCollection(TASKS, assTaskID)
+export const deleteUserFromTask = (userId, assignedTaskId) => {
+  getElementRefFromCollection(TASKS, assignedTaskId)
     .update({
-      selectedUsers: firebase.firestore.FieldValue.arrayRemove(userID),
+      selectedUsers: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {
-      console.log(`USER id:${userID} was succeffully deleted from TASK id:${assTaskID}`);
+      console.log(`USER id:${userId} was succeffully deleted from TASK id:${assignedTaskId}`);
     })
     .catch((error) => {
-      console.log(`Error with deleting USER id:${userID} from TASK id:${assTaskID} `, error);
+      console.log(`Error with deleting USER id:${userId} from TASK id:${assignedTaskId} `, error);
     });
 };
 
-export const updateStatus = (userID, taskID, newStatus, callback) => {
-  const userRef = getElementRefFromCollection(USERS, userID);
+export const updateStatus = (userId, taskId, newStatus, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userId);
   userRef
     .get()
     .then((user) => {
       const newTasks = user.data().tasks.map((task) => {
-        return task.id === taskID ? { ...task, status: newStatus } : task;
+        return task.id === taskId ? { ...task, status: newStatus } : task;
       });
       userRef
         .update({
@@ -146,24 +142,24 @@ export const updateStatus = (userID, taskID, newStatus, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TASK id:${taskID} status:${newStatus} was succeffully updated in USER id:${userID}`);
+          console.log(`TASK id:${taskId} status:${newStatus} was succeffully updated in USER id:${userId}`);
         });
     })
     .catch((error) => {
-      console.log(`Error with updating status:${newStatus} in TASK id:${taskID} in USER id:${userID} `, error);
+      console.log(`Error with updating status:${newStatus} in TASK id:${taskId} in USER id:${userId} `, error);
     });
 };
 
-export const createTrack = (userID, taskID, newTrack, callback) => {
-  const userRef = getElementRefFromCollection(USERS, userID);
+export const createTrack = (userId, taskId, newTrack, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userId);
   userRef
     .get()
     .then((user) => {
       const { tasks } = user.data();
-      const { tracks } = tasks.find((item) => item.id === taskID);
+      const { tracks } = tasks.find((item) => item.id === taskId);
       tracks.push(newTrack);
       const newTasks = tasks.map((task) => {
-        return task.id === taskID ? { ...task, tracks } : task;
+        return task.id === taskId ? { ...task, tracks } : task;
       });
 
       return newTasks;
@@ -175,26 +171,26 @@ export const createTrack = (userID, taskID, newTrack, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TRACK id:${newTrack.id} from task id:${taskID} was succeffully added to USER id:${userID}`);
+          console.log(`TRACK id:${newTrack.id} from task id:${taskId} was succeffully added to USER id:${userId}`);
         });
     })
     .catch((error) => {
-      console.log(`Error with adding TRACK id:${newTrack.id} from task id:${taskID} to USER id:${userID}`, error);
+      console.log(`Error with adding TRACK id:${newTrack.id} from task id:${taskId} to USER id:${userId}`, error);
     });
 };
 
-export const editTrack = (userID, taskID, editedTrack, callback) => {
-  const userRef = getElementRefFromCollection(USERS, userID);
+export const editTrack = (userId, taskId, editedTrack, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userId);
   userRef
     .get()
     .then((user) => {
       const { tasks } = user.data();
-      const { tracks } = tasks.find((item) => item.id === taskID);
+      const { tracks } = tasks.find((item) => item.id === taskId);
       const newTracks = tracks.map((track) => {
         return track.id === editedTrack.id ? editedTrack : track;
       });
       const newTasks = tasks.map((task) => {
-        return task.id === taskID ? { ...task, tracks: newTracks } : task;
+        return task.id === taskId ? { ...task, tracks: newTracks } : task;
       });
 
       return newTasks;
@@ -206,24 +202,24 @@ export const editTrack = (userID, taskID, editedTrack, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TRACK id:${editedTrack.id} from task id:${taskID} was succeffully updated in USER id:${userID}`);
+          console.log(`TRACK id:${editedTrack.id} from task id:${taskId} was succeffully updated in USER id:${userId}`);
         });
     })
     .catch((error) => {
-      console.log(`Error with updating TRACK id:${editedTrack.id} from task id:${taskID} in USER id:${userID}`, error);
+      console.log(`Error with updating TRACK id:${editedTrack.id} from task id:${taskId} in USER id:${userId}`, error);
     });
 };
 
-export const deleteTrack = (userID, taskID, trackID, callback) => {
-  const userRef = getElementRefFromCollection(USERS, userID);
+export const deleteTrack = (userId, taskId, trackId, callback) => {
+  const userRef = getElementRefFromCollection(USERS, userId);
   userRef
     .get()
     .then((user) => {
       const { tasks } = user.data();
-      const { tracks } = tasks.find((item) => item.id === taskID);
-      const newTracks = tracks.filter((track) => track.id !== trackID);
+      const { tracks } = tasks.find((item) => item.id === taskId);
+      const newTracks = tracks.filter((track) => track.id !== trackId);
       const newTasks = tasks.map((task) => {
-        return task.id === taskID ? { ...task, tracks: newTracks } : task;
+        return task.id === taskId ? { ...task, tracks: newTracks } : task;
       });
 
       return newTasks;
@@ -235,10 +231,10 @@ export const deleteTrack = (userID, taskID, trackID, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TRACK id:${trackID} from task id:${taskID} was succeffully deleted from USER id:${userID}`);
+          console.log(`TRACK id:${trackId} from task id:${taskId} was succeffully deleted from USER id:${userId}`);
         });
     })
     .catch((error) => {
-      console.log(`Error with deleting TRACK id:${trackID} from task id:${taskID} in USER id:${userID}`, error);
+      console.log(`Error with deleting TRACK id:${trackId} from task id:${taskId} in USER id:${userId}`, error);
     });
 };

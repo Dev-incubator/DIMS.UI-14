@@ -18,7 +18,7 @@ export const reducerFunc = (prevState, action) => {
         userName: action.userName,
         tasksWithStatus: action.tasksWithStatus,
         tasksList: action.tasksList,
-        userID: action.userID,
+        userId: action.userId,
         isUser: action.role === 'User',
       };
 

@@ -11,7 +11,7 @@ import {
   reducerFunc,
 } from './User-helpers';
 
-import { USERS, createElemRef } from '../../../utilities/fb-helpers';
+import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class CreateUser extends React.Component {
@@ -71,7 +71,7 @@ export default class CreateUser extends React.Component {
         mathScoreError: '',
       },
       isValid: false,
-      newUserRef: createElemRef(USERS),
+      newUserRef: createElemRefOnDB(USERS),
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateUser = this.liftUpCreateUser.bind(this);

@@ -42,12 +42,12 @@ export default class Users extends React.Component {
     );
   }
 
-  deleteUser(selectedID) {
+  deleteUser(selectedId) {
     const { usersList } = this.state;
-    const assTasks = usersList.find((item) => item.id === selectedID).tasks;
-    deleteElemFromDB(USERS, selectedID, this.updateData);
-    if (assTasks.length) {
-      assTasks.forEach((assTask) => deleteUserFromTask(selectedID, assTask.id));
+    const assignedTasks = usersList.find((item) => item.id === selectedId).tasks;
+    deleteElemFromDB(USERS, selectedId, this.updateData);
+    if (assignedTasks.length) {
+      assignedTasks.forEach((assignedTask) => deleteUserFromTask(selectedId, assignedTask.id));
     }
   }
 
