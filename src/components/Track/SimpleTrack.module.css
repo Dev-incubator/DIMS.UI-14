@@ -1,0 +1,17 @@
+.item {
+  background-color: var(--white-color);
+  border-top: 1px solid var(--lightgray-color);
+  border-right: 1px solid var(--lightgray-color);
+  border-left: 1px solid var(--lightgray-color);
+  display: grid;
+  grid-template-columns: minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px);
+  align-items: center;
+}
+
+.item div {
+  padding: 30px 15px;
+}
+
+.item:last-of-type {
+  border-bottom: 1px solid var(--lightgray-color);
+}
