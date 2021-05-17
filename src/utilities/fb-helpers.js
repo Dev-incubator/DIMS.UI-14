@@ -114,6 +114,18 @@ export const editTaskInUsers = (usersToAssign, usersToUnassign, taskId) => {
   });
 };
 
+export async function getTasks(array) {
+  const tasksList = [];
+  await Promise.all(
+    array.map(async (item) => {
+      const task = await getElementFromCollection(TASKS, item.id);
+      tasksList.push(task.data());
+    }),
+  );
+
+  return tasksList;
+}
+
 // only for users
 export const deleteUserFromTask = (userId, assignedTaskId) => {
   getElementRefFromCollection(TASKS, assignedTaskId)

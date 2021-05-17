@@ -15,7 +15,7 @@ export const reducerFunc = (prevState, action) => {
     case TASKS_SET_DATA:
       state = {
         ...prevState,
-        userName: action.userName,
+        userFullName: action.userFullName,
         tasksWithStatus: action.tasksWithStatus,
         tasksList: action.tasksList,
         userId: action.userId,

@@ -5,7 +5,7 @@ import Button from '../components/Button/Button';
 import noop from '../shared/noop';
 import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
-import { USERS, TASKS, getElementFromCollection, updateStatus } from '../utilities/fb-helpers';
+import { USERS, getElementFromCollection, updateStatus, getTasks } from '../utilities/fb-helpers';
 import { reducerFunc, TASKS_STATUS_UPDATE, TASKS_SET_DATA } from './usersTasks-helpers';
 
 export default class UsersTasks extends React.Component {
@@ -14,7 +14,7 @@ export default class UsersTasks extends React.Component {
     this.state = {
       isUser: null,
       userId: '',
-      userName: '',
+      userFullName: '',
       tasksList: [],
       tasksWithStatus: [],
     };
@@ -31,23 +31,14 @@ export default class UsersTasks extends React.Component {
     } = this.props;
 
     const user = await getElementFromCollection(USERS, userId);
-    const userName = `${user.data().username} ${user.data().surname}`;
-    const { role } = user.data();
-    const tasksWithStatus = user.data().tasks;
-    async function getTasksList(array) {
-      const tasks = [];
-      await Promise.all(
-        array.map(async (item) => {
-          const task = await getElementFromCollection(TASKS, item.id);
-          tasks.push(task.data());
-        }),
-      );
+    const userData = user.data();
+    const { role, username, surname } = userData;
+    const userFullName = `${username} ${surname}`;
+    const tasksWithStatus = userData.tasks;
+    const tasksList = await getTasks(tasksWithStatus);
 
-      return tasks;
-    }
-    const tasksList = await getTasksList(tasksWithStatus);
     this.setState((prevState) =>
-      reducerFunc(prevState, { type: TASKS_SET_DATA, userName, tasksWithStatus, tasksList, userId, role }),
+      reducerFunc(prevState, { type: TASKS_SET_DATA, userFullName, tasksWithStatus, tasksList, userId, role }),
     );
   }
 
@@ -73,7 +64,7 @@ export default class UsersTasks extends React.Component {
   }
 
   render() {
-    const { userName, tasksWithStatus, tasksList, isUser, userId } = this.state;
+    const { userFullName, tasksWithStatus, tasksList, isUser, userId } = this.state;
 
     const tasks = tasksWithStatus.map((task, index) => {
       const taskObj = tasksList.find((item) => item.id === task.id);
@@ -98,7 +89,7 @@ export default class UsersTasks extends React.Component {
       <div>
         <div className={classes.header}>
           <h2 className={classes.title}>
-            {`${userName}'s Tasks `}
+            {`${userFullName}'s Tasks `}
             <span>({`${tasks.length}`})</span>
           </h2>
           {isUser ? null : (
