@@ -6,6 +6,7 @@ import {
   regExpScore,
   regExpDateOfBirthCheck,
   regExpCheck,
+  regExpDeadLineCheck,
 } from './regExp-helpers';
 
 export function validateInput(inputName, inputBody, password = '', startDate = '') {
@@ -70,13 +71,10 @@ export function validateInput(inputName, inputBody, password = '', startDate = '
       validatorField = regExpCheck(regExpScore, inputBody);
       errorField = validatorField ? '' : errors.score;
       break;
-    case 'deadLine':
-      validatorField = new Date(inputBody) > new Date(startDate);
-      errorField = validatorField ? '' : errors.deadLine;
-      break;
     case 'date':
-      validatorField = new Date(inputBody) > new Date(startDate);
-      errorField = validatorField ? '' : errors.track;
+    case 'deadLine':
+      validatorField = regExpDeadLineCheck(startDate, inputBody);
+      errorField = validatorField ? '' : errors.deadLine;
       break;
     default:
       break;

@@ -9,10 +9,10 @@ import {
   EDIT_TRACK_VALIDATE_FIELDS,
   EDIT_TRACK_VALIDATE_FORM,
   reducerFunc,
-} from './Track-helpers';
+} from './track-helpers';
 import debounce from '../../../utilities/debounce';
 
-export default class EditTrack extends React.Component {
+export default class EditTrack extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

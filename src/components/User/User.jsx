@@ -6,14 +6,14 @@ import classes from './User.module.css';
 import noop from '../../shared/noop';
 import Modal from '../Modals/Modal';
 import DivAnchor from '../DivAnchor';
-import { internationalizeDate } from '../../utilities/internationalization';
+import { getInternationalDate } from '../../utilities/internationalization';
 import {
   USER_MODAL_TOGGLE,
   USER_MODAL_DELETE_USER,
   USER_MODAL_EDIT_USER,
   USER_MODAL_SHOW_USER,
   reducerFunc,
-} from './User-helpers';
+} from './user-helpers';
 
 export default class User extends React.Component {
   constructor(props) {
@@ -25,7 +25,16 @@ export default class User extends React.Component {
     this.liftUpDeleteUser = this.liftUpDeleteUser.bind(this);
     this.liftUpEditUser = this.liftUpEditUser.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.selectActFunc = this.selectActFunc.bind(this);
   }
+
+  openDeleteModal = () => this.toggleModal(USER_MODAL_DELETE_USER);
+
+  openEditModal = () => this.toggleModal(USER_MODAL_EDIT_USER);
+
+  openShowModal = () => this.toggleModal(USER_MODAL_SHOW_USER);
+
+  closeAnyModal = () => this.toggleModal();
 
   toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: USER_MODAL_TOGGLE, modalType }));
@@ -44,6 +53,19 @@ export default class User extends React.Component {
     editUser(editedUser);
   }
 
+  selectActFunc() {
+    const { selectedModal } = this.state;
+
+    switch (selectedModal) {
+      case USER_MODAL_DELETE_USER:
+        return () => this.liftUpDeleteUser();
+      case USER_MODAL_EDIT_USER:
+        return (editedUser) => this.liftUpEditUser(editedUser);
+      default:
+        return () => noop;
+    }
+  }
+
   render() {
     const {
       tableIndex,
@@ -52,31 +74,16 @@ export default class User extends React.Component {
     } = this.props;
     const { isOpen, selectedModal } = this.state;
 
-    const openDeleteModal = () => this.toggleModal(USER_MODAL_DELETE_USER);
-    const openEditModal = () => this.toggleModal(USER_MODAL_EDIT_USER);
-    const openShowModal = () => this.toggleModal(USER_MODAL_SHOW_USER);
-    const closeAnyModal = () => this.toggleModal();
-    const selectActFunc = () => {
-      switch (selectedModal) {
-        case USER_MODAL_DELETE_USER:
-          return () => this.liftUpDeleteUser();
-        case USER_MODAL_EDIT_USER:
-          return (editedUser) => this.liftUpEditUser(editedUser);
-        default:
-          return () => noop;
-      }
-    };
-
     return (
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <DivAnchor onClick={openShowModal}>
+          <DivAnchor onClick={this.openShowModal}>
             {username} {surname}
           </DivAnchor>
           <div>{direction}</div>
           <div>{education}</div>
-          <div>{internationalizeDate(startDate)}</div>
+          <div>{getInternationalDate(startDate)}</div>
           <div>{new Date().getFullYear() - new Date(dateOfBirth).getFullYear()}</div>
           <div className={classes.buttons}>
             <NavLink className={classes.navLink} to={`/users/${id}/tasks`}>
@@ -85,16 +92,21 @@ export default class User extends React.Component {
             <NavLink className={classes.navLink} to={`/users/${id}/progress`}>
               <Button onClick={noop}>Progress</Button>
             </NavLink>
-            <Button roleClass='edit' onClick={openEditModal}>
+            <Button roleClass='edit' onClick={this.openEditModal}>
               Edit
             </Button>
-            <Button roleClass='delete' onClick={openDeleteModal}>
+            <Button roleClass='delete' onClick={this.openDeleteModal}>
               Delete
             </Button>
           </div>
         </div>
         {isOpen ? (
-          <Modal item={userData} actFunc={selectActFunc()} closeFunc={closeAnyModal} selectedModal={selectedModal} />
+          <Modal
+            item={userData}
+            actFunc={this.selectActFunc()}
+            closeFunc={this.closeAnyModal}
+            selectedModal={selectedModal}
+          />
         ) : null}
       </>
     );

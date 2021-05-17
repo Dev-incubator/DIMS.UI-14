@@ -5,9 +5,16 @@ import noop from '../shared/noop';
 import Button from '../components/Button/Button';
 import classes from './UsersTracks.module.css';
 import Modal from '../components/Modals/Modal';
-import { USERS, TASKS, getElementFromCollection, createTrack, editTrack, deleteTrack } from '../utilities/fb-helpers';
+import {
+  TASKS,
+  getElementFromCollection,
+  createTrack,
+  editTrack,
+  deleteTrack,
+  getTracks,
+} from '../utilities/fb-helpers';
 import Track from '../components/Track/Track';
-import { TRACKS_MODAL_CREATE_TRACK, TRACKS_MODAL_TOGGLE, reducerFunc } from './UsersTracks-helpers';
+import { TRACKS_MODAL_CREATE_TRACK, TRACKS_MODAL_TOGGLE, reducerFunc } from './usersTracks-helpers';
 
 export default class UsersTracks extends React.Component {
   constructor(props) {
@@ -36,26 +43,16 @@ export default class UsersTracks extends React.Component {
 
     const task = await getElementFromCollection(TASKS, taskId);
     const taskData = task.data();
-    const user = await getElementFromCollection(USERS, userId);
-    const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
-
-    this.setState((prevState) => ({
-      ...prevState,
-      userId,
-      taskId,
-      taskData,
-      tracks,
-    }));
+    const tracks = await getTracks(userId, taskId);
+    this.setState({ userId, taskId, taskData, tracks });
   }
+
+  openCreateModal = () => this.toggleModal(TRACKS_MODAL_CREATE_TRACK);
 
   async updateData() {
     const { userId, taskId } = this.state;
-    const user = await getElementFromCollection(USERS, userId);
-    const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
-    this.setState((prevState) => ({
-      ...prevState,
-      tracks,
-    }));
+    const tracks = await getTracks(userId, taskId);
+    this.setState({ tracks });
   }
 
   createTrack(newTrack) {
@@ -78,7 +75,6 @@ export default class UsersTracks extends React.Component {
   }
 
   render() {
-    const openModal = () => this.toggleModal(TRACKS_MODAL_CREATE_TRACK);
     const { userId, taskData, isOpen, selectedModal, tracks } = this.state;
     const tracksList = tracks.map((track, index) => {
       return (
@@ -103,7 +99,7 @@ export default class UsersTracks extends React.Component {
             <NavLink className={classes.navLink} to={`/users/${userId}/tasks`}>
               <Button onClick={noop}>Back</Button>
             </NavLink>
-            <Button onClick={openModal} roleClass='create'>
+            <Button onClick={this.openCreateModal} roleClass='create'>
               Create
             </Button>
           </div>

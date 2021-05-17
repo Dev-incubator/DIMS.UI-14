@@ -9,7 +9,7 @@ import {
   CREATE_USER_VALIDATE_FIELDS,
   CREATE_USER_VALIDATE_FORM,
   reducerFunc,
-} from './User-helpers';
+} from './user-helpers';
 
 import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';

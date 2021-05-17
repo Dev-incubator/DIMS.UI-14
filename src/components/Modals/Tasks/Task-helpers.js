@@ -1,13 +1,13 @@
 import { validateInput, checkAllFormValidity } from '../../../utilities/form-validators';
 
 // export for local user
-export const CREATE_TASK_ONCHANGE = 'create-task-onchange';
-export const CREATE_TASK_VALIDATE_FIELDS = 'create-task-validate-fields';
-export const CREATE_TASK_VALIDATE_FORM = 'create-task-validate-form';
+export const CREATE_TASK_ONCHANGE = 'CREATE_TASK_ONCHANGE';
+export const CREATE_TASK_VALIDATE_FIELDS = 'CREATE_TASK_VALIDATE_FIELDS';
+export const CREATE_TASK_VALIDATE_FORM = 'CREATE_TASK_VALIDATE_FORM';
 
-export const EDIT_TASK_ONCHANGE = 'edit-task-onchange';
-export const EDIT_TASK_VALIDATE_FIELDS = 'edit-task-validate-fields';
-export const EDIT_TASK_VALIDATE_FORM = 'edit-task-validate-form';
+export const EDIT_TASK_ONCHANGE = 'EDIT_TASK_ONCHANGE';
+export const EDIT_TASK_VALIDATE_FIELDS = 'EDIT_TASK_VALIDATE_FIELDS';
+export const EDIT_TASK_VALIDATE_FORM = 'EDIT_TASK_VALIDATE_FORM';
 
 export const reducerFunc = (prevState, action) => {
   let state;

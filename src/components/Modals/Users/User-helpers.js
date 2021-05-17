@@ -1,13 +1,13 @@
 import { validateInput, checkAllFormValidity } from '../../../utilities/form-validators';
 
 // export for local use
-export const CREATE_USER_ONCHANGE = 'create-user-onchange';
-export const CREATE_USER_VALIDATE_FIELDS = 'create-user-validate-fields';
-export const CREATE_USER_VALIDATE_FORM = 'create-user-validate-form';
+export const CREATE_USER_ONCHANGE = 'CREATE_USER_ONCHANGE';
+export const CREATE_USER_VALIDATE_FIELDS = 'CREATE_USER_VALIDATE_FIELDS';
+export const CREATE_USER_VALIDATE_FORM = 'CREATE_USER_VALIDATE_FORM';
 
-export const EDIT_USER_ONCHANGE = 'edit-user-onchange';
-export const EDIT_USER_VALIDATE_FIELDS = 'edit-user-validate-fields';
-export const EDIT_USER_VALIDATE_FORM = 'edit-user-validate-form';
+export const EDIT_USER_ONCHANGE = 'EDIT_USER_ONCHANGE';
+export const EDIT_USER_VALIDATE_FIELDS = 'EDIT_USER_VALIDATE_FIELDS';
+export const EDIT_USER_VALIDATE_FORM = 'EDIT_USER_VALIDATE_FORM';
 
 export const reducerFunc = (prevState, action) => {
   let state;

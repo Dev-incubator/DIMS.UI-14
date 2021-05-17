@@ -6,12 +6,13 @@ import noop from '../shared/noop';
 import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
 import { USERS, TASKS, getElementFromCollection, updateStatus } from '../utilities/fb-helpers';
-import { reducerFunc, STATUS_UPDATE, SET_DATA } from './Users-tasks-helpers';
+import { reducerFunc, TASKS_STATUS_UPDATE, TASKS_SET_DATA } from './usersTasks-helpers';
 
 export default class UsersTasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isUser: null,
       userId: '',
       userName: '',
       tasksList: [],
@@ -19,6 +20,7 @@ export default class UsersTasks extends React.Component {
     };
     this.changeStatus = this.changeStatus.bind(this);
     this.updateData = this.updateData.bind(this);
+    this.selectActFunc = this.selectActFunc.bind(this);
   }
 
   async componentDidMount() {
@@ -45,7 +47,7 @@ export default class UsersTasks extends React.Component {
     }
     const tasksList = await getTasksList(tasksWithStatus);
     this.setState((prevState) =>
-      reducerFunc(prevState, { type: SET_DATA, userName, tasksWithStatus, tasksList, userId, role }),
+      reducerFunc(prevState, { type: TASKS_SET_DATA, userName, tasksWithStatus, tasksList, userId, role }),
     );
   }
 
@@ -58,19 +60,20 @@ export default class UsersTasks extends React.Component {
     const { userId } = this.state;
     const user = await getElementFromCollection(USERS, userId);
     const tasksWithStatus = await user.data().tasks;
-    this.setState((prevState) => reducerFunc(prevState, { type: STATUS_UPDATE, list: tasksWithStatus }));
+    this.setState((prevState) => reducerFunc(prevState, { type: TASKS_STATUS_UPDATE, list: tasksWithStatus }));
+  }
+
+  selectActFunc() {
+    const { isUser } = this.state;
+    if (!isUser) {
+      return (id, status) => this.changeStatus(id, status);
+    }
+
+    return () => noop;
   }
 
   render() {
     const { userName, tasksWithStatus, tasksList, isUser, userId } = this.state;
-
-    const selectActFunc = () => {
-      if (isUser) {
-        return () => noop;
-      }
-
-      return (id, status) => this.changeStatus(id, status);
-    };
 
     const tasks = tasksWithStatus.map((task, index) => {
       const taskObj = tasksList.find((item) => item.id === task.id);
@@ -86,7 +89,7 @@ export default class UsersTasks extends React.Component {
           startDate={taskObj.startDate}
           deadLine={taskObj.deadLine}
           title={taskObj.title}
-          actFunc={selectActFunc()}
+          actFunc={this.selectActFunc()}
         />
       );
     });

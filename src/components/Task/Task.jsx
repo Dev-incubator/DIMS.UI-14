@@ -5,14 +5,14 @@ import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
 import noop from '../../shared/noop';
 import DivAnchor from '../DivAnchor';
-import { internationalizeDate } from '../../utilities/internationalization';
+import { getInternationalDate } from '../../utilities/internationalization';
 import {
   TASK_MODAL_TOGGLE,
   TASK_MODAL_DELETE_TASK,
   TASK_MODAL_SHOW_TASK,
   TASK_MODAL_EDIT_TASK,
   reducerFunc,
-} from './Task-helpers';
+} from './task-helpers';
 
 export default class Task extends React.Component {
   constructor(props) {
@@ -24,7 +24,16 @@ export default class Task extends React.Component {
     this.liftUpDeleteTask = this.liftUpDeleteTask.bind(this);
     this.liftUpEditTask = this.liftUpEditTask.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.selectActFunc = this.selectActFunc.bind(this);
   }
+
+  openDeleteModal = () => this.toggleModal(TASK_MODAL_DELETE_TASK);
+
+  openShowModal = () => this.toggleModal(TASK_MODAL_SHOW_TASK);
+
+  openEditModal = () => this.toggleModal(TASK_MODAL_EDIT_TASK);
+
+  closeAnyModal = () => this.toggleModal();
 
   toggleModal(modalType = '') {
     this.setState((prevState) => reducerFunc(prevState, { type: TASK_MODAL_TOGGLE, modalType }));
@@ -43,6 +52,19 @@ export default class Task extends React.Component {
     editTask(editedTask);
   }
 
+  selectActFunc() {
+    const { selectedModal } = this.state;
+
+    switch (selectedModal) {
+      case TASK_MODAL_DELETE_TASK:
+        return () => this.liftUpDeleteTask();
+      case TASK_MODAL_EDIT_TASK:
+        return (editedTask) => this.liftUpEditTask(editedTask);
+      default:
+        return () => noop;
+    }
+  }
+
   render() {
     const {
       usersList,
@@ -52,34 +74,19 @@ export default class Task extends React.Component {
     } = this.props;
     const { isOpen, selectedModal } = this.state;
 
-    const openDeleteModal = () => this.toggleModal(TASK_MODAL_DELETE_TASK);
-    const openShowModal = () => this.toggleModal(TASK_MODAL_SHOW_TASK);
-    const openEditModal = () => this.toggleModal(TASK_MODAL_EDIT_TASK);
-    const closeAnyModal = () => this.toggleModal();
-    const selectActFunc = () => {
-      switch (selectedModal) {
-        case TASK_MODAL_DELETE_TASK:
-          return () => this.liftUpDeleteTask();
-        case TASK_MODAL_EDIT_TASK:
-          return (editedTask) => this.liftUpEditTask(editedTask);
-        default:
-          return () => noop;
-      }
-    };
-
     return (
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <DivAnchor onClick={openShowModal}>{title}</DivAnchor>
+          <DivAnchor onClick={this.openShowModal}>{title}</DivAnchor>
           <div>{description}</div>
-          <div>{internationalizeDate(startDate)}</div>
-          <div>{internationalizeDate(deadLine)}</div>
+          <div>{getInternationalDate(startDate)}</div>
+          <div>{getInternationalDate(deadLine)}</div>
           <div className={classes.buttons}>
-            <Button roleClass='edit' onClick={openEditModal}>
+            <Button roleClass='edit' onClick={this.openEditModal}>
               Edit
             </Button>
-            <Button roleClass='delete' onClick={openDeleteModal}>
+            <Button roleClass='delete' onClick={this.openDeleteModal}>
               Delete
             </Button>
           </div>
@@ -88,8 +95,8 @@ export default class Task extends React.Component {
           <Modal
             item={taskData}
             list={usersList}
-            actFunc={selectActFunc()}
-            closeFunc={closeAnyModal}
+            actFunc={this.selectActFunc()}
+            closeFunc={this.closeAnyModal}
             selectedModal={selectedModal}
           />
         ) : null}

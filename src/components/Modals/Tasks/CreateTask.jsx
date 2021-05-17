@@ -9,7 +9,7 @@ import {
   CREATE_TASK_VALIDATE_FIELDS,
   CREATE_TASK_VALIDATE_FORM,
   reducerFunc,
-} from './Task-helpers';
+} from './task-helpers';
 import { TASKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 

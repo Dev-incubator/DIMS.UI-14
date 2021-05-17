@@ -2,12 +2,14 @@ import PropType from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import classes from './UserTask.module.css';
 import Button from '../Button/Button';
-import { internationalizeDate } from '../../utilities/internationalization';
+import { getInternationalDate } from '../../utilities/internationalization';
 
 export default function UserTask({ userId, taskId, tableIndex, status, isUser, startDate, deadLine, title, actFunc }) {
   const liftUpChangeStatus = (newStatus) => actFunc(taskId, newStatus);
   const handleFail = () => liftUpChangeStatus('Failed');
   const handleComplete = () => (status === 'Active' ? liftUpChangeStatus('Completed') : liftUpChangeStatus('Active'));
+  const isFailed = status === 'Failed';
+  const isActive = status === 'Active';
 
   const buttonGroup = isUser ? (
     <NavLink className={classes.navLink} to={`/users/${userId}/tasks/${taskId}/track`}>
@@ -15,10 +17,10 @@ export default function UserTask({ userId, taskId, tableIndex, status, isUser, s
     </NavLink>
   ) : (
     <>
-      <Button roleClass={status === 'Active' ? 'create' : null} onClick={handleComplete}>
-        {status === 'Active' ? 'Complete' : 'reActive'}
+      <Button roleClass={isActive ? 'create' : null} onClick={handleComplete}>
+        {isActive ? 'Complete' : 'reActive'}
       </Button>
-      <Button roleClass='delete' disabled={status === 'Failed'} onClick={handleFail}>
+      <Button roleClass='delete' disabled={isFailed} onClick={handleFail}>
         Fail
       </Button>
     </>
@@ -28,8 +30,8 @@ export default function UserTask({ userId, taskId, tableIndex, status, isUser, s
     <div className={classes.item}>
       <div>{tableIndex}</div>
       <div>{title}</div>
-      <div>{internationalizeDate(startDate)}</div>
-      <div>{internationalizeDate(deadLine)}</div>
+      <div>{getInternationalDate(startDate)}</div>
+      <div>{getInternationalDate(deadLine)}</div>
       <div className={classes[status]}>{status}</div>
       <div className={classes.buttons}>{buttonGroup}</div>
     </div>

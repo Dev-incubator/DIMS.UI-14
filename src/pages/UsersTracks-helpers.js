@@ -1,8 +1,8 @@
 // only for export
-export const TRACKS_MODAL_CREATE_TRACK = 'modal-tracks-create';
+export const TRACKS_MODAL_CREATE_TRACK = 'TRACKS_MODAL_CREATE_TRACK';
 
 // export for local use
-export const TRACKS_MODAL_TOGGLE = 'tracks-modal-toggle';
+export const TRACKS_MODAL_TOGGLE = 'TRACKS_MODAL_TOGGLE';
 
 export const reducerFunc = (prevState, action) => {
   let state;

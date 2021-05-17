@@ -87,7 +87,7 @@
     "@testing-library/react": "11.2.6",
     "@testing-library/user-event": "13.1.9",
     "eslint": "7.26.0",
-    "firebase": "^8.6.1",
+    "firebase": "8.6.1",
     "node-sass": "6.0.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",
@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "codecov": "3.8.1",
-    "commitizen": "^4.2.4",
+    "commitizen": "4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-prettier": "8.3.0",

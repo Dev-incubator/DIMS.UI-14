@@ -11,7 +11,7 @@ export default class UsersProgress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userName: '',
+      userFullName: '',
       allTracks: [],
     };
   }
@@ -23,8 +23,9 @@ export default class UsersProgress extends React.Component {
       },
     } = this.props;
     const user = await getElementFromCollection(USERS, userId);
-    const { tasks } = user.data();
-    const userName = `${user.data().username} ${user.data().surname}`;
+    const userData = user.data();
+    const { tasks, username, surname } = userData;
+    const userFullName = `${username} ${surname}`;
     const allTracks = await tasks.reduce(async (tempArr, task) => {
       const taskData = await getElementFromCollection(TASKS, task.id);
       const { title } = taskData.data();
@@ -36,24 +37,22 @@ export default class UsersProgress extends React.Component {
 
       return (await tempArr).concat(extendedTracks);
     }, []);
-    this.setState((prevState) => ({
-      ...prevState,
-      allTracks,
-      userName,
-    }));
+    this.setState({ allTracks, userFullName });
   }
 
   render() {
-    const { allTracks, userName } = this.state;
+    const { allTracks, userFullName } = this.state;
     const trackItems = allTracks.map((track, index) => {
-      return <SimpleTrack tableIndex={index + 1} note={track.note} title={track.title} date={track.date} />;
+      return (
+        <SimpleTrack tableIndex={index + 1} key={track.id} note={track.note} title={track.title} date={track.date} />
+      );
     });
 
     return (
       <div>
         <div className={classes.header}>
           <h2 className={classes.title}>
-            {`${userName}'s Progress `}
+            {`${userFullName}'s Progress `}
             <span>({`${allTracks.length}`})</span>
           </h2>
           <NavLink className={classes.navLink} to='/users'>

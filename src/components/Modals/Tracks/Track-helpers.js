@@ -1,13 +1,13 @@
 import { validateInput, checkAllFormValidity } from '../../../utilities/form-validators';
 
 // export for local user
-export const CREATE_TRACK_ONCHANGE = 'create-track-onchange';
-export const CREATE_TRACK_VALIDATE_FIELDS = 'create-track-validate-fields';
-export const CREATE_TRACK_VALIDATE_FORM = 'create-track-validate-form';
+export const CREATE_TRACK_ONCHANGE = 'CREATE_TRACK_ONCHANGE';
+export const CREATE_TRACK_VALIDATE_FIELDS = 'CREATE_TRACK_VALIDATE_FIELDS';
+export const CREATE_TRACK_VALIDATE_FORM = 'CREATE_TRACK_VALIDATE_FORM';
 
-export const EDIT_TRACK_ONCHANGE = 'edit-track-onchange';
-export const EDIT_TRACK_VALIDATE_FIELDS = 'edit-track-validate-fields';
-export const EDIT_TRACK_VALIDATE_FORM = 'edit-track-validate-form';
+export const EDIT_TRACK_ONCHANGE = 'EDIT_TRACK_ONCHANGE';
+export const EDIT_TRACK_VALIDATE_FIELDS = 'EDIT_TRACK_VALIDATE_FIELDS';
+export const EDIT_TRACK_VALIDATE_FORM = 'EDIT_TRACK_VALIDATE_FORM';
 
 export const reducerFunc = (prevState, action) => {
   let state;

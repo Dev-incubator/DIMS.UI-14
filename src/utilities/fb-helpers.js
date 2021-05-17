@@ -150,13 +150,14 @@ export const updateStatus = (userId, taskId, newStatus, callback) => {
     });
 };
 
+// only for tracks
 export const createTrack = (userId, taskId, newTrack, callback) => {
   const userRef = getElementRefFromCollection(USERS, userId);
   userRef
     .get()
     .then((user) => {
       const { tasks } = user.data();
-      const { tracks } = tasks.find((item) => item.id === taskId);
+      const tracks = getTracksWithoutRequest(tasks, taskId);
       tracks.push(newTrack);
       const newTasks = tasks.map((task) => {
         return task.id === taskId ? { ...task, tracks } : task;
@@ -185,7 +186,7 @@ export const editTrack = (userId, taskId, editedTrack, callback) => {
     .get()
     .then((user) => {
       const { tasks } = user.data();
-      const { tracks } = tasks.find((item) => item.id === taskId);
+      const tracks = getTracksWithoutRequest(tasks, taskId);
       const newTracks = tracks.map((track) => {
         return track.id === editedTrack.id ? editedTrack : track;
       });
@@ -216,7 +217,7 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
     .get()
     .then((user) => {
       const { tasks } = user.data();
-      const { tracks } = tasks.find((item) => item.id === taskId);
+      const tracks = getTracksWithoutRequest(tasks, taskId);
       const newTracks = tracks.filter((track) => track.id !== trackId);
       const newTasks = tasks.map((task) => {
         return task.id === taskId ? { ...task, tracks: newTracks } : task;
@@ -238,3 +239,16 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
       console.log(`Error with deleting TRACK id:${trackId} from task id:${taskId} in USER id:${userId}`, error);
     });
 };
+
+export async function getTracks(userId, taskId) {
+  const user = await getElementFromCollection(USERS, userId);
+  const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
+
+  return tracks;
+}
+
+async function getTracksWithoutRequest(tasks, taskId) {
+  const { tracks } = tasks.find((item) => item.id === taskId);
+
+  return tracks;
+}

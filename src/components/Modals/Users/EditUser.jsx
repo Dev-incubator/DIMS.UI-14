@@ -4,7 +4,7 @@ import classes from './EditUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 
-import { EDIT_USER_ONCHANGE, EDIT_USER_VALIDATE_FIELDS, EDIT_USER_VALIDATE_FORM, reducerFunc } from './User-helpers';
+import { EDIT_USER_ONCHANGE, EDIT_USER_VALIDATE_FIELDS, EDIT_USER_VALIDATE_FORM, reducerFunc } from './user-helpers';
 
 import debounce from '../../../utilities/debounce';
 

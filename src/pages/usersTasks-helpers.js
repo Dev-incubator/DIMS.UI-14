@@ -1,18 +1,18 @@
 // export for local use
-export const STATUS_UPDATE = 'tasks-update';
-export const SET_DATA = 'tasks-set-data';
+export const TASKS_STATUS_UPDATE = 'TASKS_STATUS_UPDATE';
+export const TASKS_SET_DATA = 'TASKS_SET_DATA';
 
 export const reducerFunc = (prevState, action) => {
   let state;
   switch (action.type) {
-    case STATUS_UPDATE:
+    case TASKS_STATUS_UPDATE:
       state = {
         ...prevState,
         tasksWithStatus: action.list,
       };
 
       return state;
-    case SET_DATA:
+    case TASKS_SET_DATA:
       state = {
         ...prevState,
         userName: action.userName,

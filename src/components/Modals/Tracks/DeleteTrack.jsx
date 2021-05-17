@@ -20,7 +20,10 @@ export default function DeleteTrack({ track, closeFunc, liftUpDeleteTrack }) {
 }
 
 DeleteTrack.propTypes = {
-  track: PropType.instanceOf(Object).isRequired,
+  track: PropType.shape({
+    note: PropType.string,
+    title: PropType.string,
+  }).isRequired,
   liftUpDeleteTrack: PropType.func.isRequired,
   closeFunc: PropType.func.isRequired,
 };

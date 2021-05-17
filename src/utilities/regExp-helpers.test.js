@@ -6,6 +6,7 @@ import {
   regExpCheck,
   regExpScore,
   regExpDateOfBirthCheck,
+  regExpDeadLineCheck,
 } from './regExp-helpers';
 
 // Name
@@ -103,4 +104,18 @@ test('[regExpCheck, regExpDateOfBirthCheck - false should be returned', () => {
   const actual = regExpDateOfBirthCheck(input);
   const expected = false;
   expect(actual).toBe(expected);
+});
+
+test('[regExpCheck, regExpDeadLineCheck - true should be returned', () => {
+  const baseDate = '05-04-2010';
+  const dateToCompare = '06-04-2010';
+  const actual = regExpDeadLineCheck(baseDate, dateToCompare);
+  expect(actual).toBe(true);
+});
+
+test('[regExpCheck, regExpDeadLineCheck - false should be returned', () => {
+  const baseDate = '05-04-2010';
+  const dateToCompare = '03-04-2010';
+  const actual = regExpDeadLineCheck(baseDate, dateToCompare);
+  expect(actual).toBe(false);
 });

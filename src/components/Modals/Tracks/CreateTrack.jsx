@@ -10,10 +10,10 @@ import {
   CREATE_TRACK_VALIDATE_FIELDS,
   CREATE_TRACK_VALIDATE_FORM,
   reducerFunc,
-} from './Track-helpers';
+} from './track-helpers';
 import debounce from '../../../utilities/debounce';
 
-export default class CreateTrack extends React.Component {
+export default class CreateTrack extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,11 +43,7 @@ export default class CreateTrack extends React.Component {
     const {
       task: { startDate, title },
     } = this.props;
-    this.setState((prevState) => ({
-      ...prevState,
-      title,
-      startDate,
-    }));
+    this.setState({ title, startDate });
   }
 
   onChange(event) {
@@ -127,7 +123,10 @@ export default class CreateTrack extends React.Component {
 }
 
 CreateTrack.propTypes = {
-  task: PropType.instanceOf(Object).isRequired,
+  task: PropType.shape({
+    startDate: PropType.string,
+    title: PropType.string,
+  }).isRequired,
   closeFunc: PropType.func.isRequired,
   liftUpCreateTrack: PropType.func.isRequired,
 };

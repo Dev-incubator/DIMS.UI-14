@@ -2,7 +2,7 @@ import PropType from 'prop-types';
 import classes from './ShowTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import { internationalizeDate } from '../../../utilities/internationalization';
+import { getInternationalDate } from '../../../utilities/internationalization';
 
 export default function ShowTask({ task, closeFunc, usersList }) {
   const { title, startDate, description, deadLine, selectedUsers } = task;
@@ -14,8 +14,8 @@ export default function ShowTask({ task, closeFunc, usersList }) {
         <div className={classes.wrapper}>
           <CraftInput title='Title' value={title} readOnly />
           <CraftInput title='Description' value={description} readOnly />
-          <CraftInput title='Start Date' value={internationalizeDate(startDate)} readOnly />
-          <CraftInput title='DeadLine' value={internationalizeDate(deadLine)} readOnly />
+          <CraftInput title='Start Date' value={getInternationalDate(startDate)} readOnly />
+          <CraftInput title='DeadLine' value={getInternationalDate(deadLine)} readOnly />
           <CraftInput title='Users' type='checkbox' options={usersList} value={selectedUsers} readOnly />
         </div>
         <div className={classes.buttons}>

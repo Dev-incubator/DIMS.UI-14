@@ -1,9 +1,9 @@
 // only for export
-export const TASKS_MODAL_CREATE_TASK = 'modal-tasks-create'; // not used now
+export const TASKS_MODAL_CREATE_TASK = 'TASKS_MODAL_CREATE_TASK'; // not used now
 
 // export for local use
-export const TASKS_MODAL_TOGGLE = 'tasks-modal-toggle';
-export const TASKS_UPDATE = 'tasks-update';
+export const TASKS_MODAL_TOGGLE = 'TASKS_MODAL_TOGGLE';
+export const TASKS_UPDATE = 'TASKS_UPDATE';
 
 export const reducerFunc = (prevState, action) => {
   let state;

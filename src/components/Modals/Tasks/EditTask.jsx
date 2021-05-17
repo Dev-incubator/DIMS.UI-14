@@ -4,7 +4,7 @@ import classes from './CreateTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 
-import { EDIT_TASK_ONCHANGE, EDIT_TASK_VALIDATE_FIELDS, EDIT_TASK_VALIDATE_FORM, reducerFunc } from './Task-helpers';
+import { EDIT_TASK_ONCHANGE, EDIT_TASK_VALIDATE_FIELDS, EDIT_TASK_VALIDATE_FORM, reducerFunc } from './task-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class EditTask extends React.PureComponent {
