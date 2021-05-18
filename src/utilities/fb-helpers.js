@@ -264,3 +264,15 @@ async function getTracksWithoutRequest(tasks, taskId) {
 
   return tracks;
 }
+
+export async function getAllTracksFromAllTasks(tasks) {
+  const allTracks = tasks.reduce(async (result, task) => {
+    const taskData = await getElementFromCollection(TASKS, task.id);
+    const { title } = taskData.data();
+    const extendedTracks = await Promise.all(task.tracks.map((track) => ({ ...track, title })));
+
+    return (await result).concat(extendedTracks);
+  }, []);
+
+  return allTracks;
+}
