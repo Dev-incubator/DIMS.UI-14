@@ -12,7 +12,7 @@ export default function UserTask({ userId, taskId, tableIndex, status, isUser, s
   const isActive = status === 'Active';
 
   const buttonGroup = isUser ? (
-    <NavLink className={classes.navLink} to={`/users/${userId}/tasks/${taskId}/track`}>
+    <NavLink className={classes.navLink} to={`/main/users/${userId}/tasks/${taskId}/track`}>
       <Button onClick={actFunc}>Tracks</Button>
     </NavLink>
   ) : (

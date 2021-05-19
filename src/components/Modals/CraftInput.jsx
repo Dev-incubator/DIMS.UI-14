@@ -65,7 +65,7 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
   } else {
     input = (
       <input
-        className={error.length ? classes.error : null}
+        className={`${classes.craftInput} ${error.length ? classes.error : null}`}
         type={type}
         id={id}
         name={id}

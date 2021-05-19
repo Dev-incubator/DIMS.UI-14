@@ -19,7 +19,6 @@ export const getElementRefFromCollection = (collection, id) => db.collection(col
 
 export async function getAllElementsFromCollection(collection) {
   const elements = await getCollection(collection);
-  console.log(elements);
   const elementsList = [];
   elements.forEach((element) => {
     elementsList.push(element.data());

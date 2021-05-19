@@ -1,0 +1,31 @@
+.inputWrapper {
+  margin-bottom: 0.75rem;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.item:last-of-type {
+  margin-top: 0.75rem;
+}
+
+.item img {
+  margin-right: 1rem;
+  height: 1.25rem;
+}
+
+.input {
+  color: var(--darkgray-color);
+  font-weight: 300;
+  border: none;
+  font-size: 1rem;
+  line-height: 1rem;
+  width: 100%;
+}
+
+.item {
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  border-bottom: 2px solid var(--lightgray-color);
+}

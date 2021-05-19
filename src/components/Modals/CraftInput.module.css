@@ -8,17 +8,17 @@
   margin-top: 0;
 }
 
-input {
+.craftInput {
   width: 45%;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid var(--darkgray-color);
 }
-input[type='date'] {
+.craftInput[type='date'] {
   padding: 8px 10px;
 }
 
-input:focus {
+.craftInput:focus {
   outline: none;
   border: 1px solid var(--lightblue-color);
 }
@@ -68,7 +68,7 @@ input[type='checkbox'] {
   margin-left: 10px;
 }
 
-input:read-only,
+.craftInput:read-only,
 .checkbox.readOnly,
 .textArea:read-only {
   background-color: var(--lightgray-color);
