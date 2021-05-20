@@ -275,3 +275,16 @@ export async function getAllTracksFromAllTasks(tasks) {
 
   return allTracks;
 }
+
+export const registerNewUser = async () => {
+  const email = 'blabla@mail.ru';
+  const password = 'lolkek';
+  try {
+    const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+    console.log(response);
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+  }
+};

@@ -96,7 +96,7 @@ export default class UsersTracks extends React.Component {
             {`${taskData.title}'s task tracks`} <span>({`${tracks.length}`})</span>
           </h2>
           <div className={classes.buttonsWrapper}>
-            <NavLink className={classes.navLink} to={`/users/${userId}/tasks`}>
+            <NavLink className={classes.navLink} to={`/main/users/${userId}/tasks`}>
               <Button onClick={noop}>Back</Button>
             </NavLink>
             <Button onClick={this.openCreateModal} roleClass='create'>

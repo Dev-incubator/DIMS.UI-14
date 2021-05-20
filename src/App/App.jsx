@@ -9,7 +9,7 @@ export default function App() {
       <BrowserRouter>
         <div className={classes.app}>
           <Route exact path='/' component={Login} />
-          <Route exact path='/main/:path' component={Main} />
+          <Route path='/main' component={Main} />
         </div>
       </BrowserRouter>
     </>

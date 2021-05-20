@@ -64,7 +64,6 @@ export default class Login extends React.Component {
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
-    const path = 'users';
 
     return (
       <>
@@ -83,7 +82,7 @@ export default class Login extends React.Component {
               error={passwordError}
             />
           </div>
-          <NavLink className={classes.buttonLink} to={`/main/${path}`}>
+          <NavLink className={classes.buttonLink} to='/main/users'>
             <Button disabled={isValid} onClick={noop}>
               Enter
             </Button>

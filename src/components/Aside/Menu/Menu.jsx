@@ -9,7 +9,7 @@ import settingsIcon from './icons/settings.svg';
 const menuList = [
   {
     title: 'Users',
-    path: '/users',
+    path: '/main/users',
     image: usersIcon,
   },
   {

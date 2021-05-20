@@ -93,7 +93,7 @@ export default class UsersTasks extends React.Component {
             <span>({`${tasks.length}`})</span>
           </h2>
           {isUser ? null : (
-            <NavLink className={classes.navLink} to='/users'>
+            <NavLink className={classes.navLink} to='/main/users'>
               <Button onClick={noop}>Back</Button>
             </NavLink>
           )}
