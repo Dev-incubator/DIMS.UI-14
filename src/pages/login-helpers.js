@@ -3,6 +3,7 @@ import { validateInput, checkAllFormValidity } from '../utilities/form-validator
 export const LOGIN_ONCHANGE = 'LOGIN_ONCHANGE';
 export const LOGIN_VALIDATE_FIELDS = 'LOGIN_VALIDATE_FIELDS';
 export const LOGIN_VALIDATE_FORM = 'LOGIN_VALIDATE_FORM';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
 
 export const reducerFunc = (prevState, action) => {
   let state;
@@ -43,6 +44,30 @@ export const reducerFunc = (prevState, action) => {
       };
 
       return state;
+    case LOGIN_FAIL:
+      switch (action.error.code) {
+        case 'auth/user-not-found':
+          state = {
+            ...action.initState,
+            loginError: 'Error! The user is not registered.',
+          };
+
+          return state;
+        case 'auth/wrong-password':
+          state = {
+            ...action.initState,
+            loginError: 'Error! The password is invalid.',
+          };
+
+          return state;
+        default:
+          state = {
+            ...action.initState,
+            loginError: 'Error! Something went wrong.',
+          };
+
+          return state;
+      }
     default:
       return prevState;
   }

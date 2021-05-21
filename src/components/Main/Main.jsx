@@ -1,5 +1,4 @@
 import React from 'react';
-import PropType from 'prop-types';
 import { Route } from 'react-router-dom';
 import classes from './Main.module.css';
 import Header from './Header/Header';
@@ -26,8 +25,6 @@ export default class Main extends React.Component {
 
   render() {
     const { isOpen } = this.state;
-    const { match, location } = this.props;
-    console.log(match, location);
 
     return (
       <div className={classes.wrapper}>
@@ -46,8 +43,3 @@ export default class Main extends React.Component {
     );
   }
 }
-
-Main.propTypes = {
-  match: PropType.instanceOf(Object).isRequired,
-  location: PropType.instanceOf(Object).isRequired,
-};

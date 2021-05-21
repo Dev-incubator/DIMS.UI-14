@@ -11,7 +11,7 @@ import {
   editElemInDB,
   USERS,
   getAllElementsFromCollection,
-  registerNewUser,
+  createAuthForNewUser,
 } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
@@ -60,7 +60,8 @@ export default class Users extends React.Component {
 
   createUser(newUserRef, newUser) {
     setElemToDB(newUserRef, newUser, this.updateData);
-    registerNewUser();
+    const { email, password } = newUser;
+    createAuthForNewUser(email, password);
   }
 
   render() {

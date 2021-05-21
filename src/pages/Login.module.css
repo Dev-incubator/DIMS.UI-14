@@ -20,10 +20,12 @@
   width: 25rem;
 }
 
-.buttonLink {
+button {
   margin-top: 6rem;
+  width: 10rem;
 }
 
-.buttonLink button {
-  width: 10rem;
+.loginError {
+  font-size: 0.625rem;
+  color: var(--validator-color);
 }

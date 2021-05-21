@@ -1,34 +1,32 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
 import debounce from '../utilities/debounce';
-import { LOGIN_ONCHANGE, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
+import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
-import noop from '../shared/noop';
+import { signInUser } from '../utilities/fb-helpers';
 
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: {
-        email: '',
-        password: '',
-      },
-      validator: {
-        email: false,
-        password: false,
-      },
-      errors: {
-        emailError: '',
-        passwordError: '',
-      },
-      isValid: false,
-    };
+    this.state = initialState;
     this.handleChange = this.handleChange.bind(this);
     this.validateFields = this.validateFields.bind(this);
     this.validateForm = this.validateForm.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  async handleClick() {
+    const {
+      data: { email, password },
+    } = this.state;
+    const userStatus = await signInUser(email, password);
+    if (!userStatus.email) {
+      this.setState((prevState) =>
+        reducerFunc(prevState, { type: LOGIN_FAIL, error: userStatus, initState: initialState }),
+      );
+    }
   }
 
   handleChange(event) {
@@ -61,9 +59,11 @@ export default class Login extends React.Component {
   render() {
     const {
       isValid,
+      loginError,
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
+    const userStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
 
     return (
       <>
@@ -82,13 +82,29 @@ export default class Login extends React.Component {
               error={passwordError}
             />
           </div>
-          <NavLink className={classes.buttonLink} to='/main/users'>
-            <Button disabled={isValid} onClick={noop}>
-              Enter
-            </Button>
-          </NavLink>
+          {userStatusMessage}
+          <Button disabled={!isValid} onClick={this.handleClick}>
+            Enter
+          </Button>
         </form>
       </>
     );
   }
 }
+
+const initialState = {
+  data: {
+    email: '',
+    password: '',
+  },
+  validator: {
+    email: false,
+    password: false,
+  },
+  errors: {
+    emailError: '',
+    passwordError: '',
+  },
+  loginError: '',
+  isValid: false,
+};

@@ -276,15 +276,26 @@ export async function getAllTracksFromAllTasks(tasks) {
   return allTracks;
 }
 
-export const registerNewUser = async () => {
-  const email = 'blabla@mail.ru';
-  const password = 'lolkek';
+export const createAuthForNewUser = async (email, password) => {
   try {
-    const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
-
-    console.log(response);
+    await firebase.auth().createUserWithEmailAndPassword(email, password);
+    console.log(`USER with email:${email} was succesfully added to auth`);
   } catch (error) {
     console.log(error.code);
     console.log(error.message);
+  }
+};
+
+export const signInUser = async (email, password) => {
+  try {
+    const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+    const { user } = userCredential;
+
+    return user;
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+
+    return error;
   }
 };
