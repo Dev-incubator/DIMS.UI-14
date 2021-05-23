@@ -13,6 +13,7 @@ import {
 
 import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
+import { getLowerCasedAndTrimmedStr } from '../../../utilities/form-helpers';
 
 export default class CreateUser extends React.Component {
   constructor(props) {
@@ -123,7 +124,7 @@ export default class CreateUser extends React.Component {
   liftUpCreateUser() {
     const { liftUpCreateUser } = this.props;
     const { data, newUserRef } = this.state;
-    const newUser = { ...data };
+    const newUser = { ...data, email: getLowerCasedAndTrimmedStr(data.email) };
     delete newUser.passwordRepeat;
     liftUpCreateUser(newUserRef, newUser);
     this.closeModal();

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropType from 'prop-types';
 import { Route } from 'react-router-dom';
 import classes from './Main.module.css';
 import Header from './Header/Header';
@@ -15,8 +16,18 @@ export default class Main extends React.Component {
     super(props);
     this.state = {
       isOpen: false,
+      loggedUserEmail: '',
     };
     this.toggleMenu = this.toggleMenu.bind(this);
+  }
+
+  componentDidMount() {
+    const {
+      location: {
+        state: { loggedUserEmail },
+      },
+    } = this.props;
+    this.setState({ loggedUserEmail });
   }
 
   toggleMenu() {
@@ -24,7 +35,7 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const { isOpen } = this.state;
+    const { isOpen, loggedUserEmail } = this.state;
 
     return (
       <div className={classes.wrapper}>
@@ -32,6 +43,7 @@ export default class Main extends React.Component {
         <main className={classes.main}>
           <Header toggleMenu={this.toggleMenu} isOpen={isOpen} />
           <div className={classes.screen}>
+            {loggedUserEmail}
             <Route exact path='/main/users' component={Users} />
             <Route path='/main/tasks' component={Tasks} />
             <Route exact path='/main/users/:userId/tasks' component={UsersTasks} />
@@ -43,3 +55,11 @@ export default class Main extends React.Component {
     );
   }
 }
+
+Main.propTypes = {
+  location: PropType.shape({
+    state: PropType.shape({
+      loggedUserEmail: PropType.string.isRequired,
+    }),
+  }).isRequired,
+};

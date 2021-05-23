@@ -1,9 +1,11 @@
 import { validateInput, checkAllFormValidity } from '../utilities/form-validators';
+import { getLowerCasedAndTrimmedStr } from '../utilities/form-helpers';
 
 export const LOGIN_ONCHANGE = 'LOGIN_ONCHANGE';
 export const LOGIN_VALIDATE_FIELDS = 'LOGIN_VALIDATE_FIELDS';
 export const LOGIN_VALIDATE_FORM = 'LOGIN_VALIDATE_FORM';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGIN_PASS = 'LOGIN_PASS';
 
 export const reducerFunc = (prevState, action) => {
   let state;
@@ -11,6 +13,7 @@ export const reducerFunc = (prevState, action) => {
     case LOGIN_ONCHANGE:
       state = {
         ...prevState,
+        loginError: '',
         data: {
           ...prevState.data,
           [action.name]: action.value,
@@ -56,6 +59,14 @@ export const reducerFunc = (prevState, action) => {
         case 'auth/wrong-password':
           state = {
             ...action.initState,
+            data: {
+              ...action.initState.data,
+              email: prevState.data.email,
+            },
+            validator: {
+              ...action.initState.validator,
+              email: prevState.validator.email,
+            },
             loginError: 'Error! The password is invalid.',
           };
 
@@ -68,6 +79,17 @@ export const reducerFunc = (prevState, action) => {
 
           return state;
       }
+    case LOGIN_PASS:
+      state = {
+        ...prevState,
+        data: {
+          ...prevState.data,
+          email: getLowerCasedAndTrimmedStr(prevState.data.email),
+        },
+        isLogged: true,
+      };
+
+      return state;
     default:
       return prevState;
   }

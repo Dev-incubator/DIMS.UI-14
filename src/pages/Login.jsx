@@ -1,8 +1,16 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
 import debounce from '../utilities/debounce';
-import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
+import {
+  LOGIN_ONCHANGE,
+  LOGIN_FAIL,
+  LOGIN_PASS,
+  LOGIN_VALIDATE_FIELDS,
+  LOGIN_VALIDATE_FORM,
+  reducerFunc,
+} from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser } from '../utilities/fb-helpers';
@@ -26,7 +34,11 @@ export default class Login extends React.Component {
       this.setState((prevState) =>
         reducerFunc(prevState, { type: LOGIN_FAIL, error: userStatus, initState: initialState }),
       );
+
+      return;
     }
+
+    this.setState((prevState) => reducerFunc(prevState, { type: LOGIN_PASS }));
   }
 
   handleChange(event) {
@@ -59,11 +71,22 @@ export default class Login extends React.Component {
   render() {
     const {
       isValid,
+      isLogged,
       loginError,
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
-    const userStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
+    const userLoginStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
+    const isLoggedRedirector = isLogged ? (
+      <Redirect
+        to={{
+          pathname: '/main',
+          state: {
+            loggedUserEmail: email,
+          },
+        }}
+      />
+    ) : null;
 
     return (
       <>
@@ -82,7 +105,8 @@ export default class Login extends React.Component {
               error={passwordError}
             />
           </div>
-          {userStatusMessage}
+          {userLoginStatusMessage}
+          {isLoggedRedirector}
           <Button disabled={!isValid} onClick={this.handleClick}>
             Enter
           </Button>
@@ -106,5 +130,6 @@ const initialState = {
     passwordError: '',
   },
   loginError: '',
+  isLogged: false,
   isValid: false,
 };
