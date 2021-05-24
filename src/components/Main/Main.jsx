@@ -11,23 +11,14 @@ import UsersProgress from '../../pages/UsersProgress';
 import Aside from '../Aside/Aside';
 import { reducerFunc, TOGGLE_MENU } from './main-helpers';
 
+const loggedUserContext = React.createContext();
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
-      loggedUserEmail: '',
     };
     this.toggleMenu = this.toggleMenu.bind(this);
-  }
-
-  componentDidMount() {
-    const {
-      location: {
-        state: { loggedUserEmail },
-      },
-    } = this.props;
-    this.setState({ loggedUserEmail });
   }
 
   toggleMenu() {
@@ -35,23 +26,29 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const { isOpen, loggedUserEmail } = this.state;
+    const { isOpen } = this.state;
+    const {
+      location: {
+        state: { loggedUser },
+      },
+    } = this.props;
 
     return (
-      <div className={classes.wrapper}>
-        <Aside isOpen={isOpen} />
-        <main className={classes.main}>
-          <Header toggleMenu={this.toggleMenu} isOpen={isOpen} />
-          <div className={classes.screen}>
-            {loggedUserEmail}
-            <Route exact path='/main/users' component={Users} />
-            <Route path='/main/tasks' component={Tasks} />
-            <Route exact path='/main/users/:userId/tasks' component={UsersTasks} />
-            <Route exact path='/main/users/:userId/tasks/:taskId/track' component={UsersTracks} />
-            <Route exact path='/main/users/:userId/progress' component={UsersProgress} />
-          </div>
-        </main>
-      </div>
+      <loggedUserContext.Provider value={loggedUser}>
+        <div className={classes.wrapper}>
+          <Aside isOpen={isOpen} />
+          <main className={classes.main}>
+            <Header toggleMenu={this.toggleMenu} isOpen={isOpen} />
+            <div className={classes.screen}>
+              <Route exact path='/main/users' component={Users} />
+              <Route path='/main/tasks' component={Tasks} />
+              <Route exact path='/main/users/:userId/tasks' component={UsersTasks} />
+              <Route exact path='/main/users/:userId/tasks/:taskId/track' component={UsersTracks} />
+              <Route exact path='/main/users/:userId/progress' component={UsersProgress} />
+            </div>
+          </main>
+        </div>
+      </loggedUserContext.Provider>
     );
   }
 }
@@ -59,7 +56,7 @@ export default class Main extends React.Component {
 Main.propTypes = {
   location: PropType.shape({
     state: PropType.shape({
-      loggedUserEmail: PropType.string.isRequired,
+      loggedUser: PropType.instanceOf(Object).isRequired,
     }),
   }).isRequired,
 };

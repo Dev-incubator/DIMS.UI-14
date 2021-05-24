@@ -27,6 +27,12 @@ export async function getAllElementsFromCollection(collection) {
   return elementsList;
 }
 
+export async function getLoggedUserByEmail(email) {
+  const usersList = await getAllElementsFromCollection(USERS);
+
+  return usersList.find((user) => user.email === email);
+}
+
 export const createElemRefOnDB = (collection) => db.collection(collection).doc();
 
 export const setElemToDB = (ref, data, callback) =>
@@ -278,8 +284,11 @@ export async function getAllTracksFromAllTasks(tasks) {
 
 export const createAuthForNewUser = async (email, password) => {
   try {
-    await firebase.auth().createUserWithEmailAndPassword(email, password);
+    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
     console.log(`USER with email:${email} was succesfully added to auth`);
+    const { user } = userCredential;
+    await user.sendEmailVerification();
+    console.log(`Verification email was sent to USER with email: ${email}`);
   } catch (error) {
     console.log(error.code);
     console.log(error.message);

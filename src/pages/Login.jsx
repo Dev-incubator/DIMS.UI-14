@@ -13,7 +13,8 @@ import {
 } from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
-import { signInUser } from '../utilities/fb-helpers';
+import { signInUser, getLoggedUserByEmail } from '../utilities/fb-helpers';
+import { getLowerCasedAndTrimmedStr } from '../utilities/form-helpers';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -37,8 +38,9 @@ export default class Login extends React.Component {
 
       return;
     }
+    const redirectPath = await getRedirectPath(getLowerCasedAndTrimmedStr(email));
 
-    this.setState((prevState) => reducerFunc(prevState, { type: LOGIN_PASS }));
+    this.setState((prevState) => reducerFunc(prevState, { type: LOGIN_PASS, redirectPath }));
   }
 
   handleChange(event) {
@@ -73,20 +75,12 @@ export default class Login extends React.Component {
       isValid,
       isLogged,
       loginError,
+      redirectPath,
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
     const userLoginStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
-    const isLoggedRedirector = isLogged ? (
-      <Redirect
-        to={{
-          pathname: '/main',
-          state: {
-            loggedUserEmail: email,
-          },
-        }}
-      />
-    ) : null;
+    const isLoggedRedirector = isLogged ? <Redirect to={redirectPath} /> : null;
 
     return (
       <>
@@ -107,9 +101,11 @@ export default class Login extends React.Component {
           </div>
           {userLoginStatusMessage}
           {isLoggedRedirector}
-          <Button disabled={!isValid} onClick={this.handleClick}>
-            Enter
-          </Button>
+          <div className={classes.buttonWrapper}>
+            <Button disabled={!isValid} onClick={this.handleClick}>
+              Enter
+            </Button>
+          </div>
         </form>
       </>
     );
@@ -129,7 +125,37 @@ const initialState = {
     emailError: '',
     passwordError: '',
   },
+  redirectPath: {},
   loginError: '',
   isLogged: false,
   isValid: false,
 };
+
+async function getRedirectPath(email) {
+  const loggedUser = await getLoggedUserByEmail(email);
+  let pathname = null;
+
+  switch (loggedUser.role) {
+    case 'Admin':
+      pathname = '/main/users';
+      break;
+    case 'Mentor':
+      pathname = '/main/tasks';
+      break;
+    case 'User':
+      pathname = `/main/users/${loggedUser.id}/tasks`;
+      break;
+    default:
+      pathname = '/'; // to 404
+      break;
+  }
+
+  const path = {
+    pathname,
+    state: {
+      loggedUser,
+    },
+  };
+
+  return path;
+}

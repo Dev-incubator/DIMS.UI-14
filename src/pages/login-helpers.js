@@ -1,5 +1,4 @@
 import { validateInput, checkAllFormValidity } from '../utilities/form-validators';
-import { getLowerCasedAndTrimmedStr } from '../utilities/form-helpers';
 
 export const LOGIN_ONCHANGE = 'LOGIN_ONCHANGE';
 export const LOGIN_VALIDATE_FIELDS = 'LOGIN_VALIDATE_FIELDS';
@@ -82,11 +81,8 @@ export const reducerFunc = (prevState, action) => {
     case LOGIN_PASS:
       state = {
         ...prevState,
-        data: {
-          ...prevState.data,
-          email: getLowerCasedAndTrimmedStr(prevState.data.email),
-        },
         isLogged: true,
+        redirectPath: action.redirectPath,
       };
 
       return state;

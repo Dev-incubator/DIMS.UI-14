@@ -20,7 +20,7 @@
   width: 25rem;
 }
 
-button {
+.buttonWrapper button {
   margin-top: 6rem;
   width: 10rem;
 }
