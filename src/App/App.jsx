@@ -27,7 +27,6 @@ export default class App extends React.Component {
     const { user, isLogged } = this.state;
     const contextState = this.state;
     const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(user)} /> : null;
-    console.log(isLoggedRedirector);
 
     return (
       <>
