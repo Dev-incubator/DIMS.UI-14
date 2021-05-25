@@ -9,9 +9,9 @@ import {
   CREATE_USER_VALIDATE_FIELDS,
   CREATE_USER_VALIDATE_FORM,
   reducerFunc,
-} from './User-helpers';
+} from './user-helpers';
 
-import { USERS, createElemRef } from '../../../utilities/fb-helpers';
+import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class CreateUser extends React.Component {
@@ -71,7 +71,7 @@ export default class CreateUser extends React.Component {
         mathScoreError: '',
       },
       isValid: false,
-      newUserRef: {},
+      newUserRef: createElemRefOnDB(USERS),
     };
     this.onChange = this.onChange.bind(this);
     this.liftUpCreateUser = this.liftUpCreateUser.bind(this);
@@ -81,13 +81,11 @@ export default class CreateUser extends React.Component {
   }
 
   componentDidMount() {
-    const newUserRef = createElemRef(USERS);
     this.setState((prevState) => ({
       ...prevState,
-      newUserRef,
       data: {
         ...prevState.data,
-        id: newUserRef.id,
+        id: prevState.newUserRef.id,
       },
     }));
   }

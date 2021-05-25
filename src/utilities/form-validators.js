@@ -6,6 +6,7 @@ import {
   regExpScore,
   regExpDateOfBirthCheck,
   regExpCheck,
+  regExpDeadLineCheck,
 } from './regExp-helpers';
 
 export function validateInput(inputName, inputBody, password = '', startDate = '') {
@@ -70,8 +71,9 @@ export function validateInput(inputName, inputBody, password = '', startDate = '
       validatorField = regExpCheck(regExpScore, inputBody);
       errorField = validatorField ? '' : errors.score;
       break;
+    case 'date':
     case 'deadLine':
-      validatorField = new Date(inputBody) > new Date(startDate);
+      validatorField = regExpDeadLineCheck(startDate, inputBody);
       errorField = validatorField ? '' : errors.deadLine;
       break;
     default:
@@ -96,4 +98,5 @@ const errors = {
   email: 'The entered email is incorrect',
   minTwo: 'This field must contain at least 2 letters',
   deadLine: "The deadLine must be later than task's start date",
+  track: "The date must be later than task's start date",
 };

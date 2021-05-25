@@ -1,15 +1,14 @@
 // only for export
-export const USER_MODAL_DELETE_USER = 'USER_MODAL_DELETE_USER';
-export const USER_MODAL_EDIT_USER = 'USER_MODAL_EDIT_USER';
-export const USER_MODAL_SHOW_USER = 'USER_MODAL_SHOW_USER';
+export const TRACK_MODAL_DELETE_TRACK = 'TRACK_MODAL_DELETE_TRACK';
+export const TRACK_MODAL_EDIT_TRACK = 'TRACK_MODAL_EDIT_TRACK';
 
 // export for local use
-export const USER_MODAL_TOGGLE = 'USER_MODAL_TOGGLE';
+export const TRACK_MODAL_TOGGLE = 'TRACK_MODAL_TOGGLE';
 
 export const reducerFunc = (prevState, action) => {
   let state;
   switch (action.type) {
-    case USER_MODAL_TOGGLE:
+    case TRACK_MODAL_TOGGLE:
       state = {
         ...prevState,
         isOpen: !prevState.isOpen,

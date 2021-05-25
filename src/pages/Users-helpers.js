@@ -1,9 +1,9 @@
 // only for export
-export const USERS_MODAL_CREATE_USER = 'modal-users-create';
+export const USERS_MODAL_CREATE_USER = 'USERS_MODAL_CREATE_USER';
 
 // export for local use
-export const USERS_MODAL_TOGGLE = 'users-modal-toggle';
-export const USERS_UPDATE = 'users-update';
+export const USERS_MODAL_TOGGLE = 'USERS_MODAL_TOGGLE';
+export const USERS_UPDATE = 'USERS_UPDATE';
 
 export const reducerFunc = (prevState, action) => {
   let state;

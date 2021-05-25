@@ -1,5 +1,5 @@
 .modal {
-  width: 55%;
+  width: 30%;
   background-color: var(--white-color);
   padding: 30px;
   border: 1px solid var(--lightgray-color);
@@ -19,21 +19,24 @@
   border-bottom: 1px solid var(--lightgray-color);
 }
 
+.wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
 .buttons {
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
 }
+
 .buttons button {
   width: 25%;
 }
 
-.wrapper {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.column {
-  width: 48%;
+.requiredwarning {
+  font-size: 10px;
+  line-height: 10px;
 }

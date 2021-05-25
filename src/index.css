@@ -39,4 +39,8 @@ code {
   --validator-color: #d50000;
 
   --divanchor-color: #5385ff;
+
+  --status-active-color: #5385ff;
+  --status-complete-color: #0ca52f;
+  --status-fail-color: #d50000;
 }

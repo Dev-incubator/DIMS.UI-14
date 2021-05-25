@@ -9,8 +9,8 @@ import {
   CREATE_TASK_VALIDATE_FIELDS,
   CREATE_TASK_VALIDATE_FORM,
   reducerFunc,
-} from './Task-helpers';
-import { TASKS, createElemRef } from '../../../utilities/fb-helpers';
+} from './task-helpers';
+import { TASKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 
 export default class CreateTask extends React.PureComponent {
@@ -38,7 +38,7 @@ export default class CreateTask extends React.PureComponent {
         selectedUsersError: '',
       },
       usersList: [],
-      newTaskRef: {},
+      newTaskRef: createElemRefOnDB(TASKS),
       isValid: false,
     };
     this.onChange = this.onChange.bind(this);
@@ -49,15 +49,13 @@ export default class CreateTask extends React.PureComponent {
   }
 
   componentDidMount() {
-    const newTaskRef = createElemRef(TASKS);
     const { usersList } = this.props;
     this.setState((prevState) => ({
       ...prevState,
       data: {
         ...prevState.data,
-        id: newTaskRef.id,
+        id: prevState.newTaskRef.id,
       },
-      newTaskRef,
       usersList,
     }));
   }

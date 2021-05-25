@@ -3,7 +3,7 @@ import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import Modal from '../components/Modals/Modal';
-import { TASKS_MODAL_TOGGLE, TASKS_UPDATE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './Tasks-helpers';
+import { TASKS_MODAL_TOGGLE, TASKS_UPDATE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './tasks-helpers';
 import {
   setElemToDB,
   deleteElemFromDB,
@@ -39,28 +39,30 @@ export default class Tasks extends React.Component {
     this.updateData();
   }
 
-  deleteTask(selectedID) {
+  openCreateModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
+
+  deleteTask(selectedId) {
     const { tasksList } = this.state;
-    const assUsers = tasksList.find((task) => task.id === selectedID).selectedUsers;
-    deleteElemFromDB(TASKS, selectedID, this.updateData);
-    assUsers.forEach((assUserID) => deleteTaskFromUser(selectedID, assUserID));
+    const assignedUsers = tasksList.find((task) => task.id === selectedId).selectedUsers;
+    deleteElemFromDB(TASKS, selectedId, this.updateData);
+    assignedUsers.forEach((assignedUserId) => deleteTaskFromUser(selectedId, assignedUserId));
   }
 
   editTask(editedTask) {
     const { tasksList } = this.state;
-    const prevAssUsers = tasksList.find((task) => task.id === editedTask.id).selectedUsers;
-    const newAssUsers = editedTask.selectedUsers;
-    const usersToUnassign = prevAssUsers.filter((assUserID) => !newAssUsers.includes(assUserID));
-    const usersToAssign = newAssUsers.filter((assUserID) => !prevAssUsers.includes(assUserID));
+    const prevAssignedUsers = tasksList.find((task) => task.id === editedTask.id).selectedUsers;
+    const newAssignedUsers = editedTask.selectedUsers;
+    const usersToUnassign = prevAssignedUsers.filter((assignedUserId) => !newAssignedUsers.includes(assignedUserId));
+    const usersToAssign = newAssignedUsers.filter((assignedUserId) => !prevAssignedUsers.includes(assignedUserId));
     editElemInDB(TASKS, editedTask, this.updateData);
     editTaskInUsers(usersToAssign, usersToUnassign, editedTask.id);
   }
 
   createTask(newTaskRef, newTask) {
-    const newTaskID = newTask.id;
-    const assUsers = newTask.selectedUsers;
+    const newTaskId = newTask.id;
+    const assignedUsers = newTask.selectedUsers;
     setElemToDB(newTaskRef, newTask, this.updateData);
-    assUsers.forEach((assUserID) => addTaskToUser(newTaskID, assUserID));
+    assignedUsers.forEach((assignedUserId) => addTaskToUser(newTaskId, assignedUserId));
   }
 
   toggleModal(modalType = '') {
@@ -75,7 +77,6 @@ export default class Tasks extends React.Component {
 
   render() {
     const { tasksList, usersList, selectedModal, isOpen } = this.state;
-    const openModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
 
     const tasks = tasksList.map((task, index) => {
       return (
@@ -96,7 +97,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button roleClass='create' onClick={openModal}>
+          <Button roleClass='create' onClick={this.openCreateModal}>
             Create
           </Button>
         </div>

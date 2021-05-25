@@ -3,7 +3,7 @@ import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import User from '../components/User/User';
 import Modal from '../components/Modals/Modal';
-import { USERS_MODAL_TOGGLE, USERS_UPDATE, USERS_MODAL_CREATE_USER, reducerFunc } from './Users-helpers';
+import { USERS_MODAL_TOGGLE, USERS_UPDATE, USERS_MODAL_CREATE_USER, reducerFunc } from './users-helpers';
 import {
   setElemToDB,
   deleteElemFromDB,
@@ -32,6 +32,8 @@ export default class Users extends React.Component {
     this.updateData();
   }
 
+  openCreateModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
+
   toggleModal(modalType) {
     this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
   }
@@ -42,12 +44,12 @@ export default class Users extends React.Component {
     );
   }
 
-  deleteUser(selectedID) {
+  deleteUser(selectedId) {
     const { usersList } = this.state;
-    const assTasks = usersList.find((item) => item.id === selectedID).tasks;
-    deleteElemFromDB(USERS, selectedID, this.updateData);
-    if (assTasks.length) {
-      assTasks.forEach((assTask) => deleteUserFromTask(selectedID, assTask.id));
+    const assignedTasks = usersList.find((item) => item.id === selectedId).tasks;
+    deleteElemFromDB(USERS, selectedId, this.updateData);
+    if (assignedTasks.length) {
+      assignedTasks.forEach((assignedTask) => deleteUserFromTask(selectedId, assignedTask.id));
     }
   }
 
@@ -61,7 +63,6 @@ export default class Users extends React.Component {
 
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
-    const openModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
 
     const users = usersList.map((user, index) => {
       return (
@@ -81,7 +82,7 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={openModal} roleClass='create'>
+          <Button onClick={this.openCreateModal} roleClass='create'>
             Create
           </Button>
         </div>

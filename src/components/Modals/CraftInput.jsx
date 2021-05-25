@@ -29,7 +29,7 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
     );
   } else if (type === 'checkbox') {
     children = options.map((item) => {
-      const isChecked = value.find((userID) => userID === item.id);
+      const isChecked = value.find((userId) => userId === item.id);
 
       return (
         <div key={item.id} className={classes.checkboxElem}>
@@ -49,6 +49,19 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
       );
     });
     input = <div className={`${classes.checkbox} ${readOnly ? classes.readOnly : null}`}>{children}</div>;
+  } else if (type === 'textarea') {
+    input = (
+      <textarea
+        className={classes.textArea}
+        id={id}
+        name={id}
+        placeholder={placeholderObj[id]}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+        rows={5}
+      />
+    );
   } else {
     input = (
       <input
@@ -89,6 +102,7 @@ const placeholderObj = {
   mathScore: 'Enter math score',
   title: 'Enter task title',
   description: 'Enter task descriptions',
+  note: 'Enter track note',
 };
 
 CraftInput.propTypes = {

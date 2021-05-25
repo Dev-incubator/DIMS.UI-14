@@ -13,3 +13,7 @@ export const regExpDateOfBirthCheck = (str) => {
 
   return currentYear - new Date(str).getFullYear() >= 18;
 };
+
+export const regExpDeadLineCheck = (baseDate, dateToCompare) => {
+  return new Date(dateToCompare) > new Date(baseDate);
+};

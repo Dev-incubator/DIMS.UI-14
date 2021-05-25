@@ -5,8 +5,8 @@
   border-left: 1px solid var(--lightgray-color);
   display: grid;
   grid-template-columns:
-    minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 300px) minmax(auto, 150px) minmax(auto, 150px)
-    minmax(auto, 125px);
+  minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px)
+  minmax(auto, 130px);
   align-items: center;
 }
 

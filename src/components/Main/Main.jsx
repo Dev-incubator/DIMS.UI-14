@@ -5,6 +5,8 @@ import Header from './Header/Header';
 import Users from '../../pages/Users';
 import Tasks from '../../pages/Tasks';
 import UsersTasks from '../../pages/UsersTasks';
+import UsersTracks from '../../pages/UsersTracks';
+import UsersProgress from '../../pages/UsersProgress';
 
 export default function Main({ toggleMenu, isOpen }) {
   return (
@@ -12,8 +14,10 @@ export default function Main({ toggleMenu, isOpen }) {
       <Header toggleMenu={toggleMenu} isOpen={isOpen} />
       <div className={classes.screen}>
         <Route exact path='/users' component={Users} />
-        <Route exact path='/tasks' component={Tasks} />
-        <Route exact path='/user-tasks/:userID' component={UsersTasks} />
+        <Route path='/tasks' component={Tasks} />
+        <Route exact path='/users/:userId/tasks' component={UsersTasks} />
+        <Route exact path='/users/:userId/tasks/:taskId/track' component={UsersTracks} />
+        <Route exact path='/users/:userId/progress' component={UsersProgress} />
       </div>
     </main>
   );

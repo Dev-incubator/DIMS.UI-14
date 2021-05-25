@@ -4,9 +4,7 @@
   border-right: 1px solid var(--lightgray-color);
   border-left: 1px solid var(--lightgray-color);
   display: grid;
-  grid-template-columns:
-    minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 300px) minmax(auto, 150px) minmax(auto, 150px)
-    minmax(auto, 125px);
+  grid-template-columns: minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px);
   align-items: center;
 }
 
@@ -16,11 +14,4 @@
 
 .item:last-of-type {
   border-bottom: 1px solid var(--lightgray-color);
-}
-
-.item .buttons {
-  padding: 10px;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-gap: 10px;
 }

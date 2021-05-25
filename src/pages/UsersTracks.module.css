@@ -1,0 +1,49 @@
+.content {
+    display: grid;
+    height: min-content;
+    grid-template-rows: auto;
+  }
+  
+  .subheader {
+    color: var(--darkgray-color);
+    background-color: var(--background-color);
+    display: grid;
+    grid-template-columns:
+      minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px)
+      minmax(auto, 130px);
+    align-items: center;
+  }
+  
+  .subheader div {
+    padding: 20px 15px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .header button {
+    width: 100px;
+  }
+  
+  .title {
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+  
+  .title span {
+    color: var(--darkgray-color);
+  }
+
+  .buttonsWrapper {
+    display: flex;
+  }
+
+  .navLink {
+    margin-right: 10px;
+    display: block;
+    color: var(--white-color);
+    text-decoration: none;
+  }
