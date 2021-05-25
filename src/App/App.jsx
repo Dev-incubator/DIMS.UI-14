@@ -34,7 +34,7 @@ export default class App extends React.Component {
           <UserContext.Provider value={contextState}>
             <div className={classes.app}>
               <UserContext.Consumer>
-                {(userContext) => <Route exact path='/' render={() => <Login {...userContext} />} />}
+                {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
               </UserContext.Consumer>
               <Route path='/main' component={Main} />
               {isLoggedRedirector}
