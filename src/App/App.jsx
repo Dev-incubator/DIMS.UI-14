@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
@@ -26,19 +26,22 @@ export default class App extends React.Component {
   render() {
     const { user, isLogged } = this.state;
     const contextState = this.state;
-    const isLoggedRedirector = isLogged ? <Redirect exact from='/' to={getRedirectPath(user)} /> : null;
+    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(user)} /> : null;
+    console.log(isLoggedRedirector);
 
     return (
       <>
         <BrowserRouter>
           <UserContext.Provider value={contextState}>
-            <div className={classes.app}>
-              <UserContext.Consumer>
-                {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
-              </UserContext.Consumer>
-              <Route path='/main' component={Main} />
-              {isLoggedRedirector}
-            </div>
+            <Switch>
+              <div className={classes.app}>
+                <UserContext.Consumer>
+                  {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
+                </UserContext.Consumer>
+                <Route path='/main' component={Main} />
+                {isLoggedRedirector}
+              </div>
+            </Switch>
           </UserContext.Provider>
         </BrowserRouter>
       </>

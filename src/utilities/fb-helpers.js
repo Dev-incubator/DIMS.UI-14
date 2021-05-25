@@ -16,6 +16,7 @@ export const getCollection = (collection) => db.collection(collection).get();
 export async function getElementDataFromCollection(collection, id) {
   const element = await getElementRefFromCollection(collection, id).get();
   const elementData = element.data();
+
   return elementData;
 }
 
