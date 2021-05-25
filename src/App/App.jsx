@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
@@ -33,13 +33,11 @@ export default class App extends React.Component {
         <BrowserRouter>
           <UserContext.Provider value={contextState}>
             <div className={classes.app}>
-              <Switch>
-                <UserContext.Consumer>
-                  {(userContext) => <Route path='/' render={() => <Login userContext={userContext} />} />}
-                </UserContext.Consumer>
-                <Route path='/main' component={Main} />
-                {isLoggedRedirector}
-              </Switch>
+              <UserContext.Consumer>
+                {(userContext) => <Route exact path='/' render={() => <Login {...userContext} />} />}
+              </UserContext.Consumer>
+              <Route path='/main' component={Main} />
+              {isLoggedRedirector}
             </div>
           </UserContext.Provider>
         </BrowserRouter>

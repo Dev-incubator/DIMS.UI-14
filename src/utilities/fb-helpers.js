@@ -13,7 +13,11 @@ export const db = firebase.firestore();
 // common
 export const getCollection = (collection) => db.collection(collection).get();
 
-export const getElementFromCollection = (collection, id) => getElementRefFromCollection(collection, id).get();
+export async function getElementDataFromCollection(collection, id) {
+  const element = await getElementRefFromCollection(collection, id).get();
+  const elementData = element.data();
+  return elementData;
+}
 
 export const getElementRefFromCollection = (collection, id) => db.collection(collection).doc(id);
 
@@ -123,8 +127,8 @@ export async function getTasks(array) {
   const tasksList = [];
   await Promise.all(
     array.map(async (item) => {
-      const task = await getElementFromCollection(TASKS, item.id);
-      tasksList.push(task.data());
+      const task = await getElementDataFromCollection(TASKS, item.id);
+      tasksList.push(task);
     }),
   );
 
@@ -258,8 +262,8 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
 };
 
 export async function getTracks(userId, taskId) {
-  const user = await getElementFromCollection(USERS, userId);
-  const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
+  const user = await getElementDataFromCollection(USERS, userId);
+  const { tracks } = await user.tasks.find((item) => item.id === taskId);
 
   return tracks;
 }
@@ -272,8 +276,8 @@ async function getTracksWithoutRequest(tasks, taskId) {
 
 export async function getAllTracksFromAllTasks(tasks) {
   const allTracks = tasks.reduce(async (result, task) => {
-    const taskData = await getElementFromCollection(TASKS, task.id);
-    const { title } = taskData.data();
+    const taskData = await getElementDataFromCollection(TASKS, task.id);
+    const { title } = taskData;
     const extendedTracks = await Promise.all(task.tracks.map((track) => ({ ...track, title })));
 
     return (await result).concat(extendedTracks);

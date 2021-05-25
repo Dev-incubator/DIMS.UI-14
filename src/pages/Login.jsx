@@ -32,9 +32,8 @@ export default class Login extends React.Component {
       return;
     }
     const loggedUser = await getLoggedUserByEmail(getLowerCasedAndTrimmedStr(email));
-    const {
-      userContext: { setUserContext },
-    } = this.props;
+
+    const { setUserContext } = this.props;
     setUserContext(loggedUser);
   }
 
@@ -122,8 +121,5 @@ const initialState = {
 };
 
 Login.propTypes = {
-  userContext: PropType.shape({
-    user: PropType.instanceOf(Object).isRequired,
-    setUserContext: PropType.func.isRequired,
-  }).isRequired,
+  setUserContext: PropType.func.isRequired,
 };

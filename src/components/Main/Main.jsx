@@ -34,14 +34,22 @@ export default class Main extends React.Component {
           <Header toggleMenu={this.toggleMenu} isOpen={isOpen} />
           <div className={classes.screen}>
             <UserContext.Consumer>
-              {(userContext) => <Route path='/main/users' render={() => <Users {...userContext} />} />}
-            </UserContext.Consumer>
-            <UserContext.Consumer>
-              {(userContext) => <Route exact path='/main/tasks' render={() => <Tasks {...userContext} />} />}
+              {(userContext) => (
+                <Route exact path='/main/users' render={(props) => <Users {...props} {...userContext} />} />
+              )}
             </UserContext.Consumer>
             <UserContext.Consumer>
               {(userContext) => (
-                <Route exact path='/main/users/:userId/tasks' render={() => <UsersTasks {...userContext} />} />
+                <Route exact path='/main/tasks' render={(props) => <Tasks {...props} {...userContext} />} />
+              )}
+            </UserContext.Consumer>
+            <UserContext.Consumer>
+              {(userContext) => (
+                <Route
+                  exact
+                  path='/main/users/:userId/tasks'
+                  render={(props) => <UsersTasks {...props} {...userContext} />}
+                />
               )}
             </UserContext.Consumer>
             <UserContext.Consumer>
@@ -49,13 +57,18 @@ export default class Main extends React.Component {
                 <Route
                   exact
                   path='/main/users/:userId/tasks/:taskId/track'
-                  render={() => <UsersTracks {...userContext} />}
+                  render={(props) => <UsersTracks {...props} {...userContext} />}
                 />
               )}
             </UserContext.Consumer>
             <UserContext.Consumer>
               {(userContext) => (
-                <Route exact path='/main/users/:userId/progress' render={() => <UsersProgress {...userContext} />} />
+                <Route
+                  {...userContext}
+                  exact
+                  path='/main/users/:userId/progress'
+                  render={(props) => <UsersProgress {...props} {...userContext} />}
+                />
               )}
             </UserContext.Consumer>
           </div>
