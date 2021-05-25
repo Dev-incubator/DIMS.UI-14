@@ -1,16 +1,9 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import PropType from 'prop-types';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
 import debounce from '../utilities/debounce';
-import {
-  LOGIN_ONCHANGE,
-  LOGIN_FAIL,
-  LOGIN_PASS,
-  LOGIN_VALIDATE_FIELDS,
-  LOGIN_VALIDATE_FORM,
-  reducerFunc,
-} from './login-helpers';
+import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, getLoggedUserByEmail } from '../utilities/fb-helpers';
@@ -38,9 +31,11 @@ export default class Login extends React.Component {
 
       return;
     }
-    const redirectPath = await getRedirectPath(getLowerCasedAndTrimmedStr(email));
-
-    this.setState((prevState) => reducerFunc(prevState, { type: LOGIN_PASS, redirectPath }));
+    const loggedUser = await getLoggedUserByEmail(getLowerCasedAndTrimmedStr(email));
+    const {
+      userContext: { setUserContext },
+    } = this.props;
+    setUserContext(loggedUser);
   }
 
   handleChange(event) {
@@ -73,14 +68,11 @@ export default class Login extends React.Component {
   render() {
     const {
       isValid,
-      isLogged,
       loginError,
-      redirectPath,
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
     const userLoginStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
-    const isLoggedRedirector = isLogged ? <Redirect to={redirectPath} /> : null;
 
     return (
       <>
@@ -100,7 +92,6 @@ export default class Login extends React.Component {
             />
           </div>
           {userLoginStatusMessage}
-          {isLoggedRedirector}
           <div className={classes.buttonWrapper}>
             <Button disabled={!isValid} onClick={this.handleClick}>
               Enter
@@ -125,37 +116,14 @@ const initialState = {
     emailError: '',
     passwordError: '',
   },
-  redirectPath: {},
   loginError: '',
   isLogged: false,
   isValid: false,
 };
 
-async function getRedirectPath(email) {
-  const loggedUser = await getLoggedUserByEmail(email);
-  let pathname = null;
-
-  switch (loggedUser.role) {
-    case 'Admin':
-      pathname = '/main/users';
-      break;
-    case 'Mentor':
-      pathname = '/main/tasks';
-      break;
-    case 'User':
-      pathname = `/main/users/${loggedUser.id}/tasks`;
-      break;
-    default:
-      pathname = '/'; // to 404
-      break;
-  }
-
-  const path = {
-    pathname,
-    state: {
-      loggedUser,
-    },
-  };
-
-  return path;
-}
+Login.propTypes = {
+  userContext: PropType.shape({
+    user: PropType.instanceOf(Object).isRequired,
+    setUserContext: PropType.func.isRequired,
+  }).isRequired,
+};

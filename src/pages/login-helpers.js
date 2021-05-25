@@ -78,14 +78,6 @@ export const reducerFunc = (prevState, action) => {
 
           return state;
       }
-    case LOGIN_PASS:
-      state = {
-        ...prevState,
-        isLogged: true,
-        redirectPath: action.redirectPath,
-      };
-
-      return state;
     default:
       return prevState;
   }

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropType from 'prop-types';
 import { Route } from 'react-router-dom';
 import classes from './Main.module.css';
 import Header from './Header/Header';
@@ -10,8 +9,8 @@ import UsersTracks from '../../pages/UsersTracks';
 import UsersProgress from '../../pages/UsersProgress';
 import Aside from '../Aside/Aside';
 import { reducerFunc, TOGGLE_MENU } from './main-helpers';
+import { UserContext } from '../../App/userContext';
 
-const loggedUserContext = React.createContext();
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -27,36 +26,41 @@ export default class Main extends React.Component {
 
   render() {
     const { isOpen } = this.state;
-    const {
-      location: {
-        state: { loggedUser },
-      },
-    } = this.props;
 
     return (
-      <loggedUserContext.Provider value={loggedUser}>
-        <div className={classes.wrapper}>
-          <Aside isOpen={isOpen} />
-          <main className={classes.main}>
-            <Header toggleMenu={this.toggleMenu} isOpen={isOpen} />
-            <div className={classes.screen}>
-              <Route exact path='/main/users' component={Users} />
-              <Route path='/main/tasks' component={Tasks} />
-              <Route exact path='/main/users/:userId/tasks' component={UsersTasks} />
-              <Route exact path='/main/users/:userId/tasks/:taskId/track' component={UsersTracks} />
-              <Route exact path='/main/users/:userId/progress' component={UsersProgress} />
-            </div>
-          </main>
-        </div>
-      </loggedUserContext.Provider>
+      <div className={classes.wrapper}>
+        <Aside isOpen={isOpen} />
+        <main className={classes.main}>
+          <Header toggleMenu={this.toggleMenu} isOpen={isOpen} />
+          <div className={classes.screen}>
+            <UserContext.Consumer>
+              {(userContext) => <Route path='/main/users' render={() => <Users {...userContext} />} />}
+            </UserContext.Consumer>
+            <UserContext.Consumer>
+              {(userContext) => <Route exact path='/main/tasks' render={() => <Tasks {...userContext} />} />}
+            </UserContext.Consumer>
+            <UserContext.Consumer>
+              {(userContext) => (
+                <Route exact path='/main/users/:userId/tasks' render={() => <UsersTasks {...userContext} />} />
+              )}
+            </UserContext.Consumer>
+            <UserContext.Consumer>
+              {(userContext) => (
+                <Route
+                  exact
+                  path='/main/users/:userId/tasks/:taskId/track'
+                  render={() => <UsersTracks {...userContext} />}
+                />
+              )}
+            </UserContext.Consumer>
+            <UserContext.Consumer>
+              {(userContext) => (
+                <Route exact path='/main/users/:userId/progress' render={() => <UsersProgress {...userContext} />} />
+              )}
+            </UserContext.Consumer>
+          </div>
+        </main>
+      </div>
     );
   }
 }
-
-Main.propTypes = {
-  location: PropType.shape({
-    state: PropType.shape({
-      loggedUser: PropType.instanceOf(Object).isRequired,
-    }),
-  }).isRequired,
-};
