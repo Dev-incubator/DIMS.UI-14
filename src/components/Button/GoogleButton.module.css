@@ -1,0 +1,26 @@
+.googleButton {
+  cursor: pointer;
+  color: var(--lightblue-color);
+  padding: 8px;
+  background-color: var(--white-color);
+  border: 1px solid var(--lightblue-color);
+  border-radius: 20px;
+  transition: 0.1s all;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.googleImg {
+  width: 20px;
+}
+
+.googleButton:hover {
+  background-color: var(--lightblue-color);
+  box-shadow: 0 0 5px 0 var(--lightblue-color);
+  color: var(--white-color);
+}
+
+.googleButton:focus {
+  outline: none;
+}

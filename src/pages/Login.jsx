@@ -1,7 +1,9 @@
 import React from 'react';
 import PropType from 'prop-types';
+import noop from '../shared/noop';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
+import GoogleButton from '../components/Button/GoogleButton';
 import debounce from '../utilities/debounce';
 import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
@@ -95,6 +97,7 @@ export default class Login extends React.Component {
             <Button disabled={!isValid} onClick={this.handleClick}>
               Enter
             </Button>
+            <GoogleButton onClick={noop}>Login with Google</GoogleButton>
           </div>
         </form>
       </>
