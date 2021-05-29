@@ -269,11 +269,11 @@ export async function getTracks(userId, taskId) {
   return tracks;
 }
 
-async function getTracksWithoutRequest(tasks, taskId) {
+const getTracksWithoutRequest = (tasks, taskId) => {
   const { tracks } = tasks.find((item) => item.id === taskId);
 
   return tracks;
-}
+};
 
 export async function getAllTracksFromAllTasks(tasks) {
   const allTracks = tasks.reduce(async (result, task) => {

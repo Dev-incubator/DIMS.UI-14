@@ -32,7 +32,14 @@ export default class UsersProgress extends React.Component {
     const { allTracks, userFullName } = this.state;
     const trackItems = allTracks.map((track, index) => {
       return (
-        <SimpleTrack tableIndex={index + 1} key={track.id} note={track.note} title={track.title} date={track.date} />
+        <SimpleTrack
+          tableIndex={index + 1}
+          key={track.id}
+          note={track.note}
+          title={track.title}
+          date={track.date}
+          name={track.name}
+        />
       );
     });
 
@@ -51,7 +58,8 @@ export default class UsersProgress extends React.Component {
           <div className={classes.subheader}>
             <div>№</div>
             <div>Task Name</div>
-            <div>Task Note</div>
+            <div>Track Name</div>
+            <div>Track Note</div>
             <div>Date</div>
           </div>
           {trackItems}

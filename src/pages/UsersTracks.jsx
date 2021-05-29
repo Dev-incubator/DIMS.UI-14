@@ -106,8 +106,8 @@ export default class UsersTracks extends React.Component {
         <div className={classes.content}>
           <div className={classes.subheader}>
             <div>№</div>
-            <div>Task Name</div>
-            <div>Task Note</div>
+            <div>Track Name</div>
+            <div>Track Note</div>
             <div>Date</div>
             <div>Controls</div>
           </div>

@@ -22,12 +22,15 @@ export default class EditTrack extends React.PureComponent {
         id: '',
         date: '',
         note: '',
+        name: '',
       },
       validator: {
         date: true,
+        name: true,
       },
       errors: {
         dateError: '',
+        nameError: '',
       },
       isValid: false,
     };
@@ -40,7 +43,7 @@ export default class EditTrack extends React.PureComponent {
 
   componentDidMount() {
     const {
-      track: { id, date, note, title, startDate },
+      track: { id, date, note, title, name, startDate },
     } = this.props;
     this.setState((prevState) => ({
       ...prevState,
@@ -51,6 +54,7 @@ export default class EditTrack extends React.PureComponent {
         id,
         date,
         note,
+        name,
       },
     }));
   }
@@ -97,8 +101,8 @@ export default class EditTrack extends React.PureComponent {
     const {
       isValid,
       title,
-      data: { date, note },
-      errors: { dateError },
+      data: { date, note, name },
+      errors: { dateError, nameError },
     } = this.state;
 
     return (
@@ -107,6 +111,14 @@ export default class EditTrack extends React.PureComponent {
         <form>
           <div className={classes.wrapper}>
             <CraftInput title='Task Name' readOnly value={title} />
+            <CraftInput
+              title='Track Name'
+              isRequired
+              id='name'
+              value={name}
+              onChange={this.onChange}
+              error={nameError}
+            />
             <CraftInput
               title='Date'
               isRequired

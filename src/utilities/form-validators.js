@@ -16,6 +16,7 @@ export function validateInput(inputName, inputBody, password = '', startDate = '
   switch (inputName) {
     case 'username':
     case 'title':
+    case 'name':
       validatorField = regExpCheck(regExpNames, inputBody);
       errorField = validatorField ? '' : errors.minTwo;
       break;

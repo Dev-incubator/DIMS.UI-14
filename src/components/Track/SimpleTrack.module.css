@@ -4,7 +4,10 @@
   border-right: 1px solid var(--lightgray-color);
   border-left: 1px solid var(--lightgray-color);
   display: grid;
-  grid-template-columns: minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px);
+  grid-template-columns: minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 200px) minmax(auto, 250px) minmax(
+      auto,
+      150px
+    );
   align-items: center;
 }
 

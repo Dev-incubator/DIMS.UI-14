@@ -8,8 +8,10 @@
   color: var(--darkgray-color);
   background-color: var(--background-color);
   display: grid;
-  grid-template-columns:
-    minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px);
+  grid-template-columns: minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 200px) minmax(auto, 250px) minmax(
+      auto,
+      150px
+    );
   align-items: center;
 }
 

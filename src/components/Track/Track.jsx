@@ -57,7 +57,6 @@ export default class Track extends React.Component {
     const {
       tableIndex,
       track,
-      track: { date, note },
       taskData: { title, startDate },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
@@ -68,9 +67,9 @@ export default class Track extends React.Component {
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <div>{title}</div>
-          <div>{note}</div>
-          <div>{getInternationalDate(date)}</div>
+          <div>{track.name}</div>
+          <div>{track.note}</div>
+          <div>{getInternationalDate(track.date)}</div>
           <div className={classes.buttons}>
             <Button roleClass='edit' onClick={this.openEditModal}>
               Edit
@@ -98,6 +97,7 @@ Track.propTypes = {
   taskData: PropType.instanceOf(Object).isRequired,
   track: PropType.shape({
     id: PropType.string,
+    name: PropType.string,
     date: PropType.string,
     note: PropType.string,
   }).isRequired,

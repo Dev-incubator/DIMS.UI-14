@@ -103,6 +103,7 @@ const placeholderObj = {
   title: 'Enter task title',
   description: 'Enter task descriptions',
   note: 'Enter track note',
+  name: 'Enter track name',
 };
 
 CraftInput.propTypes = {

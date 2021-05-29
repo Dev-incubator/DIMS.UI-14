@@ -35,5 +35,9 @@ export default class Main extends React.Component {
 }
 
 Main.propTypes = {
-  routes: PropTypes.instanceOf(Object).isRequired,
+  routes: PropTypes.instanceOf(Object),
+};
+
+Main.defaultProps = {
+  routes: {},
 };
