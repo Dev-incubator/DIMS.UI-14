@@ -23,9 +23,8 @@ export default class UsersProgress extends React.Component {
       },
     } = this.props;
     const userData = await getElementDataFromCollection(USERS, userId);
-    const { tasks, username, surname } = userData;
-    const userFullName = `${username} ${surname}`;
-    const allTracks = await getAllTracksFromAllTasks(tasks);
+    const userFullName = `${userData.username} ${userData.surname}`;
+    const allTracks = await getAllTracksFromAllTasks(userData.tasks);
     this.setState({ allTracks, userFullName });
   }
 

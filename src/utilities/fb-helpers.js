@@ -313,3 +313,37 @@ export const signInUser = async (email, password) => {
     return error;
   }
 };
+
+export const deleteUserAuth = async (userToDelete) => {
+  try {
+    await signInUser(userToDelete.email, userToDelete.password);
+    const userAuth = firebase.auth().currentUser;
+    await userAuth.delete();
+    console.log(`USER with ID:${userToDelete.id} was succesfully deleted from the Auth section`);
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+  }
+};
+
+export const updateUserAuthData = async (prevUserData, editedUserData) => {
+  const prevEmail = prevUserData.email;
+  const prevPassword = prevUserData.password;
+  const editedEmail = editedUserData.email;
+  const editedPassword = editedUserData.password;
+  try {
+    await signInUser(prevEmail, prevPassword);
+    const userAuth = firebase.auth().currentUser;
+    if (prevEmail !== editedEmail) {
+      await userAuth.updateEmail(editedEmail);
+      console.log(`Email Auth of USER id:${prevUserData.id} was succesfully updated`);
+    }
+    if (prevPassword !== editedPassword) {
+      await userAuth.updatePassword(editedPassword);
+      console.log(`Password Auth of USER id:${prevUserData.id} was succesfully updated`);
+    }
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+  }
+};

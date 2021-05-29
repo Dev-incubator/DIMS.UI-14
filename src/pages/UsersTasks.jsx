@@ -12,7 +12,6 @@ export default class UsersTasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isUser: null,
       userId: '',
       userFullName: '',
       tasksList: [],
@@ -31,13 +30,12 @@ export default class UsersTasks extends React.Component {
     } = this.props;
 
     const userData = await getElementDataFromCollection(USERS, userId);
-    const { role, username, surname } = userData;
-    const userFullName = `${username} ${surname}`;
+    const userFullName = `${userData.username} ${userData.surname}`;
     const tasksWithStatus = userData.tasks;
     const tasksList = await getTasks(tasksWithStatus);
 
     this.setState((prevState) =>
-      reducerFunc(prevState, { type: TASKS_SET_DATA, userFullName, tasksWithStatus, tasksList, userId, role }),
+      reducerFunc(prevState, { type: TASKS_SET_DATA, userFullName, tasksWithStatus, tasksList, userId }),
     );
   }
 
@@ -53,17 +51,22 @@ export default class UsersTasks extends React.Component {
     this.setState((prevState) => reducerFunc(prevState, { type: TASKS_STATUS_UPDATE, list: tasksWithStatus }));
   }
 
-  selectActFunc() {
-    const { isUser } = this.state;
+  selectActFunc(id, status) {
+    const {
+      loggedUser: { role },
+    } = this.props;
+    const isUser = role === 'User';
     if (!isUser) {
-      return (id, status) => this.changeStatus(id, status);
+      this.changeStatus(id, status);
     }
-
-    return () => noop;
   }
 
   render() {
-    const { userFullName, tasksWithStatus, tasksList, isUser, userId } = this.state;
+    const { userFullName, tasksWithStatus, tasksList, userId } = this.state;
+    const {
+      loggedUser: { role },
+    } = this.props;
+    const isUser = role === 'User';
 
     const tasks = tasksWithStatus.map((task, index) => {
       const taskObj = tasksList.find((item) => item.id === task.id);
@@ -79,7 +82,7 @@ export default class UsersTasks extends React.Component {
           startDate={taskObj.startDate}
           deadLine={taskObj.deadLine}
           title={taskObj.title}
-          actFunc={this.selectActFunc()}
+          actFunc={this.selectActFunc}
         />
       );
     });
@@ -115,4 +118,5 @@ export default class UsersTasks extends React.Component {
 
 UsersTasks.propTypes = {
   match: PropType.instanceOf(Object).isRequired,
+  loggedUser: PropType.instanceOf(Object).isRequired,
 };

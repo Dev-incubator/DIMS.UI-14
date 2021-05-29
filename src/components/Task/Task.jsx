@@ -3,7 +3,6 @@ import PropType from 'prop-types';
 import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
-import noop from '../../shared/noop';
 import DivAnchor from '../DivAnchor';
 import { getInternationalDate } from '../../utilities/internationalization';
 import {
@@ -52,16 +51,12 @@ export default class Task extends React.Component {
     editTask(editedTask);
   }
 
-  selectActFunc() {
+  selectActFunc(editedTask = {}) {
     const { selectedModal } = this.state;
-
-    switch (selectedModal) {
-      case TASK_MODAL_DELETE_TASK:
-        return () => this.liftUpDeleteTask();
-      case TASK_MODAL_EDIT_TASK:
-        return (editedTask) => this.liftUpEditTask(editedTask);
-      default:
-        return () => noop;
+    if (selectedModal === TASK_MODAL_DELETE_TASK) {
+      this.liftUpDeleteTask();
+    } else if (selectedModal === TASK_MODAL_EDIT_TASK) {
+      this.liftUpEditTask(editedTask);
     }
   }
 
@@ -95,7 +90,7 @@ export default class Task extends React.Component {
           <Modal
             item={taskData}
             list={usersList}
-            actFunc={this.selectActFunc()}
+            actFunc={this.selectActFunc}
             closeFunc={this.closeAnyModal}
             selectedModal={selectedModal}
           />

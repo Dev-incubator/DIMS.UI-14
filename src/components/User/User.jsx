@@ -53,16 +53,12 @@ export default class User extends React.Component {
     editUser(editedUser);
   }
 
-  selectActFunc() {
+  selectActFunc(editedUser = {}) {
     const { selectedModal } = this.state;
-
-    switch (selectedModal) {
-      case USER_MODAL_DELETE_USER:
-        return () => this.liftUpDeleteUser();
-      case USER_MODAL_EDIT_USER:
-        return (editedUser) => this.liftUpEditUser(editedUser);
-      default:
-        return () => noop;
+    if (selectedModal === USER_MODAL_DELETE_USER) {
+      this.liftUpDeleteUser();
+    } else if (selectedModal === USER_MODAL_EDIT_USER) {
+      this.liftUpEditUser(editedUser);
     }
   }
 
@@ -71,8 +67,10 @@ export default class User extends React.Component {
       tableIndex,
       userData,
       userData: { id, username, surname, direction, education, startDate, dateOfBirth },
+      loggedUser: { role },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
+    const isAdmin = role === 'Admin';
 
     return (
       <>
@@ -92,18 +90,22 @@ export default class User extends React.Component {
             <NavLink className={classes.navLink} to={`/main/users/${id}/progress`}>
               <Button onClick={noop}>Progress</Button>
             </NavLink>
-            <Button roleClass='edit' onClick={this.openEditModal}>
-              Edit
-            </Button>
-            <Button roleClass='delete' onClick={this.openDeleteModal}>
-              Delete
-            </Button>
+            {isAdmin ? (
+              <>
+                <Button roleClass='edit' onClick={this.openEditModal}>
+                  Edit
+                </Button>
+                <Button roleClass='delete' onClick={this.openDeleteModal}>
+                  Delete
+                </Button>
+              </>
+            ) : null}
           </div>
         </div>
         {isOpen ? (
           <Modal
             item={userData}
-            actFunc={this.selectActFunc()}
+            actFunc={this.selectActFunc}
             closeFunc={this.closeAnyModal}
             selectedModal={selectedModal}
           />
@@ -115,6 +117,7 @@ export default class User extends React.Component {
 
 User.propTypes = {
   userData: PropType.instanceOf(Object).isRequired,
+  loggedUser: PropType.instanceOf(Object).isRequired,
   tableIndex: PropType.number.isRequired,
   deleteUser: PropType.func.isRequired,
   editUser: PropType.func.isRequired,

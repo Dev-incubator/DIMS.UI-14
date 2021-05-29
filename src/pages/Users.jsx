@@ -1,7 +1,8 @@
 import React from 'react';
+import PropType from 'prop-types';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
-import User from '../components/User/User';
+import UserWithContext from '../components/ContextHOCs/UserWithContext';
 import Modal from '../components/Modals/Modal';
 import { USERS_MODAL_TOGGLE, USERS_UPDATE, USERS_MODAL_CREATE_USER, reducerFunc } from './users-helpers';
 import {
@@ -12,6 +13,8 @@ import {
   USERS,
   getAllElementsFromCollection,
   createAuthForNewUser,
+  deleteUserAuth,
+  updateUserAuthData,
 } from '../utilities/fb-helpers';
 
 export default class Users extends React.Component {
@@ -39,23 +42,27 @@ export default class Users extends React.Component {
     this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
   }
 
-  updateData() {
-    getAllElementsFromCollection(USERS).then((usersList) =>
-      this.setState((prevState) => reducerFunc(prevState, { type: USERS_UPDATE, usersList })),
-    );
+  async updateData() {
+    const usersList = await getAllElementsFromCollection(USERS);
+    this.setState((prevState) => reducerFunc(prevState, { type: USERS_UPDATE, usersList }));
   }
 
   deleteUser(selectedId) {
     const { usersList } = this.state;
-    const assignedTasks = usersList.find((item) => item.id === selectedId).tasks;
+    const userToDelete = usersList.find((item) => item.id === selectedId);
+    const assignedTasks = userToDelete.tasks;
     deleteElemFromDB(USERS, selectedId, this.updateData);
+    deleteUserAuth(userToDelete);
     if (assignedTasks.length) {
       assignedTasks.forEach((assignedTask) => deleteUserFromTask(selectedId, assignedTask.id));
     }
   }
 
   editUser(editedUser) {
+    const { usersList } = this.state;
+    const prevUserData = usersList.find((item) => item.id === editedUser.id);
     editElemInDB(USERS, editedUser, this.updateData);
+    updateUserAuthData(prevUserData, editedUser);
   }
 
   createUser(newUserRef, newUser) {
@@ -66,10 +73,14 @@ export default class Users extends React.Component {
 
   render() {
     const { usersList, selectedModal, isOpen } = this.state;
+    const {
+      loggedUser: { role },
+    } = this.props;
+    const isAdmin = role === 'Admin';
 
     const users = usersList.map((user, index) => {
       return (
-        <User
+        <UserWithContext
           deleteUser={this.deleteUser}
           editUser={this.editUser}
           key={user.id}
@@ -85,9 +96,11 @@ export default class Users extends React.Component {
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>
           </h2>
-          <Button onClick={this.openCreateModal} roleClass='create'>
-            Create
-          </Button>
+          {isAdmin ? (
+            <Button onClick={this.openCreateModal} roleClass='create'>
+              Create
+            </Button>
+          ) : null}
         </div>
         <div className={classes.content}>
           <div className={classes.subheader}>
@@ -106,3 +119,7 @@ export default class Users extends React.Component {
     );
   }
 }
+
+Users.propTypes = {
+  loggedUser: PropType.instanceOf(Object).isRequired,
+};
