@@ -1,6 +1,5 @@
 import React from 'react';
 import PropType from 'prop-types';
-import noop from '../shared/noop';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
 import GoogleButton from '../components/Button/GoogleButton';
@@ -8,8 +7,7 @@ import debounce from '../utilities/debounce';
 import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
-import { signInUser, getLoggedUserByEmail } from '../utilities/fb-helpers';
-import { getLowerCasedAndTrimmedStr } from '../utilities/form-helpers';
+import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -19,24 +17,36 @@ export default class Login extends React.Component {
     this.validateFields = this.validateFields.bind(this);
     this.validateForm = this.validateForm.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleGoogleButtonClick = this.handleGoogleButtonClick.bind(this);
+  }
+
+  async handleGoogleButtonClick() {
+    const userData = await signInWithGoogle();
+    if (!userData.email) {
+      this.setState((prevState) =>
+        reducerFunc(prevState, { type: LOGIN_FAIL, error: { code: 'auth/user-not-found' }, initState: initialState }),
+      );
+
+      return;
+    }
+    const { setUserContext } = this.props;
+    setUserContext(userData);
   }
 
   async handleClick() {
     const {
       data: { email, password },
     } = this.state;
-    const userStatus = await signInUser(email, password);
-    if (!userStatus.email) {
+    const userData = await signInUser(email, password);
+    if (!userData.email) {
       this.setState((prevState) =>
-        reducerFunc(prevState, { type: LOGIN_FAIL, error: userStatus, initState: initialState }),
+        reducerFunc(prevState, { type: LOGIN_FAIL, error: userData, initState: initialState }),
       );
 
       return;
     }
-    const loggedUser = await getLoggedUserByEmail(getLowerCasedAndTrimmedStr(email));
-
     const { setUserContext } = this.props;
-    setUserContext(loggedUser);
+    setUserContext(userData);
   }
 
   handleChange(event) {
@@ -97,7 +107,7 @@ export default class Login extends React.Component {
             <Button disabled={!isValid} onClick={this.handleClick}>
               Enter
             </Button>
-            <GoogleButton onClick={noop}>Login with Google</GoogleButton>
+            <GoogleButton onClick={this.handleGoogleButtonClick}>Login with Google</GoogleButton>
           </div>
         </form>
       </>

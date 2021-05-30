@@ -301,14 +301,44 @@ export const createAuthForNewUser = async (email, password) => {
 };
 
 export const signInUser = async (email, password) => {
+  let userData = null;
   try {
     const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
     const { user } = userCredential;
+    if (user.email) {
+      userData = await getLoggedUserByEmail(user.email);
+    }
 
-    return user;
+    return userData;
   } catch (error) {
     console.log(error.code);
     console.log(error.message);
+
+    return error;
+  }
+};
+
+export const signInWithGoogle = async () => {
+  let userData = null;
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await firebase.auth().signInWithPopup(provider);
+    const { user } = result;
+    if (user.email) {
+      const usersList = await getAllElementsFromCollection(USERS);
+      userData = usersList.find((userDoc) => userDoc.email === user.email);
+      if (userData === undefined) {
+        const userAuth = firebase.auth().currentUser;
+        await userAuth.delete();
+      }
+    }
+
+    return userData;
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+    console.log(error.email);
+    console.log(error.credential);
 
     return error;
   }
@@ -345,5 +375,25 @@ export const updateUserAuthData = async (prevUserData, editedUserData) => {
   } catch (error) {
     console.log(error.code);
     console.log(error.message);
+  }
+};
+
+export const LogOut = async () => {
+  try {
+    await firebase.auth().signOut();
+    console.log('Succesfully LogOut');
+  } catch (error) {
+    console.log('Something went wrong with Logout', error);
+  }
+};
+
+export const resetUserPassword = async (loggedUser) => {
+  const { email } = loggedUser;
+  try {
+    const auth = firebase.auth();
+    await auth.sendPasswordResetEmail(email);
+    console.log(`Email to reset password was succesfully sent to email: ${email}`);
+  } catch (error) {
+    console.log(`Error with sending email to reset password to email: ${email}`, error);
   }
 };

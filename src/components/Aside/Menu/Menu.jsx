@@ -3,9 +3,13 @@ import classes from './Menu.module.css';
 import logo from '../../../icons/logo.svg';
 import logoutIcon from '../../../icons/logout.svg';
 import { getRoleDependedMenuLinks } from '../../Routes';
+import { LogOut } from '../../../utilities/fb-helpers';
 
 export default function Menu({ loggedUser, setUserContext, isLogged }) {
-  const handleClick = () => setUserContext({});
+  const handleClick = () => {
+    LogOut();
+    setUserContext({});
+  };
   const menuLinks = isLogged ? getRoleDependedMenuLinks(loggedUser) : null;
 
   return (

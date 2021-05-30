@@ -9,6 +9,7 @@ import settingsIcon from '../icons/settings.svg';
 import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
+import SettingsWithContext from './ContextHOCs/SettingsWithContext';
 
 const paths = [
   { isExact: true, path: '/main/users', component: UsersWithContext },
@@ -16,11 +17,12 @@ const paths = [
   { isExact: true, path: '/main/users/:userId/tasks', component: UsersTasksWithContext },
   { isExact: true, path: '/main/users/:userId/tasks/:taskId/track', component: UsersTracks },
   { isExact: true, path: '/main/users/:userId/progress', component: UsersProgress },
+  { isExact: true, path: '/main/settings', component: SettingsWithContext },
   { isExact: false, path: '', component: PageNotFound },
 ];
 
-const adminAndMentorPermissions = [0, 1, 2, 3, 4, 5];
-const userPermissions = [2, 3, 5];
+const adminAndMentorPermissions = [0, 1, 2, 3, 4, 5, 6];
+const userPermissions = [2, 3, 5, 6];
 
 export const getRoleDependedRoutes = (loggedUser) => {
   let permissionsList = null;

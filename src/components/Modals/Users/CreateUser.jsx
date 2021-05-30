@@ -24,7 +24,7 @@ export default class CreateUser extends React.Component {
         surname: '',
         email: '',
         direction: 'React',
-        sex: '',
+        sex: 'Male',
         role: 'User',
         password: '',
         passwordRepeat: '',
