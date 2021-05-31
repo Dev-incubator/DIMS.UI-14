@@ -1,6 +1,6 @@
 @import-normalize;
 
-*{
+* {
   box-sizing: border-box;
 }
 
@@ -47,4 +47,7 @@ code {
   --status-active-color: #5385ff;
   --status-complete-color: #0ca52f;
   --status-fail-color: #d50000;
+
+  --theme-button-hover-color: #ecedf1;
+  --theme-button-active-color: #122043;
 }

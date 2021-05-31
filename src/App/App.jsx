@@ -4,6 +4,7 @@ import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
 import { UserContext } from './userContext';
+import { ThemeContext } from './themeContext';
 import { getRoleDependedRoutes } from '../components/Routes';
 import { getFromLocalStorage, setToLocalStorage } from '../utilities/localStorage-helpers';
 
@@ -11,8 +12,14 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...(getFromLocalStorage('userContext') || {}),
-      setUserContext: this.setUserContext,
+      userContext: {
+        ...(getFromLocalStorage('userContext') || {}),
+        setUserContext: this.setUserContext,
+      },
+      themeContext: {
+        ...(getFromLocalStorage('themeContext') || true),
+        setThemeContext: this.setThemeContext,
+      },
     };
   }
 
@@ -20,31 +27,62 @@ export default class App extends React.Component {
     this.setState(
       (prevState) => ({
         ...prevState,
-        loggedUser,
-        isLogged: !prevState.isLogged,
+        userContext: {
+          ...prevState.userContext,
+          loggedUser,
+          isLogged: !prevState.userContext.isLogged,
+        },
       }),
-      () => setToLocalStorage('userContext', this.state),
+      this.updateUserContext,
     );
   };
 
+  setThemeContext = () => {
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        themeContext: {
+          ...prevState.themeContext,
+          isLightTheme: !prevState.themeContext.isLightTheme,
+        },
+      }),
+      this.updateThemeContext,
+    );
+  };
+
+  updateThemeContext = () => {
+    const { themeContext } = this.state;
+    setToLocalStorage('themeContext', themeContext);
+  };
+
+  updateUserContext = () => {
+    const { userContext } = this.state;
+    setToLocalStorage('userContext', userContext);
+  };
+
   render() {
-    const { loggedUser, isLogged } = this.state;
-    const contextState = this.state;
+    const {
+      userContext,
+      userContext: { isLogged, loggedUser },
+      themeContext,
+    } = this.state;
     const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : <Redirect to='/' />;
     const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
 
     return (
       <>
         <BrowserRouter>
-          <UserContext.Provider value={contextState}>
-            <div className={classes.app}>
-              <UserContext.Consumer>
-                {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
-              </UserContext.Consumer>
-              <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
-              {isLoggedRedirector}
-            </div>
-          </UserContext.Provider>
+          <ThemeContext.Provider value={themeContext}>
+            <UserContext.Provider value={userContext}>
+              <div className={classes.app}>
+                <UserContext.Consumer>
+                  {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
+                </UserContext.Consumer>
+                <Route path='/main' render={(props) => <Main {...props} routes={routes} {...themeContext} />} />
+                {isLoggedRedirector}
+              </div>
+            </UserContext.Provider>
+          </ThemeContext.Provider>
         </BrowserRouter>
       </>
     );
