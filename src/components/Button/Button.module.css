@@ -1,6 +1,6 @@
 .button {
   cursor: pointer;
-  color: var(--white-color);
+  color: var(--button-text-color);
   padding: 10px;
   background-color: var(--button-default-color);
   border: none;
@@ -50,4 +50,11 @@
 .button[disabled]:hover {
   background-color: var(--button-disabled-color);
   box-shadow: 0 0 5px 0 var(--button-disabled-color);
+}
+.button.onScreen {
+  background-color: var(--button-onScreen-color);
+}
+.button.onScreen:hover {
+  background-color: var(--button-default-hover-color);
+  box-shadow: 0 0 5px 0 var(--button-default-hover-color);
 }

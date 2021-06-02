@@ -20,9 +20,9 @@ export default function Menu({ loggedUser, setUserContext, isLogged }) {
       </div>
       <nav>
         {menuLinks}
-        <div role='button' tabIndex={0} className={classes.item} onKeyDown={handleClick} onClick={handleClick}>
-          <img className={classes.image} src={logoutIcon} alt='logout-logo' />
-          <div className={classes.itemTitle}>Logout</div>
+        <div role='button' tabIndex={0} className={classes.logout} onKeyDown={handleClick} onClick={handleClick}>
+          <img className={classes.logoutImage} src={logoutIcon} alt='logout-logo' />
+          <div className={classes.logoutTitle}>Logout</div>
         </div>
       </nav>
     </menu>

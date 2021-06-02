@@ -5,50 +5,59 @@ import sunLogo from '../icons/sun.svg';
 import moonLogo from '../icons/moon.svg';
 import classes from './Settings.module.css';
 import { resetUserPassword } from '../utilities/fb-helpers';
+import { THEME_LIGHT, THEME_DARK, setGlobalTheme } from '../utilities/theme-helpers';
 
 export default class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       resetBtnMsg: '',
+      theme: '',
     };
-    this.handleReset = this.handleReset.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleThemeChange = this.handleThemeChange.bind(this);
+  }
+
+  componentDidMount() {
+    const { theme } = this.props;
+    this.setState({ theme });
   }
 
   handleBlur() {
     this.setState({ resetBtnMsg: '' });
   }
 
-  async handleReset() {
+  handleReset = async () => {
     const { loggedUser } = this.props;
     await resetUserPassword(loggedUser);
     this.setState({ resetBtnMsg: 'Email to reset password was succesfully sent' });
-  }
+  };
 
-  handleThemeChange(theme) {
-    const { setThemeContext, isLightTheme } = this.props;
-    if ((isLightTheme && theme === 'light') || (!isLightTheme && theme === 'dark')) return;
-    setThemeContext();
-  }
+  toggleTheme = (themeName) => {
+    const { theme } = this.state;
+    if (theme === themeName) return;
+    const nextTheme = theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+    this.setState({ theme: nextTheme });
+    setGlobalTheme(nextTheme);
+  };
 
-  selectDarkTheme = () => this.handleThemeChange('dark');
+  selectDarkTheme = () => this.toggleTheme(THEME_DARK);
 
-  selectLightTheme = () => this.handleThemeChange('light');
+  selectLightTheme = () => this.toggleTheme(THEME_LIGHT);
 
   render() {
-    const { resetBtnMsg } = this.state;
+    const { resetBtnMsg, theme } = this.state;
     const isResetted = resetBtnMsg !== '';
-    const { isLightTheme } = this.props;
-    const lightThemeButtonClass = isLightTheme ? `${classes.themeItem} ${classes.active}` : `${classes.themeItem}`;
-    const darkThemeButtonClass = isLightTheme ? `${classes.themeItem}` : `${classes.themeItem} ${classes.active}`;
+    const lightThemeButtonClass =
+      theme === THEME_LIGHT ? `${classes.themeItem} ${classes.active}` : `${classes.themeItem}`;
+    const darkThemeButtonClass =
+      theme === THEME_LIGHT ? `${classes.themeItem}` : `${classes.themeItem} ${classes.active}`;
 
     return (
       <div className={classes.wrapper}>
         <h2 className={classes.title}>Reset your password:</h2>
         <div className={classes.resetButton} onBlur={this.handleBlur}>
-          <Button onClick={this.handleReset}>Click to reset</Button>
+          <Button onClick={this.handleReset} onScreen>
+            Click to reset
+          </Button>
           {isResetted ? <div className={classes.resetText}>{resetBtnMsg}</div> : null}
         </div>
         <h2 className={classes.title}>Change color theme:</h2>
@@ -81,6 +90,5 @@ export default class Settings extends React.Component {
 
 Settings.propTypes = {
   loggedUser: PropType.instanceOf(Object).isRequired,
-  setThemeContext: PropType.func.isRequired,
-  isLightTheme: PropType.bool.isRequired,
+  theme: PropType.string.isRequired,
 };

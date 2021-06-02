@@ -1,23 +1,23 @@
 .item {
   display: flex;
   text-decoration: none;
-  color: var(--white-color);
+  color: var(--menu-text-color);
   padding: 25px 50px;
   justify-content: flex-start;
   font-size: 22px;
   line-height: 22px;
   align-items: center;
-  border-left: 6px solid var(--darkblue-color);
+  border-left: 6px solid var(--menu-item-border-color);
   transition: background-color 0.3s all;
   cursor: pointer;
 }
 
 .item:hover {
-  background-color: var(--menu-action-color);
-  border-color: var(--lightblue-color);
+  background-color: var(--menu-item-action-color);
+  border-color: var(--menu-item-active-color);
 }
 .item.active {
-  border-color: var(--lightblue-color);
+  border-color: var(--menu-item-active-color);
 }
 
 .image {

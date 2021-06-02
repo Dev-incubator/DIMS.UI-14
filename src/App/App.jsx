@@ -4,9 +4,10 @@ import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
 import { UserContext } from './userContext';
-import { ThemeContext } from './themeContext';
 import { getRoleDependedRoutes } from '../components/Routes';
 import { getFromLocalStorage, setToLocalStorage } from '../utilities/localStorage-helpers';
+import { applyGlobalTheme, getGlobalTheme } from '../utilities/theme-helpers';
+import { ThemeContext } from './themeContext';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,10 +16,6 @@ export default class App extends React.Component {
       userContext: {
         ...(getFromLocalStorage('userContext') || {}),
         setUserContext: this.setUserContext,
-      },
-      themeContext: {
-        ...(getFromLocalStorage('themeContext') || true),
-        setThemeContext: this.setThemeContext,
       },
     };
   }
@@ -37,24 +34,6 @@ export default class App extends React.Component {
     );
   };
 
-  setThemeContext = () => {
-    this.setState(
-      (prevState) => ({
-        ...prevState,
-        themeContext: {
-          ...prevState.themeContext,
-          isLightTheme: !prevState.themeContext.isLightTheme,
-        },
-      }),
-      this.updateThemeContext,
-    );
-  };
-
-  updateThemeContext = () => {
-    const { themeContext } = this.state;
-    setToLocalStorage('themeContext', themeContext);
-  };
-
   updateUserContext = () => {
     const { userContext } = this.state;
     setToLocalStorage('userContext', userContext);
@@ -64,8 +43,9 @@ export default class App extends React.Component {
     const {
       userContext,
       userContext: { isLogged, loggedUser },
-      themeContext,
     } = this.state;
+    const themeContext = getGlobalTheme();
+    applyGlobalTheme(themeContext);
     const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : <Redirect to='/' />;
     const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
 
@@ -75,10 +55,8 @@ export default class App extends React.Component {
           <ThemeContext.Provider value={themeContext}>
             <UserContext.Provider value={userContext}>
               <div className={classes.app}>
-                <UserContext.Consumer>
-                  {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
-                </UserContext.Consumer>
-                <Route path='/main' render={(props) => <Main {...props} routes={routes} {...themeContext} />} />
+                <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />
+                <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
                 {isLoggedRedirector}
               </div>
             </UserContext.Provider>

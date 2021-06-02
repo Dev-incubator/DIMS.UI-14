@@ -5,8 +5,7 @@
 }
 
 .subheader {
-  color: var(--darkgray-color);
-  background-color: var(--background-color);
+  color: var(--screen-header-text-color);
   display: grid;
   grid-template-columns:
     minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 300px) minmax(auto, 150px) minmax(auto, 150px)
@@ -34,5 +33,5 @@
 }
 
 .title span {
-  color: var(--darkgray-color);
+  color: var(--screen-header-text-color);
 }

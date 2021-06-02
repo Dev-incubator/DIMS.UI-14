@@ -1,6 +1,6 @@
 import PropType from 'prop-types';
 import React from 'react';
-import classes from './CreateTask.module.css';
+import classes from './EditTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 

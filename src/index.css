@@ -12,42 +12,132 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-:root {
-  --white-color: #fff;
+body[data-theme='light'] {
+  background-color: #fff;
+  color: #000;
   --background-color: #f6f7fb;
-  --black-color: #000;
-  --darkblue-color: #0e1935;
-  --lightgray-color: #ecedf1;
-  --darkgray-color: #7787ab;
-  --lightblue-color: #5385ff;
-  --menu-action-color: #122043;
-
-  --button-default-color: #5385ff;
-  --button-default-hover-color: #3855a5;
-
-  --button-delete-color: #d50000;
-  --button-delete-hover-color: #ae0000;
-
-  --button-edit-color: #ffa610;
-  --button-edit-hover-color: #ff7518;
-
-  --button-create-color: #1bc47d;
-  --button-create-hover-color: #0ca52f;
-
-  --button-disabled-color: #ecedf1;
-
-  --validator-color: #d50000;
-
+  --main-header-color: #fff;
+  --main-header-bottom-color: #ecedf1;
+  --hamburger-color: #000;
+  --menu-color: #0e1935;
+  --menu-border-color: #0e1935;
+  --menu-header-border-color: #000;
+  --menu-item-border-color: #0e1935;
+  --menu-text-color: #fff;
+  --menu-item-action-color: #122043;
+  --menu-item-active-color: #5385ff;
+  --screen-header-text-color: #7787ab;
+  --screen-element-background-color: #fff;
+  --screen-element-border-color: #ecedf1;
+  --progress-navlink-text-color: #fff;
+  --login-welcome-color: #5385ff;
+  --login-header-color: #0e1935;
+  --login-text-color: #fff;
+  --login-header-action-color: #122043;
+  --login-header-active-color: #5385ff;
+  --login-input-border-color: #ecedf1;
+  --login-input-text-color: #7787ab;
+  --login-input-color: #fff;
   --divanchor-color: #5385ff;
-
   --status-active-color: #5385ff;
   --status-complete-color: #0ca52f;
   --status-fail-color: #d50000;
-
+  --button-text-color: #fff;
+  --button-default-color: #5385ff;
+  --button-default-hover-color: #3855a5;
+  --button-delete-color: #d50000;
+  --button-delete-hover-color: #ae0000;
+  --button-edit-color: #ffa610;
+  --button-edit-hover-color: #ff7518;
+  --button-create-color: #1bc47d;
+  --button-create-hover-color: #0ca52f;
+  --button-disabled-color: #ecedf1;
+  --button-onScreen-color: #5385ff;
+  --validator-color: #d50000;
+  --modal-overlay-color: rgba(0, 0, 0, 0.5);
+  --modal-background-color: #fff;
+  --modal-border-shadow-color: #ecedf1;
+  --modal-div-color: #5385ff;
+  --craft-input-border-color: #7787ab;
+  --craft-input-border-focus-color: #5385ff;
+  --craft-input-readonly-color: #ecedf1;
+  --craft-input-text-color: #000;
   --theme-button-hover-color: #ecedf1;
   --theme-button-active-color: #122043;
+  --theme-button-active-text-color: #fff;
+  --google-button-border-color: #3855a5;
+  --google-button-background-color: #fff;
+  --google-button-text-color: #5385ff;
+  --google-button-text-hover-color: #fff;
+
+  --white-color: #fff; /*main-header-color, menu-text-color*/
+  --black-color: #000; /*hamburger-color*/
+  --darkblue-color: #0e1935; /*menu-color, menu-border-color*/
+  --lightgray-color: #ecedf1; /*main-header-bottom-color*/
+  --darkgray-color: #7787ab;
+  --lightblue-color: #5385ff; /*menu-item-active-color*/
+  --menu-action-color: #122043; /*menu-item-action-color*/
+}
+
+body[data-theme='dark'] {
+  background-color: #122043;
+  color: #ecedf1;
+  --background-color: #122043;
+  --main-header-color: #0e1935;
+  --main-header-bottom-color: #000;
+  --hamburger-color: #ecedf1;
+  --menu-color: #0e1935;
+  --menu-border-color: #000;
+  --menu-header-border-color: #000;
+  --menu-item-border-color: #0e1935;
+  --menu-text-color: #ecedf1;
+  --menu-item-action-color: #122043;
+  --menu-item-active-color: #5385ff;
+  --screen-header-text-color: #7787ab;
+  --screen-element-border-color: #122043;
+  --screen-element-background-color: #0e1935;
+  --navlink-common-text-color: #ecedf1;
+  --login-welcome-color: #5385ff;
+  --login-header-color: #0e1935;
+  --login-text-color: #ecedf1;
+  --login-header-action-color: #122043;
+  --login-header-active-color: #5385ff;
+  --login-input-border-color: #0e1935;
+  --login-input-text-color: #ecedf1;
+  --login-input-color: #122043;
+  --divanchor-color: #5385ff;
+  --status-active-color: #5385ff;
+  --status-complete-color: #0ca52f;
+  --status-fail-color: #d50000;
+  --button-text-color: #ecedf1;
+  --button-default-color: #122043;
+  --button-default-hover-color: #5385ff;
+  --button-delete-color: #500000;
+  --button-delete-hover-color: #8b0000;
+  --button-edit-color: #894b00;
+  --button-edit-hover-color: #c46c00;
+  --button-create-color: #013220;
+  --button-create-hover-color: #026c45;
+  --button-disabled-color: #122043;
+  --button-onScreen-color: #0e1935;
+  --validator-color: #8b0000;
+  --modal-overlay-color: rgba(0, 0, 0, 0.5);
+  --modal-background-color: #0e1935;
+  --modal-border-shadow-color: #122043;
+  --modal-div-color: #5385ff;
+  --craft-input-border-color: #5385ff;
+  --craft-input-border-focus-color: #5385ff;
+  --craft-input-readonly-color: #0e1935;
+  --craft-input-text-color: #ecedf1;
+  --theme-button-hover-color: #0e1935;
+  --theme-button-active-color: #0e1935;
+  --theme-button-active-text-color: #ecedf1;
+  --google-button-border-color: #5385ff;
+  --google-button-background-color: #122043;
+  --google-button-text-color: #ecedf1;
+  --google-button-text-hover-color: #ecedf1;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

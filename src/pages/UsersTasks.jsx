@@ -96,7 +96,9 @@ export default class UsersTasks extends React.Component {
           </h2>
           {isUser ? null : (
             <NavLink className={classes.navLink} to='/main/users'>
-              <Button onClick={noop}>Back</Button>
+              <Button onClick={noop} onScreen>
+                Back
+              </Button>
             </NavLink>
           )}
         </div>

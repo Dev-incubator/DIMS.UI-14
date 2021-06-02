@@ -6,7 +6,7 @@
 }
 
 .welcome span {
-  color: var(--lightblue-color);
+  color: var(--login-welcome-color);
 }
 
 .form {

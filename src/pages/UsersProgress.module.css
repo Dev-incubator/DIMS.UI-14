@@ -5,8 +5,7 @@
 }
 
 .subheader {
-  color: var(--darkgray-color);
-  background-color: var(--background-color);
+  color: var(--screen-header-text-color);
   display: grid;
   grid-template-columns: minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 200px) minmax(auto, 250px) minmax(
       auto,
@@ -35,11 +34,11 @@
 }
 
 .title span {
-  color: var(--darkgray-color);
+  color: var(--screen-header-text-color);
 }
 
 .navLink {
   display: inherit;
-  color: var(--white-color);
+  color: var(--navlink-common-text-color);
   text-decoration: none;
 }

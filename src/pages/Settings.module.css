@@ -57,7 +57,7 @@
 }
 
 .themeItem.active {
-  color: var(--white-color);
+  color: var(--theme-button-active-text-color);
   background-color: var(--theme-button-active-color);
 }
 

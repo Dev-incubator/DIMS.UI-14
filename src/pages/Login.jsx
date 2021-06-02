@@ -104,7 +104,7 @@ export default class Login extends React.Component {
           </div>
           {userLoginStatusMessage}
           <div className={classes.buttonWrapper}>
-            <Button disabled={!isValid} onClick={this.handleClick}>
+            <Button disabled={!isValid} onClick={this.handleClick} onScreen>
               Enter
             </Button>
             <GoogleButton onClick={this.handleGoogleButtonClick}>Login with Google</GoogleButton>

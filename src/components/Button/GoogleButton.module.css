@@ -1,9 +1,9 @@
 .googleButton {
   cursor: pointer;
-  color: var(--lightblue-color);
+  color: var(--google-button-text-color);
   padding: 8px;
-  background-color: var(--white-color);
-  border: 1px solid var(--lightblue-color);
+  background-color: var(--google-button-background-color);
+  border: 1px solid var(--google-button-border-color);
   border-radius: 20px;
   transition: 0.1s all;
   display: flex;
@@ -16,9 +16,9 @@
 }
 
 .googleButton:hover {
-  background-color: var(--lightblue-color);
-  box-shadow: 0 0 5px 0 var(--lightblue-color);
-  color: var(--white-color);
+  background-color: var(--google-button-border-color);
+  box-shadow: 0 0 5px 0 var(--google-button-border-color);
+  color: var(--google-button-text-hover-color);
 }
 
 .googleButton:focus {

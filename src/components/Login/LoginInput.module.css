@@ -16,7 +16,8 @@
 }
 
 .input {
-  color: var(--darkgray-color);
+  color: var(--login-input-text-color);
+  background-color: var(--login-input-color);
   font-weight: 300;
   border: none;
   font-size: 1rem;
@@ -27,5 +28,5 @@
 .item {
   padding: 0.75rem 0.5rem;
   display: flex;
-  border-bottom: 2px solid var(--lightgray-color);
+  border-bottom: 2px solid var(--login-input-border-color);
 }

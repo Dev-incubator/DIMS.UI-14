@@ -17,7 +17,7 @@
 
 .hamburger span {
   display: block;
-  background: var(--black-color);
+  background: var(--hamburger-color);
   width: 30px;
   height: 3px;
   transition: 0.7s all;
