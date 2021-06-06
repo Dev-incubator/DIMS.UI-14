@@ -62,6 +62,7 @@ body[data-theme='light'] {
   --craft-input-border-focus-color: #5385ff;
   --craft-input-readonly-color: #ecedf1;
   --craft-input-text-color: #000;
+  --craft-input-background-color: #fff;
   --theme-button-hover-color: #ecedf1;
   --theme-button-active-color: #122043;
   --theme-button-active-text-color: #fff;
@@ -69,14 +70,6 @@ body[data-theme='light'] {
   --google-button-background-color: #fff;
   --google-button-text-color: #5385ff;
   --google-button-text-hover-color: #fff;
-
-  --white-color: #fff; /*main-header-color, menu-text-color*/
-  --black-color: #000; /*hamburger-color*/
-  --darkblue-color: #0e1935; /*menu-color, menu-border-color*/
-  --lightgray-color: #ecedf1; /*main-header-bottom-color*/
-  --darkgray-color: #7787ab;
-  --lightblue-color: #5385ff; /*menu-item-active-color*/
-  --menu-action-color: #122043; /*menu-item-action-color*/
 }
 
 body[data-theme='dark'] {
@@ -129,6 +122,7 @@ body[data-theme='dark'] {
   --craft-input-border-focus-color: #5385ff;
   --craft-input-readonly-color: #0e1935;
   --craft-input-text-color: #ecedf1;
+  --craft-input-background-color: #0e1935;
   --theme-button-hover-color: #0e1935;
   --theme-button-active-color: #0e1935;
   --theme-button-active-text-color: #ecedf1;

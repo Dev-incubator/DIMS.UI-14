@@ -1,75 +1,71 @@
-import React from 'react';
+import { useEffect } from 'react';
 import PropType from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import classes from './UsersProgress.module.css';
 import Button from '../components/Button/Button';
+import Loader from '../components/Loader/Loader';
 import noop from '../shared/noop';
-import { USERS, getElementDataFromCollection, getAllTracksFromAllTasks } from '../utilities/fb-helpers';
 import SimpleTrack from '../components/Track/SimpleTrack';
+import fetchProgress from '../store/actionCreators/fetchProgress';
 
-export default class UsersProgress extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userFullName: '',
-      allTracks: [],
-    };
-  }
+const UsersProgress = ({
+  match: {
+    params: { userId },
+  },
+}) => {
+  const { allTracks, userFullName } = useSelector((state) => state.progress);
+  const { loading } = useSelector((state) => state.app);
+  const dispatch = useDispatch();
 
-  async componentDidMount() {
-    const {
-      match: {
-        params: { userId },
-      },
-    } = this.props;
-    const userData = await getElementDataFromCollection(USERS, userId);
-    const userFullName = `${userData.username} ${userData.surname}`;
-    const allTracks = await getAllTracksFromAllTasks(userData.tasks);
-    this.setState({ allTracks, userFullName });
-  }
+  useEffect(() => {
+    dispatch(fetchProgress(userId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  render() {
-    const { allTracks, userFullName } = this.state;
-    const trackItems = allTracks.map((track, index) => {
-      return (
-        <SimpleTrack
-          tableIndex={index + 1}
-          key={track.id}
-          note={track.note}
-          title={track.title}
-          date={track.date}
-          name={track.name}
-        />
-      );
-    });
+  if (loading) return <Loader />;
 
+  const trackItems = allTracks.map((track, index) => {
     return (
-      <div>
-        <div className={classes.header}>
-          <h2 className={classes.title}>
-            {`${userFullName}'s Progress `}
-            <span>({`${allTracks.length}`})</span>
-          </h2>
-          <NavLink className={classes.navLink} to='/main/users'>
-            <Button onClick={noop} onScreen>
-              Back
-            </Button>
-          </NavLink>
-        </div>
-        <div className={classes.content}>
-          <div className={classes.subheader}>
-            <div>№</div>
-            <div>Task Name</div>
-            <div>Track Name</div>
-            <div>Track Note</div>
-            <div>Date</div>
-          </div>
-          {trackItems}
-        </div>
-      </div>
+      <SimpleTrack
+        tableIndex={index + 1}
+        key={track.id}
+        note={track.note}
+        title={track.title}
+        date={track.date}
+        name={track.name}
+      />
     );
-  }
-}
+  });
+
+  return (
+    <div>
+      <div className={classes.header}>
+        <h2 className={classes.title}>
+          {`${userFullName}'s Progress `}
+          <span>({`${allTracks.length}`})</span>
+        </h2>
+        <NavLink className={classes.navLink} to='/main/users'>
+          <Button onClick={noop} onScreen>
+            Back
+          </Button>
+        </NavLink>
+      </div>
+      <div className={classes.content}>
+        <div className={classes.subheader}>
+          <div>№</div>
+          <div>Task Name</div>
+          <div>Track Name</div>
+          <div>Track Note</div>
+          <div>Date</div>
+        </div>
+        {trackItems}
+      </div>
+    </div>
+  );
+};
+
+export default UsersProgress;
 
 UsersProgress.propTypes = {
   match: PropType.instanceOf(Object).isRequired,

@@ -6,7 +6,7 @@
 }
 
 .item input {
-  background-color: var(--craft-input-readonly-color);
+  background-color: var(--craft-input-background-color);
   color: var(--craft-input-text-color);
 }
 
@@ -34,7 +34,7 @@ select {
   border: 1px solid var(--craft-input-border-color);
   padding: 10px;
   width: 45%;
-  background-color: var(--craft-input-readonly-color);
+  background-color: var(--craft-input-background-color);
   color: var(--craft-input-text-color);
 }
 

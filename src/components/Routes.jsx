@@ -8,6 +8,7 @@ import PageNotFound from '../pages/PageNotFound';
 import settingsIcon from '../icons/settings.svg';
 import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
+import WorkFlowIcon from '../icons/workflow.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
 import SettingsWithContext from './ContextHOCs/SettingsWithContext';
 
@@ -46,28 +47,33 @@ export const getRoleDependedRoutes = (loggedUser) => {
   return <Switch>{routePack}</Switch>;
 };
 
-const menuList = [
-  {
-    title: 'Users',
-    path: '/main/users',
-    image: usersIcon,
-  },
-  {
-    title: 'Workflow',
-    path: '/main/tasks',
-    image: tasksIcon,
-  },
-  {
-    title: 'Settings',
-    path: '/main/settings',
-    image: settingsIcon,
-  },
-];
-
-const adminAndMentorMenuList = [0, 1, 2];
-const userMenuList = [2];
-
 export const getRoleDependedMenuLinks = (loggedUser) => {
+  const menuList = [
+    {
+      title: 'Users',
+      path: '/main/users',
+      image: usersIcon,
+    },
+    {
+      title: 'Tasks',
+      path: '/main/tasks',
+      image: tasksIcon,
+    },
+    {
+      title: 'WorkFlow',
+      path: `/main/users/${loggedUser.id}/tasks`,
+      image: WorkFlowIcon,
+    },
+    {
+      title: 'Settings',
+      path: '/main/settings',
+      image: settingsIcon,
+    },
+  ];
+
+  const adminAndMentorMenuList = [0, 1, 3];
+  const userMenuList = [2, 3];
+
   const isUser = loggedUser.role === 'User';
   let roleDependendMenuList = null;
   if (!isUser) {

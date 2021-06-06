@@ -1,0 +1,3 @@
+const TOGGLE_LOADER = 'APP/TOGGLE_LOADER';
+
+export default TOGGLE_LOADER;
