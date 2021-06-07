@@ -11,7 +11,7 @@ import Aside from '../Aside/Aside';
 import { reducerFunc, TOGGLE_MENU } from './main-helpers';
 import { UserContext } from '../../App/userContext';
 
-export default class Main extends React.Component {
+export default class Main extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,1 +1,2 @@
-export const getLowerCasedAndTrimmedStr = (str) => str.toLowerCase().trim();
+export const getLowerCasedStr = (str) => str.toLowerCase();
+export const getTrimmedStr = (str) => str.trim();

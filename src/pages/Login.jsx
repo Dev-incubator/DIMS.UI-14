@@ -7,9 +7,27 @@ import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM,
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, getLoggedUserByEmail } from '../utilities/fb-helpers';
-import { getLowerCasedAndTrimmedStr } from '../utilities/form-helpers';
+import { getLowerCasedStr, getTrimmedStr } from '../utilities/form-helpers';
 
-export default class Login extends React.Component {
+const initialState = {
+  data: {
+    email: '',
+    password: '',
+  },
+  validator: {
+    email: false,
+    password: false,
+  },
+  errors: {
+    emailError: '',
+    passwordError: '',
+  },
+  loginError: '',
+  isLogged: false,
+  isValid: false,
+};
+
+export default class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -31,7 +49,7 @@ export default class Login extends React.Component {
 
       return;
     }
-    const loggedUser = await getLoggedUserByEmail(getLowerCasedAndTrimmedStr(email));
+    const loggedUser = await getLoggedUserByEmail(getLowerCasedStr(getTrimmedStr(email)));
 
     const { setUserContext } = this.props;
     setUserContext(loggedUser);
@@ -101,24 +119,6 @@ export default class Login extends React.Component {
     );
   }
 }
-
-const initialState = {
-  data: {
-    email: '',
-    password: '',
-  },
-  validator: {
-    email: false,
-    password: false,
-  },
-  errors: {
-    emailError: '',
-    passwordError: '',
-  },
-  loginError: '',
-  isLogged: false,
-  isValid: false,
-};
 
 Login.propTypes = {
   setUserContext: PropType.func.isRequired,
