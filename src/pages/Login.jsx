@@ -9,7 +9,25 @@ import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
 
-export default class Login extends React.Component {
+const initialState = {
+  data: {
+    email: '',
+    password: '',
+  },
+  validator: {
+    email: false,
+    password: false,
+  },
+  errors: {
+    emailError: '',
+    passwordError: '',
+  },
+  loginError: '',
+  isLogged: false,
+  isValid: false,
+};
+
+export default class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -114,24 +132,6 @@ export default class Login extends React.Component {
     );
   }
 }
-
-const initialState = {
-  data: {
-    email: '',
-    password: '',
-  },
-  validator: {
-    email: false,
-    password: false,
-  },
-  errors: {
-    emailError: '',
-    passwordError: '',
-  },
-  loginError: '',
-  isLogged: false,
-  isValid: false,
-};
 
 Login.propTypes = {
   setUserContext: PropType.func.isRequired,

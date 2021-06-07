@@ -47,7 +47,7 @@ export default class UsersTasks extends React.Component {
   async updateData() {
     const { userId } = this.state;
     const userData = await getElementDataFromCollection(USERS, userId);
-    const tasksWithStatus = await userData.tasks;
+    const tasksWithStatus = userData.tasks;
     this.setState((prevState) => reducerFunc(prevState, { type: TASKS_STATUS_UPDATE, list: tasksWithStatus }));
   }
 
