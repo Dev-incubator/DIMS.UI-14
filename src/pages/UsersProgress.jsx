@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import classes from './UsersProgress.module.css';
 import Button from '../components/Button/Button';
 import noop from '../shared/noop';
-import { USERS, getElementFromCollection, getAllTracksFromAllTasks } from '../utilities/fb-helpers';
+import { USERS, getElementDataFromCollection, getAllTracksFromAllTasks } from '../utilities/fb-helpers';
 import SimpleTrack from '../components/Track/SimpleTrack';
 
 export default class UsersProgress extends React.Component {
@@ -22,8 +22,7 @@ export default class UsersProgress extends React.Component {
         params: { userId },
       },
     } = this.props;
-    const user = await getElementFromCollection(USERS, userId);
-    const userData = user.data();
+    const userData = await getElementDataFromCollection(USERS, userId);
     const { tasks, username, surname } = userData;
     const userFullName = `${username} ${surname}`;
     const allTracks = await getAllTracksFromAllTasks(tasks);
@@ -45,7 +44,7 @@ export default class UsersProgress extends React.Component {
             {`${userFullName}'s Progress `}
             <span>({`${allTracks.length}`})</span>
           </h2>
-          <NavLink className={classes.navLink} to='/users'>
+          <NavLink className={classes.navLink} to='/main/users'>
             <Button onClick={noop}>Back</Button>
           </NavLink>
         </div>

@@ -1,4 +1,4 @@
-export const TOGGLE_MENU = 'toggle-menu';
+export const TOGGLE_MENU = 'TOGGLE_MENU';
 
 export const reducerFunc = (prevState, action) => {
   let state;
@@ -7,12 +7,7 @@ export const reducerFunc = (prevState, action) => {
     case TOGGLE_MENU:
       state = {
         ...prevState,
-        settings: {
-          ...prevState.settings,
-          menu: {
-            isOpen: !prevState.settings.menu.isOpen,
-          },
-        },
+        isOpen: !prevState.isOpen,
       };
 
       return state;

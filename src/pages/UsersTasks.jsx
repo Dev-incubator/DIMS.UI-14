@@ -5,7 +5,7 @@ import Button from '../components/Button/Button';
 import noop from '../shared/noop';
 import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
-import { USERS, getElementFromCollection, updateStatus, getTasks } from '../utilities/fb-helpers';
+import { USERS, getElementDataFromCollection, updateStatus, getTasks } from '../utilities/fb-helpers';
 import { reducerFunc, TASKS_STATUS_UPDATE, TASKS_SET_DATA } from './usersTasks-helpers';
 
 export default class UsersTasks extends React.Component {
@@ -30,8 +30,7 @@ export default class UsersTasks extends React.Component {
       },
     } = this.props;
 
-    const user = await getElementFromCollection(USERS, userId);
-    const userData = user.data();
+    const userData = await getElementDataFromCollection(USERS, userId);
     const { role, username, surname } = userData;
     const userFullName = `${username} ${surname}`;
     const tasksWithStatus = userData.tasks;
@@ -49,8 +48,8 @@ export default class UsersTasks extends React.Component {
 
   async updateData() {
     const { userId } = this.state;
-    const user = await getElementFromCollection(USERS, userId);
-    const tasksWithStatus = await user.data().tasks;
+    const userData = await getElementDataFromCollection(USERS, userId);
+    const tasksWithStatus = userData.tasks;
     this.setState((prevState) => reducerFunc(prevState, { type: TASKS_STATUS_UPDATE, list: tasksWithStatus }));
   }
 
@@ -93,7 +92,7 @@ export default class UsersTasks extends React.Component {
             <span>({`${tasks.length}`})</span>
           </h2>
           {isUser ? null : (
-            <NavLink className={classes.navLink} to='/users'>
+            <NavLink className={classes.navLink} to='/main/users'>
               <Button onClick={noop}>Back</Button>
             </NavLink>
           )}

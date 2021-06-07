@@ -86,10 +86,10 @@ export default class User extends React.Component {
           <div>{getInternationalDate(startDate)}</div>
           <div>{new Date().getFullYear() - new Date(dateOfBirth).getFullYear()}</div>
           <div className={classes.buttons}>
-            <NavLink className={classes.navLink} to={`/users/${id}/tasks`}>
+            <NavLink className={classes.navLink} to={`/main/users/${id}/tasks`}>
               <Button onClick={noop}>Tasks</Button>
             </NavLink>
-            <NavLink className={classes.navLink} to={`/users/${id}/progress`}>
+            <NavLink className={classes.navLink} to={`/main/users/${id}/progress`}>
               <Button onClick={noop}>Progress</Button>
             </NavLink>
             <Button roleClass='edit' onClick={this.openEditModal}>

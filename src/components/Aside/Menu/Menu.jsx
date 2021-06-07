@@ -1,5 +1,5 @@
 import classes from './Menu.module.css';
-import logo from './icons/logo.svg';
+import logo from '../../../icons/logo.svg';
 import MenuItem from './MenuItem/MenuItem';
 import usersIcon from './icons/user.svg';
 import tasksIcon from './icons/tasks.svg';
@@ -9,12 +9,12 @@ import settingsIcon from './icons/settings.svg';
 const menuList = [
   {
     title: 'Users',
-    path: '/users',
+    path: '/main/users',
     image: usersIcon,
   },
   {
     title: 'Workflow',
-    path: '/tasks',
+    path: '/main/tasks',
     image: tasksIcon,
   },
   {
@@ -24,7 +24,7 @@ const menuList = [
   },
   {
     title: 'Logout',
-    path: '/test1',
+    path: '/',
     image: logoutIcon,
   },
 ];

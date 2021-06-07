@@ -1,41 +1,62 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import Aside from '../components/Aside/Aside';
-import Main from '../components/Main/Main';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import Login from '../pages/Login';
 import classes from './App.module.css';
-import { reducerFunc, TOGGLE_MENU } from './App-helpers';
+import Main from '../components/Main/Main';
+import { UserContext } from './userContext';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: {
-        menu: {
-          isOpen: false,
-        },
-      },
+      user: {},
+      isLogged: false,
+      setUserContext: this.setUserContext,
     };
-    this.toggleMenu = this.toggleMenu.bind(this);
   }
 
-  toggleMenu() {
-    this.setState((prevState) => reducerFunc(prevState, { type: TOGGLE_MENU }));
-  }
+  setUserContext = (user) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      user,
+      isLogged: !prevState.isLogged,
+    }));
+  };
 
   render() {
-    const {
-      settings: {
-        menu: { isOpen },
-      },
-    } = this.state;
+    const { user, isLogged } = this.state;
+    const contextState = this.state;
+    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(user)} /> : null;
 
     return (
-      <BrowserRouter>
-        <div className={classes.app}>
-          <Aside isOpen={isOpen} />
-          <Main isOpen={isOpen} toggleMenu={this.toggleMenu} />
-        </div>
-      </BrowserRouter>
+      <>
+        <BrowserRouter>
+          <UserContext.Provider value={contextState}>
+            <Switch>
+              <div className={classes.app}>
+                <UserContext.Consumer>
+                  {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
+                </UserContext.Consumer>
+                <Route path='/main' component={Main} />
+                {isLoggedRedirector}
+              </div>
+            </Switch>
+          </UserContext.Provider>
+        </BrowserRouter>
+      </>
     );
   }
 }
+
+export const getRedirectPath = (loggedUser) => {
+  switch (loggedUser.role) {
+    case 'Admin':
+      return '/main/users';
+    case 'Mentor':
+      return '/main/tasks';
+    case 'User':
+      return `/main/users/${loggedUser.id}/tasks`;
+    default:
+      return '/'; // to 404
+  }
+};

@@ -7,7 +7,7 @@ import classes from './UsersTracks.module.css';
 import Modal from '../components/Modals/Modal';
 import {
   TASKS,
-  getElementFromCollection,
+  getElementDataFromCollection,
   createTrack,
   editTrack,
   deleteTrack,
@@ -41,8 +41,7 @@ export default class UsersTracks extends React.Component {
       },
     } = this.props;
 
-    const task = await getElementFromCollection(TASKS, taskId);
-    const taskData = task.data();
+    const taskData = await getElementDataFromCollection(TASKS, taskId);
     const tracks = await getTracks(userId, taskId);
     this.setState({ userId, taskId, taskData, tracks });
   }
@@ -96,7 +95,7 @@ export default class UsersTracks extends React.Component {
             {`${taskData.title}'s task tracks`} <span>({`${tracks.length}`})</span>
           </h2>
           <div className={classes.buttonsWrapper}>
-            <NavLink className={classes.navLink} to={`/users/${userId}/tasks`}>
+            <NavLink className={classes.navLink} to={`/main/users/${userId}/tasks`}>
               <Button onClick={noop}>Back</Button>
             </NavLink>
             <Button onClick={this.openCreateModal} roleClass='create'>

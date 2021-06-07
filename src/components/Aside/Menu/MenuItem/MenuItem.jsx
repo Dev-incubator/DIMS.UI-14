@@ -4,7 +4,7 @@ import classes from './MenuItem.module.css';
 
 export default function MenuItem({ title, path, image }) {
   return (
-    <NavLink className={classes.item} to={path} activeClassName={classes.active}>
+    <NavLink className={classes.item} exact to={path} activeClassName={classes.active}>
       <img className={classes.image} src={image} alt='menu-logo' />
       <div className={classes.title}>{title}</div>
     </NavLink>

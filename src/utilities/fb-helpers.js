@@ -13,19 +13,28 @@ export const db = firebase.firestore();
 // common
 export const getCollection = (collection) => db.collection(collection).get();
 
-export const getElementFromCollection = (collection, id) => getElementRefFromCollection(collection, id).get();
+export async function getElementDataFromCollection(collection, id) {
+  const element = await getElementRefFromCollection(collection, id).get();
+
+  return element.data();
+}
 
 export const getElementRefFromCollection = (collection, id) => db.collection(collection).doc(id);
 
 export async function getAllElementsFromCollection(collection) {
   const elements = await getCollection(collection);
-  console.log(elements);
   const elementsList = [];
   elements.forEach((element) => {
     elementsList.push(element.data());
   });
 
   return elementsList;
+}
+
+export async function getLoggedUserByEmail(email) {
+  const usersList = await getAllElementsFromCollection(USERS);
+
+  return usersList.find((user) => user.email === email);
 }
 
 export const createElemRefOnDB = (collection) => db.collection(collection).doc();
@@ -118,8 +127,8 @@ export async function getTasks(array) {
   const tasksList = [];
   await Promise.all(
     array.map(async (item) => {
-      const task = await getElementFromCollection(TASKS, item.id);
-      tasksList.push(task.data());
+      const task = await getElementDataFromCollection(TASKS, item.id);
+      tasksList.push(task);
     }),
   );
 
@@ -253,8 +262,8 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
 };
 
 export async function getTracks(userId, taskId) {
-  const user = await getElementFromCollection(USERS, userId);
-  const { tracks } = await user.data().tasks.find((item) => item.id === taskId);
+  const user = await getElementDataFromCollection(USERS, userId);
+  const { tracks } = await user.tasks.find((item) => item.id === taskId);
 
   return tracks;
 }
@@ -267,8 +276,8 @@ async function getTracksWithoutRequest(tasks, taskId) {
 
 export async function getAllTracksFromAllTasks(tasks) {
   const allTracks = tasks.reduce(async (result, task) => {
-    const taskData = await getElementFromCollection(TASKS, task.id);
-    const { title } = taskData.data();
+    const taskData = await getElementDataFromCollection(TASKS, task.id);
+    const { title } = taskData;
     const extendedTracks = await Promise.all(task.tracks.map((track) => ({ ...track, title })));
 
     return (await result).concat(extendedTracks);
@@ -276,3 +285,30 @@ export async function getAllTracksFromAllTasks(tasks) {
 
   return allTracks;
 }
+
+export const createAuthForNewUser = async (email, password) => {
+  try {
+    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    console.log(`USER with email:${email} was succesfully added to auth`);
+    const { user } = userCredential;
+    await user.sendEmailVerification();
+    console.log(`Verification email was sent to USER with email: ${email}`);
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+  }
+};
+
+export const signInUser = async (email, password) => {
+  try {
+    const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+    const { user } = userCredential;
+
+    return user;
+  } catch (error) {
+    console.log(error.code);
+    console.log(error.message);
+
+    return Promise.reject(error);
+  }
+};
