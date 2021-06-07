@@ -3,7 +3,7 @@ import classes from './Main.module.css';
 import Header from './Header/Header';
 import Aside from '../Aside/Aside';
 
-export const Main = ({ routes }) => {
+const Main = ({ routes }) => {
   return (
     <div className={classes.wrapper}>
       <Aside />
