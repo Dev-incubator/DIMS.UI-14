@@ -1,17 +1,13 @@
-// import PropType from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import PropType from 'prop-types';
 import toggleMenu from '../../../../store/actionCreators/toggleMenu';
 import classes from './Hamburger.module.css';
 
-const Hamburger = () => {
-  const dispatch = useDispatch();
-  const handleClick = () => dispatch(toggleMenu());
-  const isOpen = useSelector((state) => state.menu.isOpen);
-
+const Hamburger = ({ isOpen, toggleMenu }) => {
   const className = isOpen ? `${classes.hamburger} ${classes.active}` : `${classes.hamburger}`;
 
   return (
-    <div tabIndex={0} role='button' className={className} onClick={handleClick} onKeyDown={handleClick}>
+    <div tabIndex={0} role='button' className={className} onClick={toggleMenu} onKeyDown={toggleMenu}>
       <span />
       <span />
       <span />
@@ -19,21 +15,19 @@ const Hamburger = () => {
   );
 };
 
-// const mapStateToProps = (state) => {
-//   return {
-//     isOpen: state.menu.isOpen,
-//   };
-// };
+const mapStateToProps = (state) => {
+  return {
+    isOpen: state.menu.isOpen,
+  };
+};
 
-// const mapDispatchToProps = {
-//   toggleMenu,
-// };
+const mapDispatchToProps = {
+  toggleMenu,
+};
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Hamburger);
+export default connect(mapStateToProps, mapDispatchToProps)(Hamburger);
 
-export default Hamburger;
-
-// Hamburger.propTypes = {
-//   toggleMenu: PropType.func.isRequired,
-//   isOpen: PropType.bool.isRequired,
-// };
+Hamburger.propTypes = {
+  toggleMenu: PropType.func.isRequired,
+  isOpen: PropType.bool.isRequired,
+};

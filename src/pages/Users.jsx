@@ -1,5 +1,5 @@
+import React from 'react';
 import { connect } from 'react-redux';
-import { useEffect } from 'react';
 import PropType from 'prop-types';
 import Loader from '../components/Loader/Loader';
 import Button from '../components/Button/Button';
@@ -20,24 +20,14 @@ import toggleModal from '../store/actionCreators/toggleModal';
 import fetchUsers from '../store/actionCreators/fetchUsers';
 import openCreateUserModal from '../store/actionCreators/openCreateUserModal';
 
-const Users = ({
-  fetchUsers,
-  loggedUser: { role },
-  app: { isModalOpen, loading, selectedModal },
-  usersList,
-  toggleModal,
-  openCreateUserModal,
-}) => {
-  useEffect(() => {
-    if (!usersList.length) {
-      fetchUsers();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+class Users extends React.PureComponent {
+  componentDidMount() {
+    const { fetchUsers, usersList } = this.props;
+    if (!usersList.length) fetchUsers();
+  }
 
-  if (loading) return <Loader />;
-
-  const deleteUser = (selectedId) => {
+  deleteUser = (selectedId) => {
+    const { usersList, fetchUsers } = this.props;
     const userToDelete = usersList.find((item) => item.id === selectedId);
     const assignedTasks = userToDelete.tasks;
     deleteElemFromDB(USERS, selectedId, fetchUsers);
@@ -47,60 +37,74 @@ const Users = ({
     }
   };
 
-  const editUser = (editedUser) => {
+  editUser = (editedUser) => {
+    const { usersList, fetchUsers } = this.props;
     const prevUserData = usersList.find((item) => item.id === editedUser.id);
     editElemInDB(USERS, editedUser, fetchUsers);
     updateUserAuthData(prevUserData, editedUser);
   };
 
-  const createUser = (newUserRef, newUser) => {
+  createUser = (newUserRef, newUser) => {
+    const { fetchUsers } = this.props;
     setElemToDB(newUserRef, newUser, fetchUsers);
     const { email, password } = newUser;
     createAuthForNewUser(email, password);
   };
 
-  const users = usersList.map((user, index) => {
+  render() {
+    const {
+      usersList,
+      openCreateUserModal,
+      toggleModal,
+      loggedUser: { role },
+      app: { isModalOpen, loading, selectedModal },
+    } = this.props;
+
+    if (loading) return <Loader />;
+
+    const users = usersList.map((user, index) => {
+      return (
+        <UserWithContext
+          deleteUser={this.deleteUser}
+          editUser={this.editUser}
+          key={user.id}
+          userData={user}
+          tableIndex={index + 1}
+        />
+      );
+    });
+
+    const isAdmin = role === 'Admin';
+
     return (
-      <UserWithContext
-        deleteUser={deleteUser}
-        editUser={editUser}
-        key={user.id}
-        userData={user}
-        tableIndex={index + 1}
-      />
-    );
-  });
-
-  const isAdmin = role === 'Admin';
-
-  return (
-    <div>
-      <div className={classes.header}>
-        <h2 className={classes.title}>
-          Users <span>({`${usersList.length}`})</span>
-        </h2>
-        {isAdmin ? (
-          <Button onClick={openCreateUserModal} roleClass='create'>
-            Create
-          </Button>
-        ) : null}
-      </div>
-      <div className={classes.content}>
-        <div className={classes.subheader}>
-          <div>№</div>
-          <div>Full Name</div>
-          <div>Direction</div>
-          <div>Education</div>
-          <div>Start</div>
-          <div>Age</div>
-          <div>Controls</div>
+      <div>
+        <div className={classes.header}>
+          <h2 className={classes.title}>
+            Users <span>({`${usersList.length}`})</span>
+          </h2>
+          {isAdmin ? (
+            <Button onClick={openCreateUserModal} roleClass='create'>
+              Create
+            </Button>
+          ) : null}
         </div>
-        {users}
+        <div className={classes.content}>
+          <div className={classes.subheader}>
+            <div>№</div>
+            <div>Full Name</div>
+            <div>Direction</div>
+            <div>Education</div>
+            <div>Start</div>
+            <div>Age</div>
+            <div>Controls</div>
+          </div>
+          {users}
+        </div>
+        {isModalOpen ? <Modal closeFunc={toggleModal} actFunc={this.createUser} selectedModal={selectedModal} /> : null}
       </div>
-      {isModalOpen ? <Modal closeFunc={toggleModal} actFunc={createUser} selectedModal={selectedModal} /> : null}
-    </div>
-  );
-};
+    );
+  }
+}
 
 const mapStateToProps = (state) => {
   return {
