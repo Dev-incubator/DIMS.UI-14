@@ -1,12 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
 import { UserContext } from './userContext';
 import { getRoleDependedRoutes } from '../components/Routes';
 import { getFromLocalStorage, setToLocalStorage } from '../utilities/localStorage-helpers';
-import rolesPack from '../utilities/rolesPack';
+import PageNotFound from '../pages/PageNotFound';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -31,36 +31,24 @@ export default class App extends React.Component {
   render() {
     const { loggedUser, isLogged } = this.state;
     const contextState = this.state;
-    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : <Redirect to='/' />;
     const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
+    const isLoggedRedirector = isLogged ? null : <Redirect to='/' />;
 
     return (
       <>
         <BrowserRouter>
           <UserContext.Provider value={contextState}>
             <div className={classes.app}>
-              <UserContext.Consumer>
-                {(userContext) => <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />}
-              </UserContext.Consumer>
-              <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
-              {isLoggedRedirector}
+              <Switch>
+                <Route exact path='/' render={(props) => <Login {...props} {...contextState} />} />
+                <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
+                <Route component={PageNotFound} />
+              </Switch>
             </div>
           </UserContext.Provider>
+          {isLoggedRedirector}
         </BrowserRouter>
       </>
     );
   }
 }
-
-const getRedirectPath = (loggedUser) => {
-  switch (loggedUser.role) {
-    case rolesPack.admin:
-      return '/main/users';
-    case rolesPack.mentor:
-      return '/main/tasks';
-    case rolesPack.user:
-      return `/main/users/${loggedUser.id}/tasks`;
-    default:
-      return '/'; // to 404
-  }
-};

@@ -1,0 +1,89 @@
+.wrapper {
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.wrapper svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -250px;
+  margin-left: -400px;
+}
+.messageBox {
+  height: 200px;
+  width: 380px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: 50px;
+  color: #122043;
+  font-family: Roboto;
+  font-weight: 300;
+}
+.messageBox h1 {
+  font-size: 60px;
+  line-height: 46px;
+  margin-bottom: 40px;
+}
+.buttonsCon .actionLinkWrap {
+  margin-top: 40px;
+}
+.buttonsCon .actionLinkWrap a {
+  background: #5385ff;
+  padding: 8px 25px;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  -webkit-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 10px;
+}
+.buttonsCon .actionLinkWrap a:hover {
+  background: #3855a5;
+}
+
+.Polygon1,
+.Polygon2,
+.Polygon3,
+.Polygon4,
+.Polygon4,
+.Polygon5 {
+  -webkit-animation: float 1s infinite ease-in-out alternate;
+  animation: float 1s infinite ease-in-out alternate;
+}
+.Polygon2 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.Polygon3 {
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+.Polygon4 {
+  -webkit-animation-delay: 0.6s;
+  animation-delay: 0.6s;
+}
+.Polygon5 {
+  -webkit-animation-delay: 0.8s;
+  animation-delay: 0.8s;
+}
+
+@-webkit-keyframes float {
+  100% {
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+}
+
+@keyframes float {
+  100% {
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+}

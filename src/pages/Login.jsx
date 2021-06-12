@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import PropType from 'prop-types';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
@@ -8,7 +9,9 @@ import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM,
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
+import rolesPack from '../utilities/rolesPack';
 
+const { admin, mentor } = rolesPack;
 const initialState = {
   data: {
     email: '',
@@ -101,7 +104,9 @@ export default class Login extends React.PureComponent {
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
+    const { isLogged, loggedUser } = this.props;
     const userLoginStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
+    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : null;
 
     return (
       <>
@@ -128,6 +133,7 @@ export default class Login extends React.PureComponent {
             <GoogleButton onClick={this.handleGoogleButtonClick}>Login with Google</GoogleButton>
           </div>
         </form>
+        {isLoggedRedirector}
       </>
     );
   }
@@ -135,4 +141,20 @@ export default class Login extends React.PureComponent {
 
 Login.propTypes = {
   setUserContext: PropType.func.isRequired,
+  isLogged: PropType.bool.isRequired,
+  loggedUser: PropType.instanceOf(Object).isRequired,
+};
+
+const getRedirectPath = (loggedUser) => {
+  const { role, id } = loggedUser;
+  let path = null;
+  if (role === admin) {
+    path = '/main/users';
+  } else if (role === mentor) {
+    path = '/main/tasks';
+  } else {
+    path = `/main/users/${id}/tasks`;
+  }
+
+  return path;
 };
