@@ -3,7 +3,7 @@ import React from 'react';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-
+import rolesPack from '../../../utilities/rolesPack';
 import {
   CREATE_USER_ONCHANGE,
   CREATE_USER_VALIDATE_FIELDS,
@@ -15,6 +15,7 @@ import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers';
 
+const { admin, mentor, user } = rolesPack;
 export default class CreateUser extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +26,7 @@ export default class CreateUser extends React.Component {
         email: '',
         direction: 'React',
         sex: 'Male',
-        role: 'User',
+        role: user,
         password: '',
         passwordRepeat: '',
         dateOfBirth: '',
@@ -224,7 +225,7 @@ export default class CreateUser extends React.Component {
                 type='select'
                 value={role}
                 onChange={this.onChange}
-                options='Admin, Mentor, User'
+                options={`${admin}, ${mentor}, ${user}`}
                 error={roleError}
               />
               <CraftInput

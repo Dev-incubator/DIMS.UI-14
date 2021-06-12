@@ -313,7 +313,7 @@ export const signInUser = async (email, password) => {
     console.log(error.code);
     console.log(error.message);
 
-    return error;
+    return Promise.reject(error);
   }
 };
 

@@ -10,40 +10,41 @@ import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
 import SettingsWithContext from './ContextHOCs/SettingsWithContext';
+import rolesPack from '../utilities/rolesPack';
+
+const { admin, mentor, user } = rolesPack;
 
 const paths = [
-  { isExact: true, path: '/main/users', component: UsersWithContext },
-  { isExact: true, path: '/main/tasks', component: Tasks },
-  { isExact: true, path: '/main/users/:userId/tasks', component: UsersTasksWithContext },
-  { isExact: true, path: '/main/users/:userId/tasks/:taskId/track', component: UsersTracks },
-  { isExact: true, path: '/main/users/:userId/progress', component: UsersProgress },
-  { isExact: true, path: '/main/settings', component: SettingsWithContext },
-  { isExact: false, path: '', component: PageNotFound },
+  { isExact: true, path: '/main/users', permissions: [admin, mentor], component: UsersWithContext },
+  { isExact: true, path: '/main/tasks', permissions: [admin, mentor], component: Tasks },
+  {
+    isExact: true,
+    path: '/main/users/:userId/tasks',
+    permissions: [admin, mentor, user],
+    component: UsersTasksWithContext,
+  },
+  {
+    isExact: true,
+    path: '/main/users/:userId/tasks/:taskId/track',
+    permissions: [admin, mentor, user],
+    component: UsersTracks,
+  },
+  { isExact: true, path: '/main/users/:userId/progress', permissions: [admin, user], component: UsersProgress },
+  { isExact: true, path: '/main/settings', permissions: [admin, mentor, user], component: SettingsWithContext },
+  { isExact: false, path: '', permissions: [admin, mentor, user], component: PageNotFound },
 ];
 
-const adminAndMentorPermissions = [0, 1, 2, 3, 4, 5, 6];
-const userPermissions = [2, 3, 5, 6];
-
-export const getRoleDependedRoutes = (loggedUser) => {
-  let permissionsList = null;
-  if (loggedUser.role === 'Admin' || loggedUser.role === 'Mentor') {
-    permissionsList = adminAndMentorPermissions;
-  } else if (loggedUser.role === 'User') {
-    permissionsList = userPermissions;
-  }
-
-  const routePack = permissionsList.map((item) => {
-    return (
-      <Route
-        key={item.toString()}
-        exact={paths[item].isExact}
-        path={paths[item].path}
-        component={paths[item].component}
-      />
-    );
-  });
-
-  return <Switch>{routePack}</Switch>;
+// {role} destructures from loggedUser
+export const getRoleDependedRoutes = ({ role }) => {
+  return (
+    <Switch>
+      {paths
+        .filter((pathObj) => pathObj.permissions.includes(role))
+        .map((path, index) => (
+          <Route key={index.toString()} exact={path.isExact} path={path.path} component={path.component} />
+        ))}
+    </Switch>
+  );
 };
 
 const menuList = [
@@ -51,37 +52,27 @@ const menuList = [
     title: 'Users',
     path: '/main/users',
     image: usersIcon,
+    permissions: [admin, mentor],
   },
   {
     title: 'Workflow',
     path: '/main/tasks',
     image: tasksIcon,
+    permissions: [admin, mentor],
   },
   {
     title: 'Settings',
     path: '/main/settings',
     image: settingsIcon,
+    permissions: [admin, mentor, user],
   },
 ];
 
-const adminAndMentorMenuList = [0, 1, 2];
-const userMenuList = [2];
-
-export const getRoleDependedMenuLinks = (loggedUser) => {
-  const isUser = loggedUser.role === 'User';
-  let roleDependendMenuList = null;
-  if (!isUser) {
-    roleDependendMenuList = adminAndMentorMenuList;
-  } else if (isUser) {
-    roleDependendMenuList = userMenuList;
-  }
-
-  return roleDependendMenuList.map((item) => (
-    <MenuItem
-      key={item.toString()}
-      title={menuList[item].title}
-      path={menuList[item].path}
-      image={menuList[item].image}
-    />
-  ));
+// {role} destructures from loggedUser
+export const getRoleDependedMenuLinks = ({ role }) => {
+  return menuList
+    .filter((menuObj) => menuObj.permissions.includes(role))
+    .map((menuObj, index) => (
+      <MenuItem key={index.toString()} title={menuObj.title} path={menuObj.path} image={menuObj.image} />
+    ));
 };

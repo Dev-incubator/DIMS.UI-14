@@ -6,6 +6,7 @@ import Main from '../components/Main/Main';
 import { UserContext } from './userContext';
 import { getRoleDependedRoutes } from '../components/Routes';
 import { getFromLocalStorage, setToLocalStorage } from '../utilities/localStorage-helpers';
+import rolesPack from '../utilities/rolesPack';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -53,11 +54,11 @@ export default class App extends React.Component {
 
 const getRedirectPath = (loggedUser) => {
   switch (loggedUser.role) {
-    case 'Admin':
+    case rolesPack.admin:
       return '/main/users';
-    case 'Mentor':
+    case rolesPack.mentor:
       return '/main/tasks';
-    case 'User':
+    case rolesPack.user:
       return `/main/users/${loggedUser.id}/tasks`;
     default:
       return '/'; // to 404
