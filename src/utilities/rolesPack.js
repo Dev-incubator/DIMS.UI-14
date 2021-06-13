@@ -1,7 +1,7 @@
-const rolesPack = Object.freeze({
+const rolesPack = {
   user: 'User',
   admin: 'Admin',
   mentor: 'Mentor',
-});
+};
 
 export default rolesPack;
