@@ -10,28 +10,36 @@ import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
 import SettingsWithContext from './ContextHOCs/SettingsWithContext';
-import rolesPack from '../utilities/rolesPack';
-
-const { admin, mentor, user } = rolesPack;
+import ROLES from '../utilities/rolesPack';
 
 const paths = [
-  { isExact: true, path: '/main/users', permissions: [admin, mentor], component: UsersWithContext },
-  { isExact: true, path: '/main/tasks', permissions: [admin, mentor], component: Tasks },
+  { isExact: true, path: '/main/users', permissions: [ROLES.ADMIN, ROLES.MENTOR], component: UsersWithContext },
+  { isExact: true, path: '/main/tasks', permissions: [ROLES.ADMIN, ROLES.MENTOR], component: Tasks },
   {
     isExact: true,
     path: '/main/users/:userId/tasks',
-    permissions: [admin, mentor, user],
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
     component: UsersTasksWithContext,
   },
   {
     isExact: true,
     path: '/main/users/:userId/tasks/:taskId/track',
-    permissions: [admin, mentor, user],
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
     component: UsersTracks,
   },
-  { isExact: true, path: '/main/users/:userId/progress', permissions: [admin, user], component: UsersProgress },
-  { isExact: true, path: '/main/settings', permissions: [admin, mentor, user], component: SettingsWithContext },
-  { isExact: false, path: '', permissions: [admin, mentor, user], component: PageNotFound },
+  {
+    isExact: true,
+    path: '/main/users/:userId/progress',
+    permissions: [ROLES.ADMIN, ROLES.MENTOR],
+    component: UsersProgress,
+  },
+  {
+    isExact: true,
+    path: '/main/settings',
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
+    component: SettingsWithContext,
+  },
+  { isExact: false, path: '', permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER], component: PageNotFound },
 ];
 
 // {role} destructures from loggedUser
@@ -52,19 +60,19 @@ const menuList = [
     title: 'Users',
     path: '/main/users',
     image: usersIcon,
-    permissions: [admin, mentor],
+    permissions: [ROLES.ADMIN, ROLES.MENTOR],
   },
   {
     title: 'Workflow',
     path: '/main/tasks',
     image: tasksIcon,
-    permissions: [admin, mentor],
+    permissions: [ROLES.ADMIN, ROLES.MENTOR],
   },
   {
     title: 'Settings',
     path: '/main/settings',
     image: settingsIcon,
-    permissions: [admin, mentor, user],
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
   },
 ];
 

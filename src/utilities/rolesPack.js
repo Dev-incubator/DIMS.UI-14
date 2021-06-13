@@ -1,7 +1,7 @@
-const rolesPack = {
-  user: 'User',
-  admin: 'Admin',
-  mentor: 'Mentor',
+const ROLES = {
+  USER: 'User',
+  ADMIN: 'Admin',
+  MENTOR: 'Mentor',
 };
 
-export default rolesPack;
+export default ROLES;

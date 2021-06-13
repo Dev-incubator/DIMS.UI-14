@@ -9,9 +9,8 @@ import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM,
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
-import rolesPack from '../utilities/rolesPack';
+import ROLES from '../utilities/rolesPack';
 
-const { admin, mentor } = rolesPack;
 const initialState = {
   data: {
     email: '',
@@ -148,9 +147,9 @@ Login.propTypes = {
 const getRedirectPath = (loggedUser) => {
   const { role, id } = loggedUser;
   let path = null;
-  if (role === admin) {
+  if (role === ROLES.ADMIN) {
     path = '/main/users';
-  } else if (role === mentor) {
+  } else if (role === ROLES.MENTOR) {
     path = '/main/tasks';
   } else {
     path = `/main/users/${id}/tasks`;

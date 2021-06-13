@@ -14,7 +14,7 @@ import {
   USER_MODAL_SHOW_USER,
   reducerFunc,
 } from './user-helpers';
-import rolesPack from '../../utilities/rolesPack';
+import ROLES from '../../utilities/rolesPack';
 
 export default class User extends React.Component {
   constructor(props) {
@@ -71,7 +71,7 @@ export default class User extends React.Component {
       loggedUser: { role },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
-    const isAdmin = role === rolesPack.admin;
+    const isAdmin = role === ROLES.ADMIN;
 
     return (
       <>

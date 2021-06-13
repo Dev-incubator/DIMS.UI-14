@@ -7,7 +7,7 @@ import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
 import { USERS, getElementDataFromCollection, updateStatus, getTasks } from '../utilities/fb-helpers';
 import { reducerFunc, TASKS_STATUS_UPDATE, TASKS_SET_DATA } from './usersTasks-helpers';
-import rolesPack from '../utilities/rolesPack';
+import ROLES from '../utilities/rolesPack';
 
 export default class UsersTasks extends React.Component {
   constructor(props) {
@@ -56,7 +56,7 @@ export default class UsersTasks extends React.Component {
     const {
       loggedUser: { role },
     } = this.props;
-    const isUser = role === rolesPack.user;
+    const isUser = role === ROLES.USER;
     if (!isUser) {
       this.changeStatus(id, status);
     }
@@ -67,7 +67,7 @@ export default class UsersTasks extends React.Component {
     const {
       loggedUser: { role },
     } = this.props;
-    const isUser = role === rolesPack.user;
+    const isUser = role === ROLES.USER;
 
     const tasks = tasksWithStatus.map((task, index) => {
       const taskObj = tasksList.find((item) => item.id === task.id);
