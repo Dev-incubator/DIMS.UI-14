@@ -7,7 +7,7 @@ import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
 import { USERS, getElementDataFromCollection, updateStatus, getTasks } from '../utilities/fb-helpers';
 import { reducerFunc, TASKS_STATUS_UPDATE, TASKS_SET_DATA } from './usersTasks-helpers';
-import ROLES from '../utilities/rolesPack';
+import { ROLES } from '../utilities/enums';
 
 export default class UsersTasks extends React.Component {
   constructor(props) {

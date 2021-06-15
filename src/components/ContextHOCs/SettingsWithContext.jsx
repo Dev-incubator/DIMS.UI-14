@@ -7,7 +7,7 @@ export default function SettingsWithContext(props) {
     <ThemeContext.Consumer>
       {(themeContext) => (
         <UserContext.Consumer>
-          {(userContext) => <Settings {...props} {...userContext} theme={themeContext} />}
+          {(userContext) => <Settings {...props} {...userContext} {...themeContext} />}
         </UserContext.Consumer>
       )}
     </ThemeContext.Consumer>

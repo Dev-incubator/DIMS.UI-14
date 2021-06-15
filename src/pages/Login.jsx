@@ -9,7 +9,7 @@ import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM,
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
-import ROLES from '../utilities/rolesPack';
+import { ROLES } from '../utilities/enums';
 
 const initialState = {
   data: {

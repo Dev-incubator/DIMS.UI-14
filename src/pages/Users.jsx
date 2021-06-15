@@ -1,6 +1,6 @@
 import React from 'react';
 import PropType from 'prop-types';
-import ROLES from '../utilities/rolesPack';
+import { ROLES } from '../utilities/enums';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import UserWithContext from '../components/ContextHOCs/UserWithContext';

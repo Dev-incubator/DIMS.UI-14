@@ -14,5 +14,14 @@ export const getGlobalTheme = () => {
 
 export const setGlobalTheme = (theme) => {
   setToLocalStorage(THEME, theme);
-  applyGlobalTheme(theme);
+};
+
+export const USERCONTEXT = 'userContext';
+
+export const getUserContext = () => {
+  return getFromLocalStorage(USERCONTEXT) || {};
+};
+
+export const setUserContext = (user) => {
+  setToLocalStorage(USERCONTEXT, user);
 };

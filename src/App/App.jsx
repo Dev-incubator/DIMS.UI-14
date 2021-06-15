@@ -5,8 +5,15 @@ import classes from './App.module.css';
 import Main from '../components/Main/Main';
 import { UserContext } from './userContext';
 import { getRoleDependedRoutes } from '../components/Routes';
-import { getFromLocalStorage, setToLocalStorage } from '../utilities/localStorage-helpers';
-import { applyGlobalTheme, getGlobalTheme } from '../utilities/theme-helpers';
+import {
+  applyGlobalTheme,
+  getGlobalTheme,
+  setGlobalTheme,
+  getUserContext,
+  setUserContext,
+  THEME_LIGHT,
+  THEME_DARK,
+} from '../utilities/context-helpers';
 import { ThemeContext } from './themeContext';
 import PageNotFound from '../pages/PageNotFound';
 
@@ -15,8 +22,13 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       userContext: {
-        ...(getFromLocalStorage('userContext') || {}),
+        ...getUserContext(),
         setUserContext: this.setUserContext,
+      },
+
+      themeContext: {
+        theme: getGlobalTheme(),
+        setThemeContext: this.setThemeContext,
       },
     };
   }
@@ -37,16 +49,42 @@ export default class App extends React.Component {
 
   updateUserContext = () => {
     const { userContext } = this.state;
-    setToLocalStorage('userContext', userContext);
+    setUserContext(userContext);
+  };
+
+  setThemeContext = (themeName) => {
+    const {
+      themeContext: { theme },
+    } = this.state;
+    if (theme === themeName) return;
+    const nextTheme = theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        themeContext: {
+          ...prevState.themeContext,
+          theme: nextTheme,
+        },
+      }),
+      this.updateThemeContext,
+    );
+  };
+
+  updateThemeContext = () => {
+    const {
+      themeContext: { theme },
+    } = this.state;
+    setGlobalTheme(theme);
   };
 
   render() {
     const {
+      themeContext,
+      themeContext: { theme },
       userContext,
       userContext: { isLogged, loggedUser },
     } = this.state;
-    const themeContext = getGlobalTheme();
-    applyGlobalTheme(themeContext);
+    applyGlobalTheme(theme);
     const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
     const isLoggedRedirector = isLogged ? null : <Redirect to='/' />;
 

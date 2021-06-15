@@ -14,7 +14,7 @@ import {
   USER_MODAL_SHOW_USER,
   reducerFunc,
 } from './user-helpers';
-import ROLES from '../../utilities/rolesPack';
+import { ROLES } from '../../utilities/enums';
 
 export default class User extends React.Component {
   constructor(props) {

@@ -5,20 +5,14 @@ import sunLogo from '../icons/sun.svg';
 import moonLogo from '../icons/moon.svg';
 import classes from './Settings.module.css';
 import { resetUserPassword } from '../utilities/fb-helpers';
-import { THEME_LIGHT, THEME_DARK, setGlobalTheme } from '../utilities/theme-helpers';
+import { THEME_LIGHT, THEME_DARK } from '../utilities/context-helpers';
 
 export default class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       resetBtnMsg: '',
-      theme: '',
     };
-  }
-
-  componentDidMount() {
-    const { theme } = this.props;
-    this.setState({ theme });
   }
 
   handleBlur() {
@@ -31,20 +25,19 @@ export default class Settings extends React.Component {
     this.setState({ resetBtnMsg: 'Email to reset password was succesfully sent' });
   };
 
-  toggleTheme = (themeName) => {
-    const { theme } = this.state;
-    if (theme === themeName) return;
-    const nextTheme = theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
-    this.setState({ theme: nextTheme });
-    setGlobalTheme(nextTheme);
+  selectDarkTheme = () => {
+    const { setThemeContext } = this.props;
+    setThemeContext(THEME_DARK);
   };
 
-  selectDarkTheme = () => this.toggleTheme(THEME_DARK);
-
-  selectLightTheme = () => this.toggleTheme(THEME_LIGHT);
+  selectLightTheme = () => {
+    const { setThemeContext } = this.props;
+    setThemeContext(THEME_LIGHT);
+  };
 
   render() {
-    const { resetBtnMsg, theme } = this.state;
+    const { resetBtnMsg } = this.state;
+    const { theme } = this.props;
     const isResetted = resetBtnMsg !== '';
     const lightThemeButtonClass =
       theme === THEME_LIGHT ? `${classes.themeItem} ${classes.active}` : `${classes.themeItem}`;
@@ -91,4 +84,5 @@ export default class Settings extends React.Component {
 Settings.propTypes = {
   loggedUser: PropType.instanceOf(Object).isRequired,
   theme: PropType.string.isRequired,
+  setThemeContext: PropType.func.isRequired,
 };
