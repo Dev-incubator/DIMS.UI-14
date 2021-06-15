@@ -3,14 +3,13 @@ import React from 'react';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-
+import ROLES from '../../../utilities/rolesPack';
 import {
   CREATE_USER_ONCHANGE,
   CREATE_USER_VALIDATE_FIELDS,
   CREATE_USER_VALIDATE_FORM,
   reducerFunc,
 } from './user-helpers';
-
 import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
 import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers';
@@ -24,8 +23,8 @@ export default class CreateUser extends React.Component {
         surname: '',
         email: '',
         direction: 'React',
-        sex: '',
-        role: 'User',
+        sex: 'Male',
+        role: ROLES.USER,
         password: '',
         passwordRepeat: '',
         dateOfBirth: '',
@@ -207,7 +206,7 @@ export default class CreateUser extends React.Component {
                 value={direction}
                 onChange={this.onChange}
                 error={directionError}
-                options='React, Angular, Java, .NET, Salesforce, PHP'
+                options={['React', 'Angular', 'Java', '.NET', 'Salesforce', 'PHP']}
               />
               <CraftInput
                 id='sex'
@@ -215,7 +214,7 @@ export default class CreateUser extends React.Component {
                 title='Sex'
                 value={sex}
                 onChange={this.onChange}
-                options='Male, Female'
+                options={['Male', 'Female']}
               />
               <CraftInput
                 id='role'
@@ -224,7 +223,7 @@ export default class CreateUser extends React.Component {
                 type='select'
                 value={role}
                 onChange={this.onChange}
-                options='Admin, Mentor, User'
+                options={[ROLES.ADMIN, ROLES.MENTOR, ROLES.USER]}
                 error={roleError}
               />
               <CraftInput

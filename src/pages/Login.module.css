@@ -20,8 +20,14 @@
   width: 25rem;
 }
 
-.buttonWrapper button {
+.buttonWrapper {
   margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonWrapper button {
+  margin-bottom: 1rem;
   width: 10rem;
 }
 

@@ -21,13 +21,16 @@ export default class CreateTrack extends React.PureComponent {
       startDate: '',
       data: {
         id: createElemRefOnDB(TRACKS).id,
+        name: '',
         date: '',
         note: '',
       },
       validator: {
+        name: false,
         date: false,
       },
       errors: {
+        nameError: '',
         dateError: '',
       },
       isValid: false,
@@ -88,8 +91,8 @@ export default class CreateTrack extends React.PureComponent {
     const {
       isValid,
       title,
-      data: { date, note },
-      errors: { dateError },
+      data: { date, note, name },
+      errors: { dateError, nameError },
     } = this.state;
 
     return (
@@ -99,7 +102,15 @@ export default class CreateTrack extends React.PureComponent {
           <div className={classes.wrapper}>
             <CraftInput title='Task Name' readOnly value={title} />
             <CraftInput
-              title='Date'
+              title='Track Name'
+              isRequired
+              id='name'
+              value={name}
+              onChange={this.onChange}
+              error={nameError}
+            />
+            <CraftInput
+              title='Track Date'
               isRequired
               id='date'
               type='date'
@@ -107,7 +118,7 @@ export default class CreateTrack extends React.PureComponent {
               error={dateError}
               onChange={this.onChange}
             />
-            <CraftInput title='Note' id='note' type='textarea' value={note} onChange={this.onChange} />
+            <CraftInput title='Track Note' id='note' type='textarea' value={note} onChange={this.onChange} />
           </div>
           <div className={classes.requiredwarning}>* - these fields are required.</div>
           <div className={classes.buttons}>

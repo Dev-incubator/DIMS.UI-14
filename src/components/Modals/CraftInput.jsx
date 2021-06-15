@@ -8,7 +8,7 @@ const CraftInput = ({ id, type, title, isRequired, onChange, readOnly, value, er
   let input;
 
   if (type === 'select') {
-    children = options.split(', ').map((item, index) => {
+    children = options.map((item, index) => {
       return (
         <option key={index.toString()} value={item}>
           {item}
@@ -103,6 +103,7 @@ const placeholderObj = {
   title: 'Enter task title',
   description: 'Enter task descriptions',
   note: 'Enter track note',
+  name: 'Enter track name',
 };
 
 CraftInput.propTypes = {

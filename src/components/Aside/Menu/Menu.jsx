@@ -1,37 +1,16 @@
+import PropType from 'prop-types';
 import classes from './Menu.module.css';
 import logo from '../../../icons/logo.svg';
-import MenuItem from './MenuItem/MenuItem';
-import usersIcon from './icons/user.svg';
-import tasksIcon from './icons/tasks.svg';
-import logoutIcon from './icons/logout.svg';
-import settingsIcon from './icons/settings.svg';
+import logoutIcon from '../../../icons/logout.svg';
+import { getRoleDependedMenuLinks } from '../../Routes';
+import { LogOut } from '../../../utilities/fb-helpers';
 
-const menuList = [
-  {
-    title: 'Users',
-    path: '/main/users',
-    image: usersIcon,
-  },
-  {
-    title: 'Workflow',
-    path: '/main/tasks',
-    image: tasksIcon,
-  },
-  {
-    title: 'Settings',
-    path: '/test2',
-    image: settingsIcon,
-  },
-  {
-    title: 'Logout',
-    path: '/',
-    image: logoutIcon,
-  },
-];
-export default function Menu() {
-  const menu = menuList.map((item, index) => {
-    return <MenuItem key={index.toString()} title={item.title} path={item.path} image={item.image} />;
-  });
+export default function Menu({ loggedUser, setUserContext, isLogged }) {
+  const handleClick = () => {
+    LogOut();
+    setUserContext({});
+  };
+  const menuLinks = isLogged ? getRoleDependedMenuLinks(loggedUser) : null;
 
   return (
     <menu className={classes.menu}>
@@ -39,7 +18,19 @@ export default function Menu() {
         <img src={logo} alt='logo' />
         <div className={classes.title}>HyperCube</div>
       </div>
-      <nav>{menu}</nav>
+      <nav>
+        {menuLinks}
+        <div role='button' tabIndex={0} className={classes.item} onKeyDown={handleClick} onClick={handleClick}>
+          <img className={classes.image} src={logoutIcon} alt='logout-logo' />
+          <div className={classes.itemTitle}>Logout</div>
+        </div>
+      </nav>
     </menu>
   );
 }
+
+Menu.propTypes = {
+  setUserContext: PropType.func.isRequired,
+  loggedUser: PropType.instanceOf(Object).isRequired,
+  isLogged: PropType.bool.isRequired,
+};

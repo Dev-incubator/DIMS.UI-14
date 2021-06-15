@@ -10,10 +10,6 @@
   align-items: center;
 }
 
-.item div {
-  padding: 30px 15px;
-}
-
 .item:last-of-type {
   border-bottom: 1px solid var(--lightgray-color);
 }
@@ -23,4 +19,8 @@
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-gap: 10px;
+}
+
+.item div {
+  padding: 30px 15px;
 }

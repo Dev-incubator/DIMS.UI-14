@@ -1,13 +1,15 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import PropType from 'prop-types';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
+import GoogleButton from '../components/Button/GoogleButton';
 import debounce from '../utilities/debounce';
 import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
-import { signInUser, getLoggedUserByEmail } from '../utilities/fb-helpers';
-import { getLowerCasedStr, getTrimmedStr } from '../utilities/form-helpers';
+import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
+import ROLES from '../utilities/rolesPack';
 
 const initialState = {
   data: {
@@ -35,24 +37,36 @@ export default class Login extends React.PureComponent {
     this.validateFields = this.validateFields.bind(this);
     this.validateForm = this.validateForm.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleGoogleButtonClick = this.handleGoogleButtonClick.bind(this);
+  }
+
+  async handleGoogleButtonClick() {
+    const userData = await signInWithGoogle();
+    if (!userData.email) {
+      this.setState((prevState) =>
+        reducerFunc(prevState, { type: LOGIN_FAIL, error: { code: 'auth/user-not-found' }, initState: initialState }),
+      );
+
+      return;
+    }
+    const { setUserContext } = this.props;
+    setUserContext(userData);
   }
 
   async handleClick() {
     const {
       data: { email, password },
     } = this.state;
-    const userStatus = await signInUser(email, password);
-    if (!userStatus.email) {
+    const userData = await signInUser(email, password);
+    if (!userData.email) {
       this.setState((prevState) =>
-        reducerFunc(prevState, { type: LOGIN_FAIL, error: userStatus, initState: initialState }),
+        reducerFunc(prevState, { type: LOGIN_FAIL, error: userData, initState: initialState }),
       );
 
       return;
     }
-    const loggedUser = await getLoggedUserByEmail(getLowerCasedStr(getTrimmedStr(email)));
-
     const { setUserContext } = this.props;
-    setUserContext(loggedUser);
+    setUserContext(userData);
   }
 
   handleChange(event) {
@@ -89,7 +103,9 @@ export default class Login extends React.PureComponent {
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
+    const { isLogged, loggedUser } = this.props;
     const userLoginStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
+    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : null;
 
     return (
       <>
@@ -113,8 +129,10 @@ export default class Login extends React.PureComponent {
             <Button disabled={!isValid} onClick={this.handleClick}>
               Enter
             </Button>
+            <GoogleButton onClick={this.handleGoogleButtonClick}>Login with Google</GoogleButton>
           </div>
         </form>
+        {isLoggedRedirector}
       </>
     );
   }
@@ -122,4 +140,20 @@ export default class Login extends React.PureComponent {
 
 Login.propTypes = {
   setUserContext: PropType.func.isRequired,
+  isLogged: PropType.bool.isRequired,
+  loggedUser: PropType.instanceOf(Object).isRequired,
+};
+
+const getRedirectPath = (loggedUser) => {
+  const { role, id } = loggedUser;
+  let path = null;
+  if (role === ROLES.ADMIN) {
+    path = '/main/users';
+  } else if (role === ROLES.MENTOR) {
+    path = '/main/tasks';
+  } else {
+    path = `/main/users/${id}/tasks`;
+  }
+
+  return path;
 };

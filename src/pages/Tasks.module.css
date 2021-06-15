@@ -10,7 +10,7 @@
   display: grid;
   grid-template-columns:
     minmax(auto, 50px) minmax(auto, 200px) minmax(auto, 300px) minmax(auto, 150px) minmax(auto, 150px)
-    minmax(auto, 125px);
+    minmax(125px, max-content);
   align-items: center;
 }
 

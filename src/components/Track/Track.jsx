@@ -1,7 +1,6 @@
 import React from 'react';
 import PropType from 'prop-types';
 import classes from './Track.module.css';
-import noop from '../../shared/noop';
 import Button from '../Button/Button';
 import Modal from '../Modals/Modal';
 import { getInternationalDate } from '../../utilities/internationalization';
@@ -45,15 +44,12 @@ export default class Track extends React.Component {
     this.setState((prevState) => reducerFunc(prevState, { type: TRACK_MODAL_TOGGLE, modalType }));
   }
 
-  selectActFunc() {
+  selectActFunc(editedTrack = {}) {
     const { selectedModal } = this.state;
-    switch (selectedModal) {
-      case TRACK_MODAL_DELETE_TRACK:
-        return () => this.liftUpDeleteTrack();
-      case TRACK_MODAL_EDIT_TRACK:
-        return (editedTrack) => this.liftUpEditTrack(editedTrack);
-      default:
-        return () => noop;
+    if (selectedModal === TRACK_MODAL_DELETE_TRACK) {
+      this.liftUpDeleteTrack();
+    } else if (selectedModal === TRACK_MODAL_EDIT_TRACK) {
+      this.liftUpEditTrack(editedTrack);
     }
   }
 
@@ -61,7 +57,6 @@ export default class Track extends React.Component {
     const {
       tableIndex,
       track,
-      track: { date, note },
       taskData: { title, startDate },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
@@ -72,9 +67,9 @@ export default class Track extends React.Component {
       <>
         <div className={classes.item}>
           <div>{tableIndex}</div>
-          <div>{title}</div>
-          <div>{note}</div>
-          <div>{getInternationalDate(date)}</div>
+          <div>{track.name}</div>
+          <div>{track.note}</div>
+          <div>{getInternationalDate(track.date)}</div>
           <div className={classes.buttons}>
             <Button roleClass='edit' onClick={this.openEditModal}>
               Edit
@@ -88,7 +83,7 @@ export default class Track extends React.Component {
           <Modal
             item={extendedTrack}
             closeFunc={this.closeAnyModal}
-            actFunc={this.selectActFunc()}
+            actFunc={this.selectActFunc}
             selectedModal={selectedModal}
           />
         ) : null}
@@ -102,6 +97,7 @@ Track.propTypes = {
   taskData: PropType.instanceOf(Object).isRequired,
   track: PropType.shape({
     id: PropType.string,
+    name: PropType.string,
     date: PropType.string,
     note: PropType.string,
   }).isRequired,
