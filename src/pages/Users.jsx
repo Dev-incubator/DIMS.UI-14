@@ -1,5 +1,6 @@
 import React from 'react';
 import PropType from 'prop-types';
+import ROLES from '../utilities/rolesPack';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import UserWithContext from '../components/ContextHOCs/UserWithContext';
@@ -76,7 +77,7 @@ export default class Users extends React.Component {
     const {
       loggedUser: { role },
     } = this.props;
-    const isAdmin = role === 'Admin';
+    const isAdmin = role === ROLES.ADMIN;
 
     const users = usersList.map((user, index) => {
       return (

@@ -10,40 +10,49 @@ import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
 import SettingsWithContext from './ContextHOCs/SettingsWithContext';
+import ROLES from '../utilities/rolesPack';
 
 const paths = [
-  { isExact: true, path: '/main/users', component: UsersWithContext },
-  { isExact: true, path: '/main/tasks', component: Tasks },
-  { isExact: true, path: '/main/users/:userId/tasks', component: UsersTasksWithContext },
-  { isExact: true, path: '/main/users/:userId/tasks/:taskId/track', component: UsersTracks },
-  { isExact: true, path: '/main/users/:userId/progress', component: UsersProgress },
-  { isExact: true, path: '/main/settings', component: SettingsWithContext },
-  { isExact: false, path: '', component: PageNotFound },
+  { isExact: true, path: '/main/users', permissions: [ROLES.ADMIN, ROLES.MENTOR], component: UsersWithContext },
+  { isExact: true, path: '/main/tasks', permissions: [ROLES.ADMIN, ROLES.MENTOR], component: Tasks },
+  {
+    isExact: true,
+    path: '/main/users/:userId/tasks',
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
+    component: UsersTasksWithContext,
+  },
+  {
+    isExact: true,
+    path: '/main/users/:userId/tasks/:taskId/track',
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
+    component: UsersTracks,
+  },
+  {
+    isExact: true,
+    path: '/main/users/:userId/progress',
+    permissions: [ROLES.ADMIN, ROLES.MENTOR],
+    component: UsersProgress,
+  },
+  {
+    isExact: true,
+    path: '/main/settings',
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
+    component: SettingsWithContext,
+  },
+  { isExact: false, path: '', permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER], component: PageNotFound },
 ];
 
-const adminAndMentorPermissions = [0, 1, 2, 3, 4, 5, 6];
-const userPermissions = [2, 3, 5, 6];
-
-export const getRoleDependedRoutes = (loggedUser) => {
-  let permissionsList = null;
-  if (loggedUser.role === 'Admin' || loggedUser.role === 'Mentor') {
-    permissionsList = adminAndMentorPermissions;
-  } else if (loggedUser.role === 'User') {
-    permissionsList = userPermissions;
-  }
-
-  const routePack = permissionsList.map((item) => {
-    return (
-      <Route
-        key={item.toString()}
-        exact={paths[item].isExact}
-        path={paths[item].path}
-        component={paths[item].component}
-      />
-    );
-  });
-
-  return <Switch>{routePack}</Switch>;
+// {role} destructures from loggedUser
+export const getRoleDependedRoutes = ({ role }) => {
+  return (
+    <Switch>
+      {paths
+        .filter((pathObj) => pathObj.permissions.includes(role))
+        .map((path, index) => (
+          <Route key={index.toString()} exact={path.isExact} path={path.path} component={path.component} />
+        ))}
+    </Switch>
+  );
 };
 
 const menuList = [
@@ -51,37 +60,27 @@ const menuList = [
     title: 'Users',
     path: '/main/users',
     image: usersIcon,
+    permissions: [ROLES.ADMIN, ROLES.MENTOR],
   },
   {
     title: 'Workflow',
     path: '/main/tasks',
     image: tasksIcon,
+    permissions: [ROLES.ADMIN, ROLES.MENTOR],
   },
   {
     title: 'Settings',
     path: '/main/settings',
     image: settingsIcon,
+    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
   },
 ];
 
-const adminAndMentorMenuList = [0, 1, 2];
-const userMenuList = [2];
-
-export const getRoleDependedMenuLinks = (loggedUser) => {
-  const isUser = loggedUser.role === 'User';
-  let roleDependendMenuList = null;
-  if (!isUser) {
-    roleDependendMenuList = adminAndMentorMenuList;
-  } else if (isUser) {
-    roleDependendMenuList = userMenuList;
-  }
-
-  return roleDependendMenuList.map((item) => (
-    <MenuItem
-      key={item.toString()}
-      title={menuList[item].title}
-      path={menuList[item].path}
-      image={menuList[item].image}
-    />
-  ));
+// {role} destructures from loggedUser
+export const getRoleDependedMenuLinks = ({ role }) => {
+  return menuList
+    .filter((menuObj) => menuObj.permissions.includes(role))
+    .map((menuObj, index) => (
+      <MenuItem key={index.toString()} title={menuObj.title} path={menuObj.path} image={menuObj.image} />
+    ));
 };

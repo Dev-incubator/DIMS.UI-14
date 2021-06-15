@@ -15,9 +15,8 @@ export const getCollection = (collection) => db.collection(collection).get();
 
 export async function getElementDataFromCollection(collection, id) {
   const element = await getElementRefFromCollection(collection, id).get();
-  const elementData = element.data();
 
-  return elementData;
+  return element.data();
 }
 
 export const getElementRefFromCollection = (collection, id) => db.collection(collection).doc(id);
@@ -314,7 +313,7 @@ export const signInUser = async (email, password) => {
     console.log(error.code);
     console.log(error.message);
 
-    return error;
+    return Promise.reject(error);
   }
 };
 
@@ -340,7 +339,7 @@ export const signInWithGoogle = async () => {
     console.log(error.email);
     console.log(error.credential);
 
-    return error;
+    return Promise.reject(error);
   }
 };
 

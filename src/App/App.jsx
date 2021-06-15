@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
@@ -8,6 +8,7 @@ import { getRoleDependedRoutes } from '../components/Routes';
 import { getFromLocalStorage, setToLocalStorage } from '../utilities/localStorage-helpers';
 import { applyGlobalTheme, getGlobalTheme } from '../utilities/theme-helpers';
 import { ThemeContext } from './themeContext';
+import PageNotFound from '../pages/PageNotFound';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -46,36 +47,26 @@ export default class App extends React.Component {
     } = this.state;
     const themeContext = getGlobalTheme();
     applyGlobalTheme(themeContext);
-    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : <Redirect to='/' />;
     const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
+    const isLoggedRedirector = isLogged ? null : <Redirect to='/' />;
 
     return (
       <>
         <BrowserRouter>
-          <ThemeContext.Provider value={themeContext}>
-            <UserContext.Provider value={userContext}>
-              <div className={classes.app}>
-                <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />
-                <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
-                {isLoggedRedirector}
-              </div>
-            </UserContext.Provider>
-          </ThemeContext.Provider>
+          <Switch>
+            <ThemeContext.Provider value={themeContext}>
+              <UserContext.Provider value={userContext}>
+                <div className={classes.app}>
+                  <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />
+                  <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
+                  <Route component={PageNotFound} />
+                  {isLoggedRedirector}
+                </div>
+              </UserContext.Provider>
+            </ThemeContext.Provider>
+          </Switch>
         </BrowserRouter>
       </>
     );
   }
 }
-
-const getRedirectPath = (loggedUser) => {
-  switch (loggedUser.role) {
-    case 'Admin':
-      return '/main/users';
-    case 'Mentor':
-      return '/main/tasks';
-    case 'User':
-      return `/main/users/${loggedUser.id}/tasks`;
-    default:
-      return '/'; // to 404
-  }
-};

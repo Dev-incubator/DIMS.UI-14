@@ -3,17 +3,16 @@ import React from 'react';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-
+import ROLES from '../../../utilities/rolesPack';
 import {
   CREATE_USER_ONCHANGE,
   CREATE_USER_VALIDATE_FIELDS,
   CREATE_USER_VALIDATE_FORM,
   reducerFunc,
 } from './user-helpers';
-
 import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
 import debounce from '../../../utilities/debounce';
-import { getLowerCasedAndTrimmedStr } from '../../../utilities/form-helpers';
+import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers';
 
 export default class CreateUser extends React.Component {
   constructor(props) {
@@ -25,7 +24,7 @@ export default class CreateUser extends React.Component {
         email: '',
         direction: 'React',
         sex: 'Male',
-        role: 'User',
+        role: ROLES.USER,
         password: '',
         passwordRepeat: '',
         dateOfBirth: '',
@@ -124,7 +123,7 @@ export default class CreateUser extends React.Component {
   liftUpCreateUser() {
     const { liftUpCreateUser } = this.props;
     const { data, newUserRef } = this.state;
-    const newUser = { ...data, email: getLowerCasedAndTrimmedStr(data.email) };
+    const newUser = { ...data, email: getLowerCasedStr(getTrimmedStr(data.email)) };
     delete newUser.passwordRepeat;
     liftUpCreateUser(newUserRef, newUser);
     this.closeModal();
@@ -207,7 +206,7 @@ export default class CreateUser extends React.Component {
                 value={direction}
                 onChange={this.onChange}
                 error={directionError}
-                options='React, Angular, Java, .NET, Salesforce, PHP'
+                options={['React', 'Angular', 'Java', '.NET', 'Salesforce', 'PHP']}
               />
               <CraftInput
                 id='sex'
@@ -215,7 +214,7 @@ export default class CreateUser extends React.Component {
                 title='Sex'
                 value={sex}
                 onChange={this.onChange}
-                options='Male, Female'
+                options={['Male', 'Female']}
               />
               <CraftInput
                 id='role'
@@ -224,7 +223,7 @@ export default class CreateUser extends React.Component {
                 type='select'
                 value={role}
                 onChange={this.onChange}
-                options='Admin, Mentor, User'
+                options={[ROLES.ADMIN, ROLES.MENTOR, ROLES.USER]}
                 error={roleError}
               />
               <CraftInput
