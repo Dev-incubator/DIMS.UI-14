@@ -1,22 +1,20 @@
 import { getFromLocalStorage, setToLocalStorage } from './localStorage-helpers';
+import { THEMES } from './enums';
 
-export const THEME = 'theme';
-export const THEME_LIGHT = 'light';
-export const THEME_DARK = 'dark';
+export const USERCONTEXT = 'userContext';
+export const THEMECONTEXT = 'themeContext';
 
 export const applyGlobalTheme = (theme) => {
   document.body.dataset.theme = theme;
 };
 
 export const getGlobalTheme = () => {
-  return getFromLocalStorage(THEME) || THEME_DARK;
+  return getFromLocalStorage(THEMES.THEME) || THEMES.DARK;
 };
 
 export const setGlobalTheme = (theme) => {
-  setToLocalStorage(THEME, theme);
+  setToLocalStorage(THEMES.THEME, theme);
 };
-
-export const USERCONTEXT = 'userContext';
 
 export const getUserContext = () => {
   return getFromLocalStorage(USERCONTEXT) || {};

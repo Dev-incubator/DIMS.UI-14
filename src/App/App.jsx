@@ -11,10 +11,9 @@ import {
   setGlobalTheme,
   getUserContext,
   setUserContext,
-  THEME_LIGHT,
-  THEME_DARK,
 } from '../utilities/context-helpers';
 import { ThemeContext } from './themeContext';
+import { THEMES } from '../utilities/enums';
 import PageNotFound from '../pages/PageNotFound';
 
 export default class App extends React.Component {
@@ -57,7 +56,7 @@ export default class App extends React.Component {
       themeContext: { theme },
     } = this.state;
     if (theme === themeName) return;
-    const nextTheme = theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+    const nextTheme = theme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK;
     this.setState(
       (prevState) => ({
         ...prevState,
@@ -91,18 +90,18 @@ export default class App extends React.Component {
     return (
       <>
         <BrowserRouter>
-          <Switch>
-            <ThemeContext.Provider value={themeContext}>
-              <UserContext.Provider value={userContext}>
-                <div className={classes.app}>
+          <ThemeContext.Provider value={themeContext}>
+            <UserContext.Provider value={userContext}>
+              <div className={classes.app}>
+                <Switch>
                   <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />
                   <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
                   <Route component={PageNotFound} />
-                  {isLoggedRedirector}
-                </div>
-              </UserContext.Provider>
-            </ThemeContext.Provider>
-          </Switch>
+                </Switch>
+              </div>
+            </UserContext.Provider>
+          </ThemeContext.Provider>
+          {isLoggedRedirector}
         </BrowserRouter>
       </>
     );

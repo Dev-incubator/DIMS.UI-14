@@ -1,11 +1,10 @@
 import React from 'react';
 import PropType from 'prop-types';
 import Button from '../components/Button/Button';
-import sunLogo from '../icons/sun.svg';
-import moonLogo from '../icons/moon.svg';
+import ThemeButton from '../components/Button/ThemeButton';
 import classes from './Settings.module.css';
 import { resetUserPassword } from '../utilities/fb-helpers';
-import { THEME_LIGHT, THEME_DARK } from '../utilities/context-helpers';
+import { THEMES } from '../utilities/enums';
 
 export default class Settings extends React.Component {
   constructor(props) {
@@ -27,22 +26,18 @@ export default class Settings extends React.Component {
 
   selectDarkTheme = () => {
     const { setThemeContext } = this.props;
-    setThemeContext(THEME_DARK);
+    setThemeContext(THEMES.DARK);
   };
 
   selectLightTheme = () => {
     const { setThemeContext } = this.props;
-    setThemeContext(THEME_LIGHT);
+    setThemeContext(THEMES.LIGHT);
   };
 
   render() {
     const { resetBtnMsg } = this.state;
     const { theme } = this.props;
     const isResetted = resetBtnMsg !== '';
-    const lightThemeButtonClass =
-      theme === THEME_LIGHT ? `${classes.themeItem} ${classes.active}` : `${classes.themeItem}`;
-    const darkThemeButtonClass =
-      theme === THEME_LIGHT ? `${classes.themeItem}` : `${classes.themeItem} ${classes.active}`;
 
     return (
       <div className={classes.wrapper}>
@@ -55,26 +50,12 @@ export default class Settings extends React.Component {
         </div>
         <h2 className={classes.title}>Change color theme:</h2>
         <div className={classes.themeToggler}>
-          <div
-            className={lightThemeButtonClass}
-            role='button'
-            tabIndex={0}
-            onKeyDown={this.selectLightTheme}
-            onClick={this.selectLightTheme}
-          >
-            <span className={classes.themeTitle}>Light</span>
-            <img className={classes.themeImg} src={sunLogo} alt='sun-logo' />
-          </div>
-          <div
-            className={darkThemeButtonClass}
-            role='button'
-            tabIndex={0}
-            onKeyDown={this.selectDarkTheme}
-            onClick={this.selectDarkTheme}
-          >
-            <span className={classes.themeTitle}>Dark</span>
-            <img className={classes.themeImg} src={moonLogo} alt='moon-logo' />
-          </div>
+          <ThemeButton onClick={this.selectLightTheme} isActive={theme === THEMES.LIGHT}>
+            {THEMES.LIGHT}
+          </ThemeButton>
+          <ThemeButton onClick={this.selectDarkTheme} isActive={theme === THEMES.DARK} position='right'>
+            {THEMES.DARK}
+          </ThemeButton>
         </div>
       </div>
     );

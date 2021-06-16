@@ -17,3 +17,9 @@ export const DIRECTIONS = {
   SALESFORCE: 'Salesforce',
   PHP: 'PHP',
 };
+
+export const THEMES = {
+  THEME: 'theme',
+  LIGHT: 'light',
+  DARK: 'dark',
+};
