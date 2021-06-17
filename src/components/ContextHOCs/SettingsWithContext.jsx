@@ -1,5 +1,5 @@
-import { UserContext } from '../../App/userContext';
-import { ThemeContext } from '../../App/themeContext';
+import { UserContext } from '../RootProvider/userContext';
+import { ThemeContext } from '../RootProvider/themeContext';
 import Settings from '../../pages/Settings';
 
 export default function SettingsWithContext(props) {

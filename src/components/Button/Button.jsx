@@ -25,5 +25,5 @@ Button.defaultProps = {
   children: null,
   roleClass: '',
   disabled: false,
-  onScreen: '',
+  onScreen: false,
 };

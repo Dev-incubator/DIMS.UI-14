@@ -1,4 +1,4 @@
-import { UserContext } from '../../App/userContext';
+import { UserContext } from '../RootProvider/userContext';
 import Menu from '../Aside/Menu/Menu';
 
 export default function MenuWithContext() {

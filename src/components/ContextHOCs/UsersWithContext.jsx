@@ -1,4 +1,4 @@
-import { UserContext } from '../../App/userContext';
+import { UserContext } from '../RootProvider/userContext';
 import Users from '../../pages/Users';
 
 export default function UsersWithContext(props) {
