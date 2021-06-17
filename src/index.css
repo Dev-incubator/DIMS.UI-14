@@ -70,6 +70,14 @@ body[data-theme='light'] {
   --google-button-background-color: var(--white);
   --google-button-text-color: var(--lightBlue);
   --google-button-text-hover-color: var(--white);
+  --pageNotFound-numbers-color: var(--navyBlue);
+  --pageNotFound-univers-color: var(--lightBlue);
+  --pageNotFound-stars-color: var(--yellow);
+  --pageNotFound-dot-color: var(--backgroundGray);
+  --pageNotFound-text: var(--darkGray);
+  --pageNotFound-button-text: var(--white);
+  --pageNotFound-button: var(--lightBlue);
+  --pageNotFound-button-hover: var(--skyBlue);
 }
 
 body[data-theme='dark'] {
@@ -130,6 +138,14 @@ body[data-theme='dark'] {
   --google-button-background-color: var(--navyBlue);
   --google-button-text-color: var(--lightGray);
   --google-button-text-hover-color: var(--lightGray);
+  --pageNotFound-numbers-color: var(--darkBlue);
+  --pageNotFound-univers-color: var(--skyBlue);
+  --pageNotFound-stars-color: var(--pumpkinOrange);
+  --pageNotFound-dot-color: var(--pumpkinOrange);
+  --pageNotFound-text: var(--lightGray);
+  --pageNotFound-button-text: var(--lightGray);
+  --pageNotFound-button: var(--darkBlue);
+  --pageNotFound-button-hover: var(--skyBlue);
 }
 
 /*color palette*/
@@ -147,6 +163,7 @@ body[data-theme='dark'] {
   --darkRed: #ae0000;
   --wineRed: #500000;
   --crimeRed: #8b0000;
+  --yellow: #f8dc25;
   --lightOrange: #ffa610;
   --orange: #ff7518;
   --darkOrange: #894b00;
