@@ -10,7 +10,7 @@ import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
 import SettingsWithContext from './ContextHOCs/SettingsWithContext';
-import ROLES from '../utilities/rolesPack';
+import { ROLES } from '../utilities/enums';
 
 const paths = [
   { isExact: true, path: '/main/users', permissions: [ROLES.ADMIN, ROLES.MENTOR], component: UsersWithContext },

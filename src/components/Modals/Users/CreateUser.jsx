@@ -3,7 +3,7 @@ import React from 'react';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import ROLES from '../../../utilities/rolesPack';
+import { ROLES, SEX, DIRECTIONS } from '../../../utilities/enums';
 import {
   CREATE_USER_ONCHANGE,
   CREATE_USER_VALIDATE_FIELDS,
@@ -22,8 +22,8 @@ export default class CreateUser extends React.Component {
         username: '',
         surname: '',
         email: '',
-        direction: 'React',
-        sex: 'Male',
+        direction: DIRECTIONS.REACT,
+        sex: SEX.MALE,
         role: ROLES.USER,
         password: '',
         passwordRepeat: '',
@@ -206,7 +206,14 @@ export default class CreateUser extends React.Component {
                 value={direction}
                 onChange={this.onChange}
                 error={directionError}
-                options={['React', 'Angular', 'Java', '.NET', 'Salesforce', 'PHP']}
+                options={[
+                  DIRECTIONS.REACT,
+                  DIRECTIONS.ANGULAR,
+                  DIRECTIONS.JAVA,
+                  DIRECTIONS.NET,
+                  DIRECTIONS.SALESFORCE,
+                  DIRECTIONS.PHP,
+                ]}
               />
               <CraftInput
                 id='sex'
@@ -214,7 +221,7 @@ export default class CreateUser extends React.Component {
                 title='Sex'
                 value={sex}
                 onChange={this.onChange}
-                options={['Male', 'Female']}
+                options={[SEX.MALE, SEX.FEMALE]}
               />
               <CraftInput
                 id='role'
@@ -291,7 +298,7 @@ export default class CreateUser extends React.Component {
                 error={educationError}
               />
               <CraftInput
-                title='Univercity average score'
+                title='University average score'
                 isRequired
                 id='averageScore'
                 value={averageScore}

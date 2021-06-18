@@ -51,7 +51,9 @@ export default class UsersProgress extends React.Component {
             <span>({`${allTracks.length}`})</span>
           </h2>
           <NavLink className={classes.navLink} to='/main/users'>
-            <Button onClick={noop}>Back</Button>
+            <Button onClick={noop} onScreen>
+              Back
+            </Button>
           </NavLink>
         </div>
         <div className={classes.content}>

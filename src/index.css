@@ -1,6 +1,6 @@
 @import-normalize;
 
-*{
+* {
   box-sizing: border-box;
 }
 
@@ -12,39 +12,168 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+body[data-theme='light'] {
+  background-color: var(--white);
+  color: var(--black);
+  --background-color: var(--backgroundGray);
+  --main-header-color: var(--white);
+  --main-header-bottom-color: var(--lightGray);
+  --hamburger-color: var(--black);
+  --menu-color: var(--darkBlue);
+  --menu-border-color: var(--darkBlue);
+  --menu-header-border-color: var(--black);
+  --menu-item-border-color: var(--darkBlue);
+  --menu-text-color: var(--white);
+  --menu-item-action-color: var(--navyBlue);
+  --menu-item-active-color: var(--lightBlue);
+  --screen-header-text-color: var(--darkGray);
+  --screen-element-background-color: var(--white);
+  --screen-element-border-color: var(--lightGray);
+  --progress-navlink-text-color: var(--white);
+  --login-welcome-color: var(--lightBlue);
+  --login-header-color: var(--darkBlue);
+  --login-text-color: var(--white);
+  --login-header-action-color: var(--navyBlue);
+  --login-header-active-color: var(--lightBlue);
+  --login-input-border-color: var(--lightGray);
+  --login-input-text-color: var(--darkGray);
+  --login-input-color: var(--white);
+  --divanchor-color: var(--lightBlue);
+  --status-active-color: var(--lightBlue);
+  --status-complete-color: var(--green);
+  --status-fail-color: var(--red);
+  --button-text-color: var(--white);
+  --button-default-color: var(--lightBlue);
+  --button-default-hover-color: var(--skyBlue);
+  --button-delete-color: var(--red);
+  --button-delete-hover-color: var(--darkRed);
+  --button-edit-color: var(--lightOrange);
+  --button-edit-hover-color: var(--orange);
+  --button-create-color: var(--lightGreen);
+  --button-create-hover-color: var(--green);
+  --button-disabled-color: var(--lightGray);
+  --button-onScreen-color: var(--lightBlue);
+  --validator-color: var(--red);
+  --modal-overlay-color: rgba(0, 0, 0, 0.5);
+  --modal-background-color: var(--white);
+  --modal-border-shadow-color: var(--lightGray);
+  --modal-div-color: var(--lightBlue);
+  --craft-input-border-color: var(--darkGray);
+  --craft-input-border-focus-color: var(--lightBlue);
+  --craft-input-readonly-color: var(--lightGray);
+  --craft-input-text-color: var(--black);
+  --theme-button-text-color: var(--black);
+  --theme-button-hover-color: var(--lightGray);
+  --theme-button-active-color: var(--navyBlue);
+  --theme-button-active-text-color: var(--white);
+  --google-button-border-color: var(--skyBlue);
+  --google-button-background-color: var(--white);
+  --google-button-text-color: var(--lightBlue);
+  --google-button-text-hover-color: var(--white);
+  --pageNotFound-numbers-color: var(--navyBlue);
+  --pageNotFound-univers-color: var(--lightBlue);
+  --pageNotFound-stars-color: var(--yellow);
+  --pageNotFound-dot-color: var(--backgroundGray);
+  --pageNotFound-text: var(--darkGray);
+  --pageNotFound-button-text: var(--white);
+  --pageNotFound-button: var(--lightBlue);
+  --pageNotFound-button-hover: var(--skyBlue);
 }
 
+body[data-theme='dark'] {
+  background-color: var(--navyBlue);
+  color: var(--lightGray);
+  --background-color: var(--navyBlue);
+  --main-header-color: var(--darkBlue);
+  --main-header-bottom-color: var(--black);
+  --hamburger-color: var(--lightGray);
+  --menu-color: var(--darkBlue);
+  --menu-border-color: var(--black);
+  --menu-header-border-color: var(--black);
+  --menu-item-border-color: var(--darkBlue);
+  --menu-text-color: var(--lightGray);
+  --menu-item-action-color: var(--navyBlue);
+  --menu-item-active-color: var(--lightBlue);
+  --screen-header-text-color: var(--darkGray);
+  --screen-element-border-color: var(--navyBlue);
+  --screen-element-background-color: var(--darkBlue);
+  --navlink-common-text-color: var(--lightGray);
+  --login-welcome-color: var(--lightBlue);
+  --login-header-color: var(--darkBlue);
+  --login-text-color: var(--lightGray);
+  --login-header-action-color: var(--navyBlue);
+  --login-header-active-color: var(--lightBlue);
+  --login-input-border-color: var(--darkBlue);
+  --login-input-text-color: var(--lightGray);
+  --login-input-color: var(--navyBlue);
+  --divanchor-color: var(--lightBlue);
+  --status-active-color: var(--lightBlue);
+  --status-complete-color: var(--green);
+  --status-fail-color: var(--red);
+  --button-text-color: var(--lightGray);
+  --button-default-color: var(--navyBlue);
+  --button-default-hover-color: var(--lightBlue);
+  --button-delete-color: var(--wineRed);
+  --button-delete-hover-color: var(--crimeRed);
+  --button-edit-color: var(--darkOrange);
+  --button-edit-hover-color: var(--pumpkinOrange);
+  --button-create-color: var(--slytherinGreen);
+  --button-create-hover-color: var(--darkGreen);
+  --button-disabled-color: var(--navyBlue);
+  --button-onScreen-color: var(--darkBlue);
+  --validator-color: var(--crimeRed);
+  --modal-overlay-color: rgba(0, 0, 0, 0.5);
+  --modal-background-color: var(--darkBlue);
+  --modal-border-shadow-color: var(--navyBlue);
+  --modal-div-color: var(--lightBlue);
+  --craft-input-border-color: var(--lightBlue);
+  --craft-input-border-focus-color: var(--lightBlue);
+  --craft-input-readonly-color: var(--darkBlue);
+  --craft-input-text-color: var(--lightGray);
+  --theme-button-text-color: var(--lightGray);
+  --theme-button-hover-color: var(--darkBlue);
+  --theme-button-active-color: var(--darkBlue);
+  --theme-button-active-text-color: var(--lightGray);
+  --google-button-border-color: var(--lightBlue);
+  --google-button-background-color: var(--navyBlue);
+  --google-button-text-color: var(--lightGray);
+  --google-button-text-hover-color: var(--lightGray);
+  --pageNotFound-numbers-color: var(--darkBlue);
+  --pageNotFound-univers-color: var(--skyBlue);
+  --pageNotFound-stars-color: var(--pumpkinOrange);
+  --pageNotFound-dot-color: var(--pumpkinOrange);
+  --pageNotFound-text: var(--lightGray);
+  --pageNotFound-button-text: var(--lightGray);
+  --pageNotFound-button: var(--darkBlue);
+  --pageNotFound-button-hover: var(--skyBlue);
+}
+
+/*color palette*/
 :root {
-  --white-color: #fff;
-  --background-color: #f6f7fb;
-  --black-color: #000;
-  --darkblue-color: #0e1935;
-  --lightgray-color: #ecedf1;
-  --darkgray-color: #7787ab;
-  --lightblue-color: #5385ff;
-  --menu-action-color: #122043;
+  --white: #fff;
+  --black: #000;
+  --backgroundGray: #f6f7fb;
+  --lightGray: #ecedf1;
+  --darkGray: #7787ab;
+  --darkBlue: #0e1935;
+  --navyBlue: #122043;
+  --lightBlue: #5385ff;
+  --skyBlue: #3855a5;
+  --red: #d50000;
+  --darkRed: #ae0000;
+  --wineRed: #500000;
+  --crimeRed: #8b0000;
+  --yellow: #f8dc25;
+  --lightOrange: #ffa610;
+  --orange: #ff7518;
+  --darkOrange: #894b00;
+  --pumpkinOrange: #c46c00;
+  --lightGreen: #1bc47d;
+  --green: #0ca52f;
+  --darkGreen: #026c45;
+  --slytherinGreen: #013220;
+}
 
-  --button-default-color: #5385ff;
-  --button-default-hover-color: #3855a5;
-
-  --button-delete-color: #d50000;
-  --button-delete-hover-color: #ae0000;
-
-  --button-edit-color: #ffa610;
-  --button-edit-hover-color: #ff7518;
-
-  --button-create-color: #1bc47d;
-  --button-create-hover-color: #0ca52f;
-
-  --button-disabled-color: #ecedf1;
-
-  --validator-color: #d50000;
-
-  --divanchor-color: #5385ff;
-
-  --status-active-color: #5385ff;
-  --status-complete-color: #0ca52f;
-  --status-fail-color: #d50000;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

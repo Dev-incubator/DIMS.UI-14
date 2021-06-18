@@ -1,12 +1,12 @@
 .item {
-  background-color: var(--white-color);
-  border-top: 1px solid var(--lightgray-color);
-  border-right: 1px solid var(--lightgray-color);
-  border-left: 1px solid var(--lightgray-color);
+  background-color: var(--screen-element-background-color);
+  border-top: 1px solid var(--screen-element-border-color);
+  border-right: 1px solid var(--screen-element-border-color);
+  border-left: 1px solid var(--screen-element-border-color);
   display: grid;
   grid-template-columns:
-  minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px)
-  minmax(auto, 130px);
+    minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 250px) minmax(auto, 150px)
+    minmax(auto, 130px);
   align-items: center;
 }
 
@@ -15,7 +15,7 @@
 }
 
 .item:last-of-type {
-  border-bottom: 1px solid var(--lightgray-color);
+  border-bottom: 1px solid var(--screen-element-border-color);
 }
 
 .item .buttons {

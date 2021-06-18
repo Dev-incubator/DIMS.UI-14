@@ -4,6 +4,12 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.item input {
+  background-color: var(--craft-input-readonly-color);
+  color: var(--craft-input-text-color);
+}
+
 .item:first-of-type {
   margin-top: 0;
 }
@@ -12,7 +18,7 @@
   width: 45%;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid var(--darkgray-color);
+  border: 1px solid var(--craft-input-border-color);
 }
 .craftInput[type='date'] {
   padding: 8px 10px;
@@ -20,19 +26,21 @@
 
 .craftInput:focus {
   outline: none;
-  border: 1px solid var(--lightblue-color);
+  border: 1px solid var(--craft-input-border-focus-color);
 }
 
 select {
   border-radius: 10px;
-  border: 1px solid var(--darkgray-color);
+  border: 1px solid var(--craft-input-border-color);
   padding: 10px;
   width: 45%;
+  background-color: var(--craft-input-readonly-color);
+  color: var(--craft-input-text-color);
 }
 
 select:focus {
   outline: none;
-  border: 1px solid var(--lightblue-color);
+  border: 1px solid var(--craft-input-border-focus-color);
 }
 
 .formwrapper {
@@ -52,7 +60,11 @@ select:focus {
   padding: 10px;
   border-radius: 10px;
   width: 45%;
-  border: 1px solid gray;
+  border: 1px solid var(--craft-input-border-color);
+}
+
+.checkbox:focus {
+  border: 1px solid var(--craft-input-border-focus-color);
 }
 
 input[type='checkbox'] {
@@ -71,18 +83,18 @@ input[type='checkbox'] {
 .craftInput:read-only,
 .checkbox.readOnly,
 .textArea:read-only {
-  background-color: var(--lightgray-color);
+  background-color: var(--craft-input-readonly-color);
 }
 
 .textArea {
   width: 45%;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid var(--darkgray-color);
+  border: 1px solid var(--craft-input-border-color);
   resize: none;
 }
 
 .textArea:focus {
   outline: none;
-  border: 1px solid var(--lightblue-color);
+  border: 1px solid var(--craft-input-border-focus-color);
 }

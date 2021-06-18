@@ -1,8 +1,8 @@
 .item {
-  background-color: var(--white-color);
-  border-top: 1px solid var(--lightgray-color);
-  border-right: 1px solid var(--lightgray-color);
-  border-left: 1px solid var(--lightgray-color);
+  background-color: var(--screen-element-background-color);
+  border-top: 1px solid var(--screen-element-border-color);
+  border-right: 1px solid var(--screen-element-border-color);
+  border-left: 1px solid var(--screen-element-border-color);
   display: grid;
   grid-template-columns:
     minmax(auto, 50px) minmax(auto, 250px) minmax(auto, 150px) minmax(auto, 150px) minmax(auto, 150px)
@@ -15,7 +15,7 @@
 }
 
 .item:last-of-type {
-  border-bottom: 1px solid var(--lightgray-color);
+  border-bottom: 1px solid var(--screen-element-border-color);
 }
 
 .item .buttons {
@@ -39,6 +39,6 @@
 
 .navLink {
   display: inherit;
-  color: var(--white-color);
+  color: var(--navlink-common-text-color);
   text-decoration: none;
 }

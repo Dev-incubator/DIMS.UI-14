@@ -1,12 +1,11 @@
 import PropType from 'prop-types';
-import Menu from './Menu/Menu';
 import classes from './Aside.module.css';
-import { UserContext } from '../../App/userContext';
+import MenuWithContext from '../ContextHOCs/MenuWithContext';
 
 export default function Aside({ isOpen }) {
   return (
     <aside className={`${classes.aside} ${isOpen ? classes.active : null}`}>
-      <UserContext.Consumer>{(userContext) => <Menu {...userContext} />}</UserContext.Consumer>
+      <MenuWithContext />
     </aside>
   );
 }

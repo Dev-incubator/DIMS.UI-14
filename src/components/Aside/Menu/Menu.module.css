@@ -1,11 +1,12 @@
 .menu {
   margin: 0;
   padding: 0;
-  background-color: var(--darkblue-color);
+  background-color: var(--menu-color);
   height: 100%;
   width: 100%;
   display: grid;
   grid-template-rows: 80px auto;
+  border-right: 2px solid var(--menu-border-color);
 }
 .header {
   padding: 15px 30px;
@@ -13,7 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--black-color);
+  border-bottom: 2px solid var(--menu-header-border-color);
 }
 
 .header img {
@@ -24,35 +25,35 @@
   margin-left: 25px;
   width: 100%;
   font-size: 25px;
-  color: var(--white-color);
+  color: var(--menu-text-color);
 }
 
-.item {
+.logout {
   display: flex;
   text-decoration: none;
-  color: var(--white-color);
+  color: var(--menu-text-color);
   padding: 25px 50px;
   justify-content: flex-start;
   font-size: 22px;
   line-height: 22px;
   align-items: center;
-  border-left: 6px solid var(--darkblue-color);
+  border-left: 6px solid var(--menu-item-border-color);
   transition: background-color 0.3s all;
   cursor: pointer;
 }
 
-.item:hover {
-  background-color: var(--menu-action-color);
-  border-color: var(--lightblue-color);
+.logout:hover {
+  background-color: var(--menu-item-action-color);
+  border-color: var(--menu-item-active-color);
 }
-.item.active {
-  border-color: var(--lightblue-color);
+.logout.active {
+  border-color: var(--menu-item-active-color);
 }
 
-.image {
+.logoutImage {
   height: 18px;
 }
 
-.itemTitle {
+.logoutTitle {
   margin-left: 10px;
 }

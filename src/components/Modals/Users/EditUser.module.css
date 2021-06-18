@@ -1,13 +1,13 @@
 .modal {
   width: 55%;
-  background-color: var(--white-color);
+  background-color: var(--modal-background-color);
   padding: 30px;
-  border: 1px solid var(--lightgray-color);
+  border: 1px solid var(--modal-border-shadow-color);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-shadow: 0 0 2px 0 var(--lightgray-color);
+  box-shadow: 0 0 2px 0 var(--modal-border-shadow-color);
 }
 
 .title {
@@ -16,7 +16,7 @@
   font-size: 1.5rem;
   line-height: 1.5rem;
   text-align: center;
-  border-bottom: 1px solid var(--lightgray-color);
+  border-bottom: 1px solid var(--modal-border-shadow-color);
 }
 
 .buttons {

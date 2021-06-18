@@ -9,7 +9,7 @@ import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM,
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
-import ROLES from '../utilities/rolesPack';
+import { ROLES } from '../utilities/enums';
 
 const initialState = {
   data: {
@@ -126,7 +126,7 @@ export default class Login extends React.PureComponent {
           </div>
           {userLoginStatusMessage}
           <div className={classes.buttonWrapper}>
-            <Button disabled={!isValid} onClick={this.handleClick}>
+            <Button disabled={!isValid} onClick={this.handleClick} onScreen>
               Enter
             </Button>
             <GoogleButton onClick={this.handleGoogleButtonClick}>Login with Google</GoogleButton>
