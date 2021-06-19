@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropType from 'prop-types';
+import { ROLES } from '../utilities/enums';
 import Loader from '../components/Loader/Loader';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
@@ -74,7 +75,7 @@ class Users extends React.PureComponent {
       );
     });
 
-    const isAdmin = role === 'Admin';
+    const isAdmin = role === ROLES.ADMIN;
 
     return (
       <div>

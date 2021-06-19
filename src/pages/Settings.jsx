@@ -1,24 +1,17 @@
 import React from 'react';
 import PropType from 'prop-types';
 import Button from '../components/Button/Button';
-import sunLogo from '../icons/sun.svg';
-import moonLogo from '../icons/moon.svg';
+import ThemeButton from '../components/Button/ThemeButton';
 import classes from './Settings.module.css';
 import { resetUserPassword } from '../utilities/fb-helpers';
-import { THEME_LIGHT, THEME_DARK, setGlobalTheme } from '../utilities/theme-helpers';
+import { THEMES } from '../utilities/enums';
 
 export default class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       resetBtnMsg: '',
-      theme: '',
     };
-  }
-
-  componentDidMount() {
-    const { theme } = this.props;
-    this.setState({ theme });
   }
 
   handleBlur() {
@@ -31,25 +24,20 @@ export default class Settings extends React.Component {
     this.setState({ resetBtnMsg: 'Email to reset password was succesfully sent' });
   };
 
-  toggleTheme = (themeName) => {
-    const { theme } = this.state;
-    if (theme === themeName) return;
-    const nextTheme = theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
-    this.setState({ theme: nextTheme });
-    setGlobalTheme(nextTheme);
+  selectDarkTheme = () => {
+    const { setThemeContext } = this.props;
+    setThemeContext(THEMES.DARK);
   };
 
-  selectDarkTheme = () => this.toggleTheme(THEME_DARK);
-
-  selectLightTheme = () => this.toggleTheme(THEME_LIGHT);
+  selectLightTheme = () => {
+    const { setThemeContext } = this.props;
+    setThemeContext(THEMES.LIGHT);
+  };
 
   render() {
-    const { resetBtnMsg, theme } = this.state;
+    const { resetBtnMsg } = this.state;
+    const { theme } = this.props;
     const isResetted = resetBtnMsg !== '';
-    const lightThemeButtonClass =
-      theme === THEME_LIGHT ? `${classes.themeItem} ${classes.active}` : `${classes.themeItem}`;
-    const darkThemeButtonClass =
-      theme === THEME_LIGHT ? `${classes.themeItem}` : `${classes.themeItem} ${classes.active}`;
 
     return (
       <div className={classes.wrapper}>
@@ -62,26 +50,12 @@ export default class Settings extends React.Component {
         </div>
         <h2 className={classes.title}>Change color theme:</h2>
         <div className={classes.themeToggler}>
-          <div
-            className={lightThemeButtonClass}
-            role='button'
-            tabIndex={0}
-            onKeyDown={this.selectLightTheme}
-            onClick={this.selectLightTheme}
-          >
-            <span className={classes.themeTitle}>Light</span>
-            <img className={classes.themeImg} src={sunLogo} alt='sun-logo' />
-          </div>
-          <div
-            className={darkThemeButtonClass}
-            role='button'
-            tabIndex={0}
-            onKeyDown={this.selectDarkTheme}
-            onClick={this.selectDarkTheme}
-          >
-            <span className={classes.themeTitle}>Dark</span>
-            <img className={classes.themeImg} src={moonLogo} alt='moon-logo' />
-          </div>
+          <ThemeButton onClick={this.selectLightTheme} isActive={theme === THEMES.LIGHT}>
+            {THEMES.LIGHT}
+          </ThemeButton>
+          <ThemeButton onClick={this.selectDarkTheme} isActive={theme === THEMES.DARK} position='right'>
+            {THEMES.DARK}
+          </ThemeButton>
         </div>
       </div>
     );
@@ -91,4 +65,5 @@ export default class Settings extends React.Component {
 Settings.propTypes = {
   loggedUser: PropType.instanceOf(Object).isRequired,
   theme: PropType.string.isRequired,
+  setThemeContext: PropType.func.isRequired,
 };

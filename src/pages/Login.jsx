@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import PropType from 'prop-types';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
@@ -8,8 +9,27 @@ import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM,
 import LoginInput from '../components/Login/LoginInput';
 import LoginHeader from '../components/Login/LoginHeader';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
+import { ROLES } from '../utilities/enums';
 
-export default class Login extends React.Component {
+const initialState = {
+  data: {
+    email: '',
+    password: '',
+  },
+  validator: {
+    email: false,
+    password: false,
+  },
+  errors: {
+    emailError: '',
+    passwordError: '',
+  },
+  loginError: '',
+  isLogged: false,
+  isValid: false,
+};
+
+export default class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -83,7 +103,9 @@ export default class Login extends React.Component {
       data: { email, password },
       errors: { emailError, passwordError },
     } = this.state;
+    const { isLogged, loggedUser } = this.props;
     const userLoginStatusMessage = loginError ? <div className={classes.loginError}>{loginError}</div> : null;
+    const isLoggedRedirector = isLogged ? <Redirect to={getRedirectPath(loggedUser)} /> : null;
 
     return (
       <>
@@ -110,29 +132,28 @@ export default class Login extends React.Component {
             <GoogleButton onClick={this.handleGoogleButtonClick}>Login with Google</GoogleButton>
           </div>
         </form>
+        {isLoggedRedirector}
       </>
     );
   }
 }
 
-const initialState = {
-  data: {
-    email: '',
-    password: '',
-  },
-  validator: {
-    email: false,
-    password: false,
-  },
-  errors: {
-    emailError: '',
-    passwordError: '',
-  },
-  loginError: '',
-  isLogged: false,
-  isValid: false,
-};
-
 Login.propTypes = {
   setUserContext: PropType.func.isRequired,
+  isLogged: PropType.bool.isRequired,
+  loggedUser: PropType.instanceOf(Object).isRequired,
+};
+
+const getRedirectPath = (loggedUser) => {
+  const { role, id } = loggedUser;
+  let path = null;
+  if (role === ROLES.ADMIN) {
+    path = '/main/users';
+  } else if (role === ROLES.MENTOR) {
+    path = '/main/tasks';
+  } else {
+    path = `/main/users/${id}/tasks`;
+  }
+
+  return path;
 };

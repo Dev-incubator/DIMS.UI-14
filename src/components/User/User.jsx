@@ -14,6 +14,7 @@ import {
   USER_MODAL_SHOW_USER,
   reducerFunc,
 } from './user-helpers';
+import { ROLES } from '../../utilities/enums';
 
 export default class User extends React.Component {
   constructor(props) {
@@ -70,7 +71,7 @@ export default class User extends React.Component {
       loggedUser: { role },
     } = this.props;
     const { isOpen, selectedModal } = this.state;
-    const isAdmin = role === 'Admin';
+    const isAdmin = role === ROLES.ADMIN;
 
     return (
       <>

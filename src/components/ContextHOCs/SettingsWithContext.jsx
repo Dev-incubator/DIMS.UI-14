@@ -1,5 +1,5 @@
-import { UserContext } from '../../App/userContext';
-import { ThemeContext } from '../../App/themeContext';
+import { UserContext } from '../RootProvider/userContext';
+import { ThemeContext } from '../RootProvider/themeContext';
 import Settings from '../../pages/Settings';
 
 export default function SettingsWithContext(props) {
@@ -7,7 +7,7 @@ export default function SettingsWithContext(props) {
     <ThemeContext.Consumer>
       {(themeContext) => (
         <UserContext.Consumer>
-          {(userContext) => <Settings {...props} {...userContext} theme={themeContext} />}
+          {(userContext) => <Settings {...props} {...userContext} {...themeContext} />}
         </UserContext.Consumer>
       )}
     </ThemeContext.Consumer>
