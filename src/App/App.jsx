@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Login from '../pages/Login';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
 import { getRoleDependedRoutes } from '../components/Routes';
 import PageNotFound from '../pages/PageNotFound';
+import LoginWithContext from '../components/ContextHOCs/LoginWithContext';
 
-const App = ({ userContext, userContext: { isLogged, loggedUser } }) => {
+const App = ({ isLogged, loggedUser }) => {
   const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
   const isLoggedRedirector = isLogged ? null : <Redirect to='/' />;
 
@@ -15,7 +15,7 @@ const App = ({ userContext, userContext: { isLogged, loggedUser } }) => {
       <BrowserRouter>
         <div className={classes.app}>
           <Switch>
-            <Route exact path='/' render={(props) => <Login {...props} {...userContext} />} />
+            <Route exact path='/' component={LoginWithContext} />
             <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
             <Route component={PageNotFound} />
           </Switch>
@@ -29,8 +29,6 @@ const App = ({ userContext, userContext: { isLogged, loggedUser } }) => {
 export default App;
 
 App.propTypes = {
-  userContext: PropTypes.shape({
-    isLogged: PropTypes.bool,
-    loggedUser: PropTypes.instanceOf(Object),
-  }).isRequired,
+  isLogged: PropTypes.bool.isRequired,
+  loggedUser: PropTypes.instanceOf(Object).isRequired,
 };

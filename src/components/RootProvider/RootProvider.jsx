@@ -91,7 +91,7 @@ export default class RootProvider extends React.PureComponent {
 
     return (
       <ThemeContext.Provider value={themeContext}>
-        <UserContext.Provider value={userContext}>{React.cloneElement(children, { userContext })}</UserContext.Provider>
+        <UserContext.Provider value={userContext}>{children}</UserContext.Provider>
       </ThemeContext.Provider>
     );
   }

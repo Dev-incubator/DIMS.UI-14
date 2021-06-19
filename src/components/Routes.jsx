@@ -65,7 +65,7 @@ export const getRoleDependedMenuLinks = ({ id, role }) => {
       permissions: [ROLES.ADMIN, ROLES.MENTOR],
     },
     {
-      title: 'Workflow',
+      title: 'Tasks',
       path: '/main/tasks',
       image: tasksIcon,
       permissions: [ROLES.ADMIN, ROLES.MENTOR],
