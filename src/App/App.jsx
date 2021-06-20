@@ -3,21 +3,19 @@ import PropTypes from 'prop-types';
 import classes from './App.module.css';
 import Main from '../components/Main/Main';
 import { getRoleDependedRoutes } from '../components/Routes';
-import PageNotFound from '../pages/PageNotFound';
-import LoginWithContext from '../components/ContextHOCs/LoginWithContext';
+import Homepage from '../components/Homepage/Homepage';
 
 const App = ({ isLogged, loggedUser }) => {
   const routes = isLogged ? getRoleDependedRoutes(loggedUser) : null;
-  const isLoggedRedirector = isLogged ? null : <Redirect to='/' />;
+  const isLoggedRedirector = isLogged ? null : <Redirect to='/login' />;
 
   return (
     <>
       <BrowserRouter>
         <div className={classes.app}>
           <Switch>
-            <Route exact path='/' component={LoginWithContext} />
             <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
-            <Route component={PageNotFound} />
+            <Route path='/' component={Homepage} />
           </Switch>
         </div>
         {isLoggedRedirector}

@@ -4,9 +4,8 @@ import classes from './Aside.module.css';
 import MenuWithContext from '../ContextHOCs/MenuWithContext';
 
 const Aside = ({ isOpen }) => {
-  const className = isOpen ? `${classes.aside} ${classes.active}` : `${classes.aside}`;
   return (
-    <aside className={className}>
+    <aside className={isOpen ? `${classes.aside} ${classes.active}` : `${classes.aside}`}>
       <MenuWithContext />
     </aside>
   );

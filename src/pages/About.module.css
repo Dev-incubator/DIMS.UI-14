@@ -1,0 +1,29 @@
+.main {
+  padding: 2rem 0;
+}
+
+.title {
+  margin: 0;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 300;
+}
+
+
+.roles__wrapper {
+  margin-top: 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tech__wrapper {
+  margin-top: 2rem;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(4, 250px);
+  grid-template-rows: repeat(2, minmax(250px, auto));
+  gap: 1rem;
+  grid-auto-columns: 250px;
+  grid-auto-rows: minmax(250px, auto);
+}

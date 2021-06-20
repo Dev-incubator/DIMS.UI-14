@@ -6,8 +6,7 @@ import Button from '../components/Button/Button';
 import GoogleButton from '../components/Button/GoogleButton';
 import debounce from '../utilities/debounce';
 import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
-import LoginInput from '../components/Login/LoginInput';
-import LoginHeader from '../components/Login/LoginHeader';
+import LoginInput from '../components/Homepage/Login/LoginInput';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
 import { ROLES } from '../utilities/enums';
 
@@ -109,7 +108,6 @@ export default class Login extends React.PureComponent {
 
     return (
       <>
-        <LoginHeader />
         <h2 className={classes.welcome}>
           Welcome <span>back!</span>
         </h2>

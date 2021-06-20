@@ -1,0 +1,39 @@
+.features__item {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.features__item_reversed {
+  flex-direction: row-reverse;
+}
+
+.features__image {
+  width: 20rem;
+}
+
+.features__image img {
+  width: 100%;
+}
+
+.features__text {
+  margin-left: 5rem;
+  width: 20rem;
+}
+
+.features__item_reversed .features__text {
+  margin-left: 0;
+  margin-right: 5rem;
+}
+
+.features__title {
+  font-weight: 400;
+  font-size: 1.25rem;
+  color: var(--about-secondary-color);
+}
+
+.features__descr {
+  margin-top: 1rem;
+  line-height: 1.25rem;
+}

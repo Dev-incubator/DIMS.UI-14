@@ -1,0 +1,26 @@
+.tech__item {
+  padding: 1.5rem;
+  border: 1px solid var(--about-border-color);
+}
+
+.tech__icon {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+}
+
+.tech__icon img {
+  height: 100%;
+}
+
+.tech__title {
+  margin: 1rem 0 0 0;
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  color: var(--about-secondary-color);
+}
+
+.tech_text {
+  margin: 1rem 0 0 0;
+}
