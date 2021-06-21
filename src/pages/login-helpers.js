@@ -4,7 +4,6 @@ export const LOGIN_ONCHANGE = 'LOGIN_ONCHANGE';
 export const LOGIN_VALIDATE_FIELDS = 'LOGIN_VALIDATE_FIELDS';
 export const LOGIN_VALIDATE_FORM = 'LOGIN_VALIDATE_FORM';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
-export const LOGIN_PASS = 'LOGIN_PASS';
 
 export const reducerFunc = (prevState, action) => {
   let state;

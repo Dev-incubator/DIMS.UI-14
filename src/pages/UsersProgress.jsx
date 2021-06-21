@@ -7,19 +7,8 @@ import Button from '../components/Button/Button';
 import Loader from '../components/Loader/Loader';
 import noop from '../shared/noop';
 import SimpleTrack from '../components/Track/SimpleTrack';
-import fetchProgress from '../store/actionCreators/fetchProgress';
 
 class UsersProgress extends React.PureComponent {
-  componentDidMount() {
-    const {
-      fetchProgress,
-      match: {
-        params: { userId },
-      },
-    } = this.props;
-    fetchProgress(userId);
-  }
-
   render() {
     const { allTracks, userFullName, loading } = this.props;
     if (loading) return <Loader />;
@@ -65,20 +54,34 @@ class UsersProgress extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const {
+    match: {
+      params: { userId },
+    },
+  } = ownProps;
+
+  const userData = state.users.usersList.find((user) => user.id === userId);
+  const userFullName = `${userData.username} ${userData.surname}`;
+  const allTracks = userData.tasks.reduce((result, taskWithTrack) => {
+    const { title } = state.tasks.tasksList.find((task) => task.id === taskWithTrack.id);
+    const extendedTracks = taskWithTrack.tracks.map((track) => ({ ...track, title }));
+
+    return result.concat(extendedTracks);
+  }, []);
+
   return {
+    tasksList: state.tasks.tasksList,
     loading: state.app.loading,
-    userFullName: state.progress.userFullName,
-    allTracks: state.progress.allTracks,
+    userFullName,
+    allTracks,
   };
 };
 
-export default connect(mapStateToProps, { fetchProgress })(UsersProgress);
+export default connect(mapStateToProps, null)(UsersProgress);
 
 UsersProgress.propTypes = {
-  match: PropType.instanceOf(Object).isRequired,
   loading: PropType.bool.isRequired,
   userFullName: PropType.string.isRequired,
   allTracks: PropType.instanceOf(Array).isRequired,
-  fetchProgress: PropType.func.isRequired,
 };

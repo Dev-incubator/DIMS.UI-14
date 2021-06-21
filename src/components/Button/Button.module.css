@@ -43,6 +43,14 @@
   box-shadow: 0 0 5px 0 var(--button-create-hover-color);
 }
 
+.button.onScreen {
+  background-color: var(--button-onScreen-color);
+}
+.button.onScreen:hover {
+  background-color: var(--button-default-hover-color);
+  box-shadow: 0 0 5px 0 var(--button-default-hover-color);
+}
+
 .button[disabled] {
   background-color: var(--button-disabled-color);
 }
@@ -50,11 +58,4 @@
 .button[disabled]:hover {
   background-color: var(--button-disabled-color);
   box-shadow: 0 0 5px 0 var(--button-disabled-color);
-}
-.button.onScreen {
-  background-color: var(--button-onScreen-color);
-}
-.button.onScreen:hover {
-  background-color: var(--button-default-hover-color);
-  box-shadow: 0 0 5px 0 var(--button-default-hover-color);
 }

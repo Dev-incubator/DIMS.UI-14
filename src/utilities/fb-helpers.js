@@ -122,7 +122,7 @@ export const editTaskInUsers = (usersToAssign, usersToUnassign, taskId) => {
     addTaskToUser(taskId, assignedUserId);
   });
 };
-
+// unused with Redux (UsersTasks Page)
 export async function getTasks(array) {
   const tasksList = [];
   await Promise.all(
@@ -260,7 +260,7 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
       console.log(`Error with deleting TRACK id:${trackId} from task id:${taskId} in USER id:${userId}`, error);
     });
 };
-
+// unused with Redux (UsersTracks Page)
 export async function getTracks(userId, taskId) {
   const user = await getElementDataFromCollection(USERS, userId);
   const { tracks } = await user.tasks.find((item) => item.id === taskId);
@@ -273,7 +273,7 @@ const getTracksWithoutRequest = (tasks, taskId) => {
 
   return tracks;
 };
-
+// unused with Redux (Progress Page)
 export async function getAllTracksFromAllTasks(tasks) {
   const allTracks = tasks.reduce(async (result, task) => {
     const taskData = await getElementDataFromCollection(TASKS, task.id);
