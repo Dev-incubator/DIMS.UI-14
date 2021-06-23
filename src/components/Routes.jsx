@@ -55,7 +55,7 @@ export const getRoleDependedRoutes = ({ role }) => {
     </Switch>
   );
 };
-
+// {role, id} destructures from loggedUser
 export const getRoleDependedMenuLinks = ({ id, role }) => {
   const menuList = [
     {

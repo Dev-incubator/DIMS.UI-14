@@ -1,5 +1,5 @@
 import React from 'react';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 import classes from './Task.module.css';
 import Modal from '../Modals/Modal';
@@ -101,9 +101,9 @@ export default class Task extends React.Component {
 }
 
 Task.propTypes = {
-  taskData: PropType.instanceOf(Object).isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
-  tableIndex: PropType.number.isRequired,
-  deleteTask: PropType.func.isRequired,
-  editTask: PropType.func.isRequired,
+  taskData: PropTypes.instanceOf(Object).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  tableIndex: PropTypes.number.isRequired,
+  deleteTask: PropTypes.func.isRequired,
+  editTask: PropTypes.func.isRequired,
 };

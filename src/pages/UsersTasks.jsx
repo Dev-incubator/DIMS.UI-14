@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import Button from '../components/Button/Button';
 import noop from '../shared/noop';
@@ -11,12 +11,17 @@ import { ROLES } from '../utilities/enums';
 import fetchUsers from '../store/actionCreators/fetchUsers';
 import fetchTasks from '../store/actionCreators/fetchTasks';
 import Loader from '../components/Loader/Loader';
+import { createUserFullName, getUserDataById, getUserTasks } from '../store/store-helpers';
 
 class UsersTasks extends React.PureComponent {
   componentDidMount() {
     const { fetchUsers, usersList, tasksList, fetchTasks } = this.props;
-    if (!usersList.length) fetchUsers();
-    if (!tasksList.length) fetchTasks();
+    if (!usersList.length) {
+      fetchUsers();
+    }
+    if (!tasksList.length) {
+      fetchTasks();
+    }
   }
 
   changeStatus = (taskId, newStatus) => {
@@ -45,7 +50,9 @@ class UsersTasks extends React.PureComponent {
     } = this.props;
     const isUser = role === ROLES.USER;
 
-    if (loading) return <Loader />;
+    if (loading) {
+      return <Loader />;
+    }
 
     const tasks = tasksWithStatus.map((task, index) => {
       const taskObj = tasksList.find((item) => item.id === task.id);
@@ -113,13 +120,11 @@ const mapStateToProps = (state, ownProps) => {
       usersList: state.users.usersList,
     };
   }
-  const userData = state.users.usersList.find((user) => user.id === userId);
-  const userFullName = `${userData.username} ${userData.surname}`;
+  const userData = getUserDataById(state, userId);
+  const userFullName = createUserFullName(userData);
   const tasksWithStatus = userData.tasks;
   // It's not similar tasksList as in another pages (it's mapped tasksList).
-  const tasksList = tasksWithStatus.map((taskWithStatus) =>
-    state.tasks.tasksList.find((task) => task.id === taskWithStatus.id),
-  );
+  const tasksList = getUserTasks(state, userData);
 
   return {
     loading: state.app.loading,
@@ -134,13 +139,15 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, { fetchUsers, fetchTasks })(UsersTasks);
 
 UsersTasks.propTypes = {
-  loading: PropType.bool.isRequired,
-  userId: PropType.string.isRequired,
-  userFullName: PropType.string.isRequired,
-  tasksWithStatus: PropType.instanceOf(Array).isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
-  tasksList: PropType.instanceOf(Array).isRequired,
-  loggedUser: PropType.instanceOf(Object).isRequired,
-  fetchUsers: PropType.func.isRequired,
-  fetchTasks: PropType.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  userId: PropTypes.string.isRequired,
+  userFullName: PropTypes.string.isRequired,
+  tasksWithStatus: PropTypes.instanceOf(Array).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  tasksList: PropTypes.instanceOf(Array).isRequired,
+  loggedUser: PropTypes.shape({
+    role: PropTypes.string.isRequired,
+  }).isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  fetchTasks: PropTypes.func.isRequired,
 };

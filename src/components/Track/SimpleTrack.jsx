@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './SimpleTrack.module.css';
 import { getInternationalDate } from '../../utilities/internationalization';
 
@@ -15,9 +15,9 @@ export default function SimpleTrack({ tableIndex, note, name, date, title }) {
 }
 
 SimpleTrack.propTypes = {
-  tableIndex: PropType.number.isRequired,
-  note: PropType.string.isRequired,
-  name: PropType.string.isRequired,
-  date: PropType.string.isRequired,
-  title: PropType.string.isRequired,
+  tableIndex: PropTypes.number.isRequired,
+  note: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };

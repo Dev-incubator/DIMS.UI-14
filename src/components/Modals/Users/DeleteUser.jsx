@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './DeleteUser.module.css';
 import Button from '../../Button/Button';
 
@@ -26,7 +26,7 @@ export default function DeleteUser({ user, closeFunc, liftUpDeleteUser }) {
 }
 
 DeleteUser.propTypes = {
-  user: PropType.instanceOf(Object).isRequired,
-  liftUpDeleteUser: PropType.func.isRequired,
-  closeFunc: PropType.func.isRequired,
+  user: PropTypes.instanceOf(Object).isRequired,
+  liftUpDeleteUser: PropTypes.func.isRequired,
+  closeFunc: PropTypes.func.isRequired,
 };

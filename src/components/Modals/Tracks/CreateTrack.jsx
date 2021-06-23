@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classes from './CreateTrack.module.css';
 import Button from '../../Button/Button';
@@ -134,10 +134,10 @@ export default class CreateTrack extends React.PureComponent {
 }
 
 CreateTrack.propTypes = {
-  task: PropType.shape({
-    startDate: PropType.string,
-    title: PropType.string,
+  task: PropTypes.shape({
+    startDate: PropTypes.string,
+    title: PropTypes.string,
   }).isRequired,
-  closeFunc: PropType.func.isRequired,
-  liftUpCreateTrack: PropType.func.isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  liftUpCreateTrack: PropTypes.func.isRequired,
 };

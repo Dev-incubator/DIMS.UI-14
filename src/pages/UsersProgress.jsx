@@ -1,17 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import classes from './UsersProgress.module.css';
 import Button from '../components/Button/Button';
 import Loader from '../components/Loader/Loader';
 import noop from '../shared/noop';
 import SimpleTrack from '../components/Track/SimpleTrack';
+import { createUserFullName, getAllTracksWithTaskTitle, getUserDataById } from '../store/store-helpers';
 
 class UsersProgress extends React.PureComponent {
   render() {
     const { allTracks, userFullName, loading } = this.props;
-    if (loading) return <Loader />;
+
+    if (loading) {
+      return <Loader />;
+    }
 
     const trackItems = allTracks.map((track, index) => {
       return (
@@ -61,14 +65,9 @@ const mapStateToProps = (state, ownProps) => {
     },
   } = ownProps;
 
-  const userData = state.users.usersList.find((user) => user.id === userId);
-  const userFullName = `${userData.username} ${userData.surname}`;
-  const allTracks = userData.tasks.reduce((result, taskWithTrack) => {
-    const { title } = state.tasks.tasksList.find((task) => task.id === taskWithTrack.id);
-    const extendedTracks = taskWithTrack.tracks.map((track) => ({ ...track, title }));
-
-    return result.concat(extendedTracks);
-  }, []);
+  const userData = getUserDataById(state, userId);
+  const userFullName = createUserFullName(userData);
+  const allTracks = getAllTracksWithTaskTitle(state, userData);
 
   return {
     tasksList: state.tasks.tasksList,
@@ -81,7 +80,7 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, null)(UsersProgress);
 
 UsersProgress.propTypes = {
-  loading: PropType.bool.isRequired,
-  userFullName: PropType.string.isRequired,
-  allTracks: PropType.instanceOf(Array).isRequired,
+  loading: PropTypes.bool.isRequired,
+  userFullName: PropTypes.string.isRequired,
+  allTracks: PropTypes.instanceOf(Array).isRequired,
 };

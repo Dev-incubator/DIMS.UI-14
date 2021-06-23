@@ -1,5 +1,5 @@
 import React from 'react';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../components/Loader/Loader';
 import Button from '../components/Button/Button';
@@ -24,8 +24,12 @@ class Tasks extends React.PureComponent {
   componentDidMount() {
     const { usersList, tasksList, fetchTasks, fetchUsers } = this.props;
 
-    if (!usersList.length) fetchUsers();
-    if (!tasksList.length) fetchTasks();
+    if (!usersList.length) {
+      fetchUsers();
+    }
+    if (!tasksList.length) {
+      fetchTasks();
+    }
   }
 
   deleteTask = (selectedId) => {
@@ -56,7 +60,9 @@ class Tasks extends React.PureComponent {
   render() {
     const { loading, tasksList, usersList, isModalOpen, selectedModal, openCreateTaskModal, toggleModal } = this.props;
 
-    if (loading) return <Loader />;
+    if (loading) {
+      return <Loader />;
+    }
 
     const tasks = tasksList.map((task, index) => {
       return (
@@ -120,13 +126,13 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
 
 Tasks.propTypes = {
-  fetchTasks: PropType.func.isRequired,
-  fetchUsers: PropType.func.isRequired,
-  openCreateTaskModal: PropType.func.isRequired,
-  toggleModal: PropType.func.isRequired,
-  tasksList: PropType.instanceOf(Array).isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
-  selectedModal: PropType.string.isRequired,
-  loading: PropType.bool.isRequired,
-  isModalOpen: PropType.bool.isRequired,
+  fetchTasks: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  openCreateTaskModal: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  tasksList: PropTypes.instanceOf(Array).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  selectedModal: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  isModalOpen: PropTypes.bool.isRequired,
 };

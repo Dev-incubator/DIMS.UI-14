@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import noop from '../shared/noop';
 import Button from '../components/Button/Button';
@@ -12,6 +12,7 @@ import Loader from '../components/Loader/Loader';
 import openCreateTrackModal from '../store/actionCreators/openCreateTrackModal';
 import toggleModal from '../store/actionCreators/toggleModal';
 import fetchUsers from '../store/actionCreators/fetchUsers';
+import { getTaskDataById, getTaskTracksById } from '../store/store-helpers';
 
 class UsersTracks extends React.PureComponent {
   createTrack = (newTrack) => {
@@ -39,7 +40,9 @@ class UsersTracks extends React.PureComponent {
       toggleModal,
     } = this.props;
 
-    if (loading) return <Loader />;
+    if (loading) {
+      return <Loader />;
+    }
 
     const tracksList = tracks.map((track, index) => {
       return (
@@ -93,8 +96,8 @@ const mapStateToProps = (state, ownProps) => {
       params: { userId, taskId },
     },
   } = ownProps;
-  const taskData = state.tasks.tasksList.find((task) => task.id === taskId);
-  const { tracks } = state.users.usersList.find((user) => user.id === userId).tasks.find((task) => task.id === taskId);
+  const taskData = getTaskDataById(state, taskId);
+  const tracks = getTaskTracksById(state, userId, taskId);
 
   return {
     app: state.app,
@@ -114,16 +117,16 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(UsersTracks);
 
 UsersTracks.propTypes = {
-  app: PropType.shape({
-    isModalOpen: PropType.bool,
-    selectedModal: PropType.string,
-    loading: PropType.bool,
+  app: PropTypes.shape({
+    isModalOpen: PropTypes.bool,
+    selectedModal: PropTypes.string,
+    loading: PropTypes.bool,
   }).isRequired,
-  userId: PropType.string.isRequired,
-  taskId: PropType.string.isRequired,
-  taskData: PropType.instanceOf(Object).isRequired,
-  tracks: PropType.instanceOf(Array).isRequired,
-  toggleModal: PropType.func.isRequired,
-  openCreateTrackModal: PropType.func.isRequired,
-  fetchUsers: PropType.func.isRequired,
+  userId: PropTypes.string.isRequired,
+  taskId: PropTypes.string.isRequired,
+  taskData: PropTypes.instanceOf(Object).isRequired,
+  tracks: PropTypes.instanceOf(Array).isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  openCreateTrackModal: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
 };

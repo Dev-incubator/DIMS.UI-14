@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classes from './Aside.module.css';
 import MenuWithContext from '../ContextHOCs/MenuWithContext';
@@ -11,14 +11,8 @@ const Aside = ({ isOpen }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isOpen: state.menu.isOpen,
-  };
-};
-
-export default connect(mapStateToProps, null)(Aside);
+export default connect(({ menu: { isOpen } }) => ({ isOpen }), null)(Aside);
 
 Aside.propTypes = {
-  isOpen: PropType.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
 };

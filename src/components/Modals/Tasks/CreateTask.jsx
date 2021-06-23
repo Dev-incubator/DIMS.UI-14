@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classes from './CreateTask.module.css';
 import Button from '../../Button/Button';
@@ -166,7 +166,7 @@ export default class CreateTask extends React.PureComponent {
 }
 
 CreateTask.propTypes = {
-  closeFunc: PropType.func.isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
-  liftUpCreateTask: PropType.func.isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  liftUpCreateTask: PropTypes.func.isRequired,
 };

@@ -1,9 +1,9 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classes from './EditUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-
+import { ROLES, SEX, DIRECTIONS } from '../../../utilities/enums';
 import { EDIT_USER_ONCHANGE, EDIT_USER_VALIDATE_FIELDS, EDIT_USER_VALIDATE_FORM, reducerFunc } from './user-helpers';
 
 import debounce from '../../../utilities/debounce';
@@ -199,7 +199,14 @@ export default class EditUser extends React.PureComponent {
                 value={direction}
                 onChange={this.onChange}
                 error={directionError}
-                options='React, Angular, Java, .NET, Salesforce, PHP'
+                options={[
+                  DIRECTIONS.REACT,
+                  DIRECTIONS.ANGULAR,
+                  DIRECTIONS.JAVA,
+                  DIRECTIONS.NET,
+                  DIRECTIONS.SALESFORCE,
+                  DIRECTIONS.PHP,
+                ]}
               />
               <CraftInput
                 id='sex'
@@ -207,7 +214,7 @@ export default class EditUser extends React.PureComponent {
                 title='Sex'
                 value={sex}
                 onChange={this.onChange}
-                options='Male, Female'
+                options={[SEX.MALE, SEX.FEMALE]}
               />
               <CraftInput
                 id='role'
@@ -216,7 +223,7 @@ export default class EditUser extends React.PureComponent {
                 type='select'
                 value={role}
                 onChange={this.onChange}
-                options='Admin, Mentor, User'
+                options={[ROLES.ADMIN, ROLES.MENTOR, ROLES.USER]}
                 error={roleError}
               />
               <CraftInput
@@ -315,7 +322,7 @@ export default class EditUser extends React.PureComponent {
 }
 
 EditUser.propTypes = {
-  closeFunc: PropType.func.isRequired,
-  liftUpEditUser: PropType.func.isRequired,
-  user: PropType.instanceOf(Object).isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  liftUpEditUser: PropTypes.func.isRequired,
+  user: PropTypes.instanceOf(Object).isRequired,
 };

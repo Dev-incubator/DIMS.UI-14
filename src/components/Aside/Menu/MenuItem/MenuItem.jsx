@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import classes from './MenuItem.module.css';
 
@@ -12,7 +12,7 @@ export default function MenuItem({ title, path, image }) {
 }
 
 MenuItem.propTypes = {
-  title: PropType.string.isRequired,
-  path: PropType.string.isRequired,
-  image: PropType.string.isRequired,
+  title: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
 };

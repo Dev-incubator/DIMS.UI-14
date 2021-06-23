@@ -1,5 +1,5 @@
 import React from 'react';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import Button from '../Button/Button';
 import classes from './User.module.css';
@@ -117,9 +117,9 @@ export default class User extends React.Component {
 }
 
 User.propTypes = {
-  userData: PropType.instanceOf(Object).isRequired,
-  loggedUser: PropType.instanceOf(Object).isRequired,
-  tableIndex: PropType.number.isRequired,
-  deleteUser: PropType.func.isRequired,
-  editUser: PropType.func.isRequired,
+  userData: PropTypes.instanceOf(Object).isRequired,
+  loggedUser: PropTypes.instanceOf(Object).isRequired,
+  tableIndex: PropTypes.number.isRequired,
+  deleteUser: PropTypes.func.isRequired,
+  editUser: PropTypes.func.isRequired,
 };

@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './ShowTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
@@ -27,7 +27,7 @@ export default function ShowTask({ task, closeFunc, usersList }) {
 }
 
 ShowTask.propTypes = {
-  task: PropType.instanceOf(Object).isRequired,
-  closeFunc: PropType.func.isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
+  task: PropTypes.instanceOf(Object).isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
 };

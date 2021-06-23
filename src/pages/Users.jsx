@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { ROLES } from '../utilities/enums';
 import Loader from '../components/Loader/Loader';
 import Button from '../components/Button/Button';
@@ -25,8 +25,12 @@ import fetchTasks from '../store/actionCreators/fetchTasks';
 class Users extends React.PureComponent {
   componentDidMount() {
     const { fetchUsers, fetchTasks, tasksList, usersList } = this.props;
-    if (!usersList.length) fetchUsers();
-    if (!tasksList.length) fetchTasks();
+    if (!usersList.length) {
+      fetchUsers();
+    }
+    if (!tasksList.length) {
+      fetchTasks();
+    }
   }
 
   deleteUser = (selectedId) => {
@@ -63,7 +67,9 @@ class Users extends React.PureComponent {
       app: { isModalOpen, loading, selectedModal },
     } = this.props;
 
-    if (loading) return <Loader />;
+    if (loading) {
+      return <Loader />;
+    }
 
     const users = usersList.map((user, index) => {
       return (
@@ -127,16 +133,18 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(Users);
 
 Users.propTypes = {
-  loggedUser: PropType.instanceOf(Object).isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
-  tasksList: PropType.instanceOf(Array).isRequired,
-  fetchUsers: PropType.func.isRequired,
-  fetchTasks: PropType.func.isRequired,
-  app: PropType.shape({
-    isModalOpen: PropType.bool,
-    selectedModal: PropType.string,
-    loading: PropType.bool,
+  loggedUser: PropTypes.shape({
+    role: PropTypes.string.isRequired,
   }).isRequired,
-  toggleModal: PropType.func.isRequired,
-  openCreateUserModal: PropType.func.isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  tasksList: PropTypes.instanceOf(Array).isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  fetchTasks: PropTypes.func.isRequired,
+  app: PropTypes.shape({
+    isModalOpen: PropTypes.bool,
+    selectedModal: PropTypes.string,
+    loading: PropTypes.bool,
+  }).isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  openCreateUserModal: PropTypes.func.isRequired,
 };

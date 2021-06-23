@@ -14,12 +14,13 @@ export default function TechFeature({ img, title, descr }) {
 }
 
 TechFeature.propTypes = {
-  img: PropTypes.instanceOf(Object).isRequired,
+  img: PropTypes.string,
   title: PropTypes.string,
   descr: PropTypes.string,
 };
 
 TechFeature.defaultProps = {
+  img: '',
   title: '',
   descr: '',
 };

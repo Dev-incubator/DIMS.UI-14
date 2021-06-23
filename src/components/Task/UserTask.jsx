@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import classes from './UserTask.module.css';
 import Button from '../Button/Button';
@@ -39,13 +39,13 @@ export default function UserTask({ userId, taskId, tableIndex, status, isUser, s
 }
 
 UserTask.propTypes = {
-  tableIndex: PropType.number.isRequired,
-  isUser: PropType.bool.isRequired,
-  taskId: PropType.string.isRequired,
-  userId: PropType.string.isRequired,
-  startDate: PropType.string.isRequired,
-  deadLine: PropType.string.isRequired,
-  title: PropType.string.isRequired,
-  status: PropType.string.isRequired,
-  actFunc: PropType.func.isRequired,
+  tableIndex: PropTypes.number.isRequired,
+  isUser: PropTypes.bool.isRequired,
+  taskId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  startDate: PropTypes.string.isRequired,
+  deadLine: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  actFunc: PropTypes.func.isRequired,
 };

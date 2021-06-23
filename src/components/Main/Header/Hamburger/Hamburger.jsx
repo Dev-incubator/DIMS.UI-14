@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import toggleMenu from '../../../../store/actionCreators/toggleMenu';
 import classes from './Hamburger.module.css';
 
@@ -28,6 +28,6 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(Hamburger);
 
 Hamburger.propTypes = {
-  toggleMenu: PropType.func.isRequired,
-  isOpen: PropType.bool.isRequired,
+  toggleMenu: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
 };

@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './Modal.module.css';
 import DeleteUser from './Users/DeleteUser';
 import CreateUser from './Users/CreateUser';
@@ -65,11 +65,11 @@ export default function Modal({ item, list, selectedModal, closeFunc, actFunc })
 }
 
 Modal.propTypes = {
-  item: PropType.instanceOf(Object),
-  list: PropType.instanceOf(Array),
-  closeFunc: PropType.func.isRequired,
-  actFunc: PropType.func,
-  selectedModal: PropType.string.isRequired,
+  item: PropTypes.instanceOf(Object),
+  list: PropTypes.instanceOf(Array),
+  closeFunc: PropTypes.func.isRequired,
+  actFunc: PropTypes.func,
+  selectedModal: PropTypes.string.isRequired,
 };
 
 Modal.defaultProps = {

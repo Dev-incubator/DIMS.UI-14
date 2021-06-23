@@ -28,5 +28,7 @@ export default App;
 
 App.propTypes = {
   isLogged: PropTypes.bool.isRequired,
-  loggedUser: PropTypes.instanceOf(Object).isRequired,
+  loggedUser: PropTypes.shape({
+    role: PropTypes.string,
+  }).isRequired,
 };

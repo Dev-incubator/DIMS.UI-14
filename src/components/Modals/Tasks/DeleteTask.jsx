@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './DeleteTask.module.css';
 import Button from '../../Button/Button';
 
@@ -20,7 +20,7 @@ export default function DeleteTask({ task, closeFunc, liftUpDeleteTask }) {
 }
 
 DeleteTask.propTypes = {
-  task: PropType.instanceOf(Object).isRequired,
-  liftUpDeleteTask: PropType.func.isRequired,
-  closeFunc: PropType.func.isRequired,
+  task: PropTypes.instanceOf(Object).isRequired,
+  liftUpDeleteTask: PropTypes.func.isRequired,
+  closeFunc: PropTypes.func.isRequired,
 };
