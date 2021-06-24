@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './DeleteTrack.module.css';
 import Button from '../../Button/Button';
 
@@ -20,10 +20,10 @@ export default function DeleteTrack({ track, closeFunc, liftUpDeleteTrack }) {
 }
 
 DeleteTrack.propTypes = {
-  track: PropType.shape({
-    note: PropType.string,
-    title: PropType.string,
+  track: PropTypes.shape({
+    note: PropTypes.string,
+    title: PropTypes.string,
   }).isRequired,
-  liftUpDeleteTrack: PropType.func.isRequired,
-  closeFunc: PropType.func.isRequired,
+  liftUpDeleteTrack: PropTypes.func.isRequired,
+  closeFunc: PropTypes.func.isRequired,
 };

@@ -1,83 +1,75 @@
 import React from 'react';
-import PropType from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { ROLES } from '../utilities/enums';
+import Loader from '../components/Loader/Loader';
 import Button from '../components/Button/Button';
 import classes from './Users.module.css';
 import UserWithContext from '../components/ContextHOCs/UserWithContext';
 import Modal from '../components/Modals/Modal';
-import { USERS_MODAL_TOGGLE, USERS_UPDATE, USERS_MODAL_CREATE_USER, reducerFunc } from './users-helpers';
 import {
   setElemToDB,
   deleteElemFromDB,
   deleteUserFromTask,
   editElemInDB,
   USERS,
-  getAllElementsFromCollection,
   createAuthForNewUser,
   deleteUserAuth,
   updateUserAuthData,
 } from '../utilities/fb-helpers';
+import toggleModal from '../store/actionCreators/toggleModal';
+import fetchUsers from '../store/actionCreators/fetchUsers';
+import openCreateUserModal from '../store/actionCreators/openCreateUserModal';
+import fetchTasks from '../store/actionCreators/fetchTasks';
 
-export default class Users extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      selectedModal: '',
-      usersList: [],
-    };
-    this.updateData = this.updateData.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.deleteUser = this.deleteUser.bind(this);
-    this.editUser = this.editUser.bind(this);
-    this.createUser = this.createUser.bind(this);
-  }
-
+class Users extends React.PureComponent {
   componentDidMount() {
-    this.updateData();
+    const { fetchUsers, fetchTasks, tasksList, usersList } = this.props;
+    if (!usersList.length) {
+      fetchUsers();
+    }
+    if (!tasksList.length) {
+      fetchTasks();
+    }
   }
 
-  openCreateModal = () => this.toggleModal(USERS_MODAL_CREATE_USER);
-
-  toggleModal(modalType) {
-    this.setState((prevState) => reducerFunc(prevState, { type: USERS_MODAL_TOGGLE, modalType }));
-  }
-
-  async updateData() {
-    const usersList = await getAllElementsFromCollection(USERS);
-    this.setState((prevState) => reducerFunc(prevState, { type: USERS_UPDATE, usersList }));
-  }
-
-  deleteUser(selectedId) {
-    const { usersList } = this.state;
+  deleteUser = (selectedId) => {
+    const { usersList, fetchUsers } = this.props;
     const userToDelete = usersList.find((item) => item.id === selectedId);
     const assignedTasks = userToDelete.tasks;
-    deleteElemFromDB(USERS, selectedId, this.updateData);
+    deleteElemFromDB(USERS, selectedId, fetchUsers);
     deleteUserAuth(userToDelete);
     if (assignedTasks.length) {
       assignedTasks.forEach((assignedTask) => deleteUserFromTask(selectedId, assignedTask.id));
     }
-  }
+  };
 
-  editUser(editedUser) {
-    const { usersList } = this.state;
+  editUser = (editedUser) => {
+    const { usersList, fetchUsers } = this.props;
     const prevUserData = usersList.find((item) => item.id === editedUser.id);
-    editElemInDB(USERS, editedUser, this.updateData);
+    editElemInDB(USERS, editedUser, fetchUsers);
     updateUserAuthData(prevUserData, editedUser);
-  }
+  };
 
-  createUser(newUserRef, newUser) {
-    setElemToDB(newUserRef, newUser, this.updateData);
+  createUser = (newUserRef, newUser) => {
+    const { fetchUsers } = this.props;
+    setElemToDB(newUserRef, newUser, fetchUsers);
     const { email, password } = newUser;
     createAuthForNewUser(email, password);
-  }
+  };
 
   render() {
-    const { usersList, selectedModal, isOpen } = this.state;
     const {
+      usersList,
+      openCreateUserModal,
+      toggleModal,
       loggedUser: { role },
+      app: { isModalOpen, loading, selectedModal },
     } = this.props;
-    const isAdmin = role === ROLES.ADMIN;
+
+    if (loading) {
+      return <Loader />;
+    }
 
     const users = usersList.map((user, index) => {
       return (
@@ -91,6 +83,8 @@ export default class Users extends React.Component {
       );
     });
 
+    const isAdmin = role === ROLES.ADMIN;
+
     return (
       <div>
         <div className={classes.header}>
@@ -98,7 +92,7 @@ export default class Users extends React.Component {
             Users <span>({`${usersList.length}`})</span>
           </h2>
           {isAdmin ? (
-            <Button onClick={this.openCreateModal} roleClass='create'>
+            <Button onClick={openCreateUserModal} roleClass='create'>
               Create
             </Button>
           ) : null}
@@ -115,12 +109,42 @@ export default class Users extends React.Component {
           </div>
           {users}
         </div>
-        {isOpen ? <Modal closeFunc={this.toggleModal} actFunc={this.createUser} selectedModal={selectedModal} /> : null}
+        {isModalOpen ? <Modal closeFunc={toggleModal} actFunc={this.createUser} selectedModal={selectedModal} /> : null}
       </div>
     );
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    app: state.app,
+    usersList: state.users.usersList,
+    tasksList: state.tasks.tasksList,
+  };
+};
+
+const mapDispatchToProps = {
+  toggleModal,
+  fetchUsers,
+  fetchTasks,
+  openCreateUserModal,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Users);
+
 Users.propTypes = {
-  loggedUser: PropType.instanceOf(Object).isRequired,
+  loggedUser: PropTypes.shape({
+    role: PropTypes.string.isRequired,
+  }).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  tasksList: PropTypes.instanceOf(Array).isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  fetchTasks: PropTypes.func.isRequired,
+  app: PropTypes.shape({
+    isModalOpen: PropTypes.bool,
+    selectedModal: PropTypes.string,
+    loading: PropTypes.bool,
+  }).isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  openCreateUserModal: PropTypes.func.isRequired,
 };

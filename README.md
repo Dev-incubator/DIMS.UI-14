@@ -1,70 +1,47 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/7744832f-1820-4384-95f5-8cb2d4baf2c2/deploy-status)](https://app.netlify.com/sites/dims-cra/deploys)
-[![codecov](https://codecov.io/gh/Dev-incubator/DIMS-cra/branch/main/graph/badge.svg?token=OGFOYAC3VK)](https://codecov.io/gh/Dev-incubator/DIMS-cra)
-[![Build Status](https://travis-ci.com/Dev-incubator/DIMS-cra.svg?branch=main)](https://travis-ci.com/Dev-incubator/DIMS-cra)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/Dev-incubator/DIMS-cra)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-![GitHub issues](https://img.shields.io/github/issues/Dev-incubator/DIMS-cra)
+<h1 align="center">Welcome to HyperCube Management System 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.0--development-blue.svg?cacheSeconds=2592000" />
+  <a href="https://github.com/Dev1LtJ/DIMS.UI-14#readme" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <a href="https://github.com/Dev-incubator/DIMS-cra/graphs/commit-activity" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  </a>
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/Dev1LtJ/HyperCube Management System" />
+  </a>
+</p>
 
-## Important notes ⚠️️
+> In the few words, it is a system for getting tasks and tracking time
 
-### The link to principal idea of design [mockup](https://symu.co/freebies/templates-4/merkury-dashboard-psd-template/). <br/> **You do not have to follow it, just use it as a guide**
+## Install
 
-### In **[wiki-ui](https://github.com/Dev-incubator/Wiki-UI)** you can find all other guides regarding project structure, plan etc.
-
-### Read about good commits, git workflow requirements etc. in repo [guide](https://github.com/Dev-incubator/git)
-
-### Main scripts 📄
-
-```bash
-  "start" - start app
-  "build" - build app
-  "test" - run tests
-  "test:coverage:ci:codecov" - run test and submit codecoverage to codecov
-  "lint" - check your code with eslint
-  "lint:fix" - fix your code with eslint
-  "cm" - run commitizen to create a good commit
+```sh
+npm install
 ```
 
-To commit message you have to write following commands
+## Usage
 
-```bash
-   git add .
-   git commit
+```sh
+npm run start
 ```
 
-then follow commitizen prompts and write a good commit
+## Run tests
 
-### Main technologies ℹ️
+```sh
+npm run test
+```
 
-- react
-- eslint + air bnb style guide + some additional rules
-- husky and lint-staged
-- prettier and eslint
-- codecov with Travis CI
-- commitizen
+## Author
 
-### Publish with netlify button 🚀
+👤 **Aliaksandr Razumny**
 
-You need to have an account on [netlify](https://www.netlify.com/)
+* Github: [@Dev1LtJ](https://github.com/Dev1LtJ)
+* LinkedIn: [@Aliaksandr Razumny](https://www.linkedin.com/in/aliaksandr-razumny-7b982a1ba/)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Dev-incubator/DIMS-cra#CUSTOM_LOGO=https://live.staticflickr.com/65535/50695950941_526e15d2f1.jpg&DIMS_TITLE="Dims%20app")
+## Show your support
 
-If you click this button, it’ll authenticate you in Netlify and you'll have to choose a repository name. <br/>
-Netlify will automatically create a new repo for you that looks exactly like this one. <br/>
-Next, it will build and deploy the new site on Netlify bringing you to the site dashboard when the build is completed.
+Give a ⭐️ if this project helped you!
 
-### Env variables 📝
-
-- **CUSTOM_LOGO** - here you can pass a link to your app logo
-- **DIMS_TITLE** - here you can pass your app title
-
-#### VSCode integration
-
-For ESLint warnings inline with your code and run formatting automatically with Prettier in VSCode, we need to install:
-
-- **[ESLint](https://github.com/Microsoft/vscode-eslint)** extension
-- **[Prettier](https://github.com/prettier/prettier-vscode)** extension
-- Edit **VSCode** settings.json to set up formatting on every file change or on every save
-
-#### Basic webstorm setup is in .idea
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

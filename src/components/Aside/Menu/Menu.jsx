@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './Menu.module.css';
 import logo from '../../../icons/logo.svg';
 import logoutIcon from '../../../icons/logout.svg';
@@ -30,7 +30,10 @@ export default function Menu({ loggedUser, setUserContext, isLogged }) {
 }
 
 Menu.propTypes = {
-  setUserContext: PropType.func.isRequired,
-  loggedUser: PropType.instanceOf(Object).isRequired,
-  isLogged: PropType.bool.isRequired,
+  setUserContext: PropTypes.func.isRequired,
+  loggedUser: PropTypes.shape({
+    id: PropTypes.string,
+    role: PropTypes.string,
+  }).isRequired,
+  isLogged: PropTypes.bool.isRequired,
 };

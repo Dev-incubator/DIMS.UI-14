@@ -78,6 +78,9 @@ body[data-theme='light'] {
   --pageNotFound-button-text: var(--white);
   --pageNotFound-button: var(--lightBlue);
   --pageNotFound-button-hover: var(--skyBlue);
+  --about-divider-color: var(--lightBlue);
+  --about-border-color: var(--lightBlue);
+  --about-secondary-color: var(--darkGray);
 }
 
 body[data-theme='dark'] {
@@ -146,6 +149,9 @@ body[data-theme='dark'] {
   --pageNotFound-button-text: var(--lightGray);
   --pageNotFound-button: var(--darkBlue);
   --pageNotFound-button-hover: var(--skyBlue);
+  --about-divider-color: var(--skyBlue);
+  --about-border-color: var(--skyBlue);
+  --about-secondary-color: var(--darkGray);
 }
 
 /*color palette*/

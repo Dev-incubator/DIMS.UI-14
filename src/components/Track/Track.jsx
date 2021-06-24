@@ -1,5 +1,5 @@
 import React from 'react';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './Track.module.css';
 import Button from '../Button/Button';
 import Modal from '../Modals/Modal';
@@ -93,14 +93,14 @@ export default class Track extends React.Component {
 }
 
 Track.propTypes = {
-  tableIndex: PropType.number.isRequired,
-  taskData: PropType.instanceOf(Object).isRequired,
-  track: PropType.shape({
-    id: PropType.string,
-    name: PropType.string,
-    date: PropType.string,
-    note: PropType.string,
+  tableIndex: PropTypes.number.isRequired,
+  taskData: PropTypes.instanceOf(Object).isRequired,
+  track: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    date: PropTypes.string,
+    note: PropTypes.string,
   }).isRequired,
-  editTrack: PropType.func.isRequired,
-  deleteTrack: PropType.func.isRequired,
+  editTrack: PropTypes.func.isRequired,
+  deleteTrack: PropTypes.func.isRequired,
 };

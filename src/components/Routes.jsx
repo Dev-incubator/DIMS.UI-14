@@ -8,6 +8,7 @@ import PageNotFound from '../pages/PageNotFound';
 import settingsIcon from '../icons/settings.svg';
 import usersIcon from '../icons/user.svg';
 import tasksIcon from '../icons/tasks.svg';
+import WorkFlowIcon from '../icons/workflow.svg';
 import MenuItem from './Aside/Menu/MenuItem/MenuItem';
 import SettingsWithContext from './ContextHOCs/SettingsWithContext';
 import { ROLES } from '../utilities/enums';
@@ -54,30 +55,35 @@ export const getRoleDependedRoutes = ({ role }) => {
     </Switch>
   );
 };
+// {role, id} destructures from loggedUser
+export const getRoleDependedMenuLinks = ({ id, role }) => {
+  const menuList = [
+    {
+      title: 'Users',
+      path: '/main/users',
+      image: usersIcon,
+      permissions: [ROLES.ADMIN, ROLES.MENTOR],
+    },
+    {
+      title: 'Tasks',
+      path: '/main/tasks',
+      image: tasksIcon,
+      permissions: [ROLES.ADMIN, ROLES.MENTOR],
+    },
+    {
+      title: 'WorkFlow',
+      path: `/main/users/${id}/tasks`,
+      image: WorkFlowIcon,
+      permissions: [ROLES.USER],
+    },
+    {
+      title: 'Settings',
+      path: '/main/settings',
+      image: settingsIcon,
+      permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
+    },
+  ];
 
-const menuList = [
-  {
-    title: 'Users',
-    path: '/main/users',
-    image: usersIcon,
-    permissions: [ROLES.ADMIN, ROLES.MENTOR],
-  },
-  {
-    title: 'Workflow',
-    path: '/main/tasks',
-    image: tasksIcon,
-    permissions: [ROLES.ADMIN, ROLES.MENTOR],
-  },
-  {
-    title: 'Settings',
-    path: '/main/settings',
-    image: settingsIcon,
-    permissions: [ROLES.ADMIN, ROLES.MENTOR, ROLES.USER],
-  },
-];
-
-// {role} destructures from loggedUser
-export const getRoleDependedMenuLinks = ({ role }) => {
   return menuList
     .filter((menuObj) => menuObj.permissions.includes(role))
     .map((menuObj, index) => (

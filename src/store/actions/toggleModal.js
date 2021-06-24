@@ -1,0 +1,3 @@
+const TOGGLE_MODAL = 'APP/TOGGLE_MODAL';
+
+export default TOGGLE_MODAL;

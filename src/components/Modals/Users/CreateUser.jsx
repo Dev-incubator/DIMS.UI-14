@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
@@ -329,6 +329,6 @@ export default class CreateUser extends React.Component {
 }
 
 CreateUser.propTypes = {
-  closeFunc: PropType.func.isRequired,
-  liftUpCreateUser: PropType.func.isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  liftUpCreateUser: PropTypes.func.isRequired,
 };

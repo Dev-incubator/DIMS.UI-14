@@ -1,58 +1,35 @@
 import React from 'react';
-import PropType from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import Button from '../components/Button/Button';
 import noop from '../shared/noop';
 import classes from './UsersTasks.module.css';
 import UserTask from '../components/Task/UserTask';
-import { USERS, getElementDataFromCollection, updateStatus, getTasks } from '../utilities/fb-helpers';
-import { reducerFunc, TASKS_STATUS_UPDATE, TASKS_SET_DATA } from './usersTasks-helpers';
+import { updateStatus } from '../utilities/fb-helpers';
 import { ROLES } from '../utilities/enums';
+import fetchUsers from '../store/actionCreators/fetchUsers';
+import fetchTasks from '../store/actionCreators/fetchTasks';
+import Loader from '../components/Loader/Loader';
+import { createUserFullName, getUserDataById, getUserTasks } from '../store/store-helpers';
 
-export default class UsersTasks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userId: '',
-      userFullName: '',
-      tasksList: [],
-      tasksWithStatus: [],
-    };
-    this.changeStatus = this.changeStatus.bind(this);
-    this.updateData = this.updateData.bind(this);
-    this.selectActFunc = this.selectActFunc.bind(this);
+class UsersTasks extends React.PureComponent {
+  componentDidMount() {
+    const { fetchUsers, usersList, tasksList, fetchTasks } = this.props;
+    if (!usersList.length) {
+      fetchUsers();
+    }
+    if (!tasksList.length) {
+      fetchTasks();
+    }
   }
 
-  async componentDidMount() {
-    const {
-      match: {
-        params: { userId },
-      },
-    } = this.props;
+  changeStatus = (taskId, newStatus) => {
+    const { userId, fetchUsers } = this.props;
+    updateStatus(userId, taskId, newStatus, fetchUsers);
+  };
 
-    const userData = await getElementDataFromCollection(USERS, userId);
-    const userFullName = `${userData.username} ${userData.surname}`;
-    const tasksWithStatus = userData.tasks;
-    const tasksList = await getTasks(tasksWithStatus);
-
-    this.setState((prevState) =>
-      reducerFunc(prevState, { type: TASKS_SET_DATA, userFullName, tasksWithStatus, tasksList, userId }),
-    );
-  }
-
-  changeStatus(taskId, newStatus) {
-    const { userId } = this.state;
-    updateStatus(userId, taskId, newStatus, this.updateData);
-  }
-
-  async updateData() {
-    const { userId } = this.state;
-    const userData = await getElementDataFromCollection(USERS, userId);
-    const tasksWithStatus = userData.tasks;
-    this.setState((prevState) => reducerFunc(prevState, { type: TASKS_STATUS_UPDATE, list: tasksWithStatus }));
-  }
-
-  selectActFunc(id, status) {
+  selectActFunc = (id, status) => {
     const {
       loggedUser: { role },
     } = this.props;
@@ -60,14 +37,22 @@ export default class UsersTasks extends React.Component {
     if (!isUser) {
       this.changeStatus(id, status);
     }
-  }
+  };
 
   render() {
-    const { userFullName, tasksWithStatus, tasksList, userId } = this.state;
     const {
+      loading,
+      userFullName,
+      tasksWithStatus,
+      tasksList,
+      userId,
       loggedUser: { role },
     } = this.props;
     const isUser = role === ROLES.USER;
+
+    if (loading) {
+      return <Loader />;
+    }
 
     const tasks = tasksWithStatus.map((task, index) => {
       const taskObj = tasksList.find((item) => item.id === task.id);
@@ -119,7 +104,50 @@ export default class UsersTasks extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const {
+    match: {
+      params: { userId },
+    },
+  } = ownProps;
+  if (!state.users.usersList.length || !state.tasks.tasksList.length) {
+    return {
+      loading: state.app.loading,
+      userId,
+      userFullName: '',
+      tasksWithStatus: [],
+      tasksList: [],
+      usersList: state.users.usersList,
+    };
+  }
+  const userData = getUserDataById(state, userId);
+  const userFullName = createUserFullName(userData);
+  const tasksWithStatus = userData.tasks;
+  // It's not similar tasksList as in another pages (it's mapped tasksList).
+  const tasksList = getUserTasks(state, userData);
+
+  return {
+    loading: state.app.loading,
+    userId,
+    userFullName,
+    tasksWithStatus,
+    tasksList,
+    usersList: state.users.usersList,
+  };
+};
+
+export default connect(mapStateToProps, { fetchUsers, fetchTasks })(UsersTasks);
+
 UsersTasks.propTypes = {
-  match: PropType.instanceOf(Object).isRequired,
-  loggedUser: PropType.instanceOf(Object).isRequired,
+  loading: PropTypes.bool.isRequired,
+  userId: PropTypes.string.isRequired,
+  userFullName: PropTypes.string.isRequired,
+  tasksWithStatus: PropTypes.instanceOf(Array).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  tasksList: PropTypes.instanceOf(Array).isRequired,
+  loggedUser: PropTypes.shape({
+    role: PropTypes.string.isRequired,
+  }).isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  fetchTasks: PropTypes.func.isRequired,
 };

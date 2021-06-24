@@ -1,5 +1,5 @@
 import React from 'react';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import Button from '../components/Button/Button';
 import ThemeButton from '../components/Button/ThemeButton';
 import classes from './Settings.module.css';
@@ -63,7 +63,9 @@ export default class Settings extends React.Component {
 }
 
 Settings.propTypes = {
-  loggedUser: PropType.instanceOf(Object).isRequired,
-  theme: PropType.string.isRequired,
-  setThemeContext: PropType.func.isRequired,
+  loggedUser: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+  }).isRequired,
+  theme: PropTypes.string.isRequired,
+  setThemeContext: PropTypes.func.isRequired,
 };

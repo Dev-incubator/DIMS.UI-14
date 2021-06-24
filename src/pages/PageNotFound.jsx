@@ -54,7 +54,7 @@ const PageNotFound = () => {
         <p>You can go to the homepage by clicking the button below:</p>
         <div className={classes.buttonsCon}>
           <div className={classes.actionLinkWrap}>
-            <NavLink to='/'>Go Homepage</NavLink>
+            <NavLink to='/login'>Go Homepage</NavLink>
           </div>
         </div>
       </div>

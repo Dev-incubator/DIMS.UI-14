@@ -1,82 +1,68 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Loader from '../components/Loader/Loader';
 import Button from '../components/Button/Button';
 import classes from './Tasks.module.css';
 import Task from '../components/Task/Task';
 import Modal from '../components/Modals/Modal';
-import { TASKS_MODAL_TOGGLE, TASKS_UPDATE, reducerFunc, TASKS_MODAL_CREATE_TASK } from './tasks-helpers';
 import {
   setElemToDB,
   deleteElemFromDB,
   editElemInDB,
   TASKS,
-  USERS,
   addTaskToUser,
   deleteTaskFromUser,
   editTaskInUsers,
-  getAllElementsFromCollection,
 } from '../utilities/fb-helpers';
+import fetchTasks from '../store/actionCreators/fetchTasks';
+import fetchUsers from '../store/actionCreators/fetchUsers';
+import openCreateTaskModal from '../store/actionCreators/openCreateTaskModal';
+import toggleModal from '../store/actionCreators/toggleModal';
 
-export default class Tasks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      selectedModal: '',
-      tasksList: [],
-      usersList: [],
-    };
-    this.deleteTask = this.deleteTask.bind(this);
-    this.createTask = this.createTask.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.editTask = this.editTask.bind(this);
-    this.updateData = this.updateData.bind(this);
-  }
-
+class Tasks extends React.PureComponent {
   componentDidMount() {
-    getAllElementsFromCollection(USERS).then((usersList) =>
-      this.setState((prevState) => reducerFunc(prevState, { type: TASKS_UPDATE, name: 'usersList', list: usersList })),
-    );
-    this.updateData();
+    const { usersList, tasksList, fetchTasks, fetchUsers } = this.props;
+
+    if (!usersList.length) {
+      fetchUsers();
+    }
+    if (!tasksList.length) {
+      fetchTasks();
+    }
   }
 
-  openCreateModal = () => this.toggleModal(TASKS_MODAL_CREATE_TASK);
-
-  deleteTask(selectedId) {
-    const { tasksList } = this.state;
+  deleteTask = (selectedId) => {
+    const { fetchTasks, tasksList } = this.props;
     const assignedUsers = tasksList.find((task) => task.id === selectedId).selectedUsers;
-    deleteElemFromDB(TASKS, selectedId, this.updateData);
+    deleteElemFromDB(TASKS, selectedId, fetchTasks);
     assignedUsers.forEach((assignedUserId) => deleteTaskFromUser(selectedId, assignedUserId));
-  }
+  };
 
-  editTask(editedTask) {
-    const { tasksList } = this.state;
+  editTask = (editedTask) => {
+    const { fetchTasks, tasksList } = this.props;
     const prevAssignedUsers = tasksList.find((task) => task.id === editedTask.id).selectedUsers;
     const newAssignedUsers = editedTask.selectedUsers;
     const usersToUnassign = prevAssignedUsers.filter((assignedUserId) => !newAssignedUsers.includes(assignedUserId));
     const usersToAssign = newAssignedUsers.filter((assignedUserId) => !prevAssignedUsers.includes(assignedUserId));
-    editElemInDB(TASKS, editedTask, this.updateData);
+    editElemInDB(TASKS, editedTask, fetchTasks);
     editTaskInUsers(usersToAssign, usersToUnassign, editedTask.id);
-  }
+  };
 
-  createTask(newTaskRef, newTask) {
+  createTask = (newTaskRef, newTask) => {
+    const { fetchTasks } = this.props;
     const newTaskId = newTask.id;
     const assignedUsers = newTask.selectedUsers;
-    setElemToDB(newTaskRef, newTask, this.updateData);
+    setElemToDB(newTaskRef, newTask, fetchTasks);
     assignedUsers.forEach((assignedUserId) => addTaskToUser(newTaskId, assignedUserId));
-  }
-
-  toggleModal(modalType = '') {
-    this.setState((prevState) => reducerFunc(prevState, { type: TASKS_MODAL_TOGGLE, modalType }));
-  }
-
-  updateData() {
-    getAllElementsFromCollection(TASKS).then((tasksList) =>
-      this.setState((prevState) => reducerFunc(prevState, { type: TASKS_UPDATE, name: 'tasksList', list: tasksList })),
-    );
-  }
+  };
 
   render() {
-    const { tasksList, usersList, selectedModal, isOpen } = this.state;
+    const { loading, tasksList, usersList, isModalOpen, selectedModal, openCreateTaskModal, toggleModal } = this.props;
+
+    if (loading) {
+      return <Loader />;
+    }
 
     const tasks = tasksList.map((task, index) => {
       return (
@@ -97,7 +83,7 @@ export default class Tasks extends React.Component {
           <h2 className={classes.title}>
             Tasks <span>({`${tasksList.length}`})</span>
           </h2>
-          <Button roleClass='create' onClick={this.openCreateModal}>
+          <Button roleClass='create' onClick={openCreateTaskModal}>
             Create
           </Button>
         </div>
@@ -112,15 +98,41 @@ export default class Tasks extends React.Component {
           </div>
           {tasks}
         </div>
-        {isOpen ? (
-          <Modal
-            list={usersList}
-            closeFunc={this.toggleModal}
-            actFunc={this.createTask}
-            selectedModal={selectedModal}
-          />
+        {isModalOpen ? (
+          <Modal list={usersList} closeFunc={toggleModal} actFunc={this.createTask} selectedModal={selectedModal} />
         ) : null}
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    tasksList: state.tasks.tasksList,
+    usersList: state.users.usersList,
+    selectedModal: state.app.selectedModal,
+    loading: state.app.loading,
+    isModalOpen: state.app.isModalOpen,
+  };
+};
+
+const mapDispatchToProps = {
+  fetchTasks,
+  fetchUsers,
+  openCreateTaskModal,
+  toggleModal,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
+
+Tasks.propTypes = {
+  fetchTasks: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
+  openCreateTaskModal: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  tasksList: PropTypes.instanceOf(Array).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
+  selectedModal: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  isModalOpen: PropTypes.bool.isRequired,
+};

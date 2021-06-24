@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './Validator.module.css';
 
 export default function Validator({ error }) {
@@ -6,5 +6,5 @@ export default function Validator({ error }) {
 }
 
 Validator.propTypes = {
-  error: PropType.string.isRequired,
+  error: PropTypes.string.isRequired,
 };

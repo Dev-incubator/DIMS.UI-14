@@ -1,13 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './Login.module.css';
 import Button from '../components/Button/Button';
 import GoogleButton from '../components/Button/GoogleButton';
 import debounce from '../utilities/debounce';
 import { LOGIN_ONCHANGE, LOGIN_FAIL, LOGIN_VALIDATE_FIELDS, LOGIN_VALIDATE_FORM, reducerFunc } from './login-helpers';
-import LoginInput from '../components/Login/LoginInput';
-import LoginHeader from '../components/Login/LoginHeader';
+import LoginInput from '../components/Homepage/Login/LoginInput';
 import { signInUser, signInWithGoogle } from '../utilities/fb-helpers';
 import { ROLES } from '../utilities/enums';
 
@@ -109,7 +108,6 @@ export default class Login extends React.PureComponent {
 
     return (
       <>
-        <LoginHeader />
         <h2 className={classes.welcome}>
           Welcome <span>back!</span>
         </h2>
@@ -139,13 +137,15 @@ export default class Login extends React.PureComponent {
 }
 
 Login.propTypes = {
-  setUserContext: PropType.func.isRequired,
-  isLogged: PropType.bool.isRequired,
-  loggedUser: PropType.instanceOf(Object).isRequired,
+  setUserContext: PropTypes.func.isRequired,
+  isLogged: PropTypes.bool.isRequired,
+  loggedUser: PropTypes.shape({
+    role: PropTypes.string,
+    id: PropTypes.string,
+  }).isRequired,
 };
 
-const getRedirectPath = (loggedUser) => {
-  const { role, id } = loggedUser;
+const getRedirectPath = ({ role, id }) => {
   let path = null;
   if (role === ROLES.ADMIN) {
     path = '/main/users';

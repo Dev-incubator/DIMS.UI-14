@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classes from './EditTask.module.css';
 import Button from '../../Button/Button';
@@ -157,8 +157,8 @@ export default class EditTask extends React.PureComponent {
 }
 
 EditTask.propTypes = {
-  closeFunc: PropType.func.isRequired,
-  liftUpEditTask: PropType.func.isRequired,
-  task: PropType.instanceOf(Object).isRequired,
-  usersList: PropType.instanceOf(Array).isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  liftUpEditTask: PropTypes.func.isRequired,
+  task: PropTypes.instanceOf(Object).isRequired,
+  usersList: PropTypes.instanceOf(Array).isRequired,
 };

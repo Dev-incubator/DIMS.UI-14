@@ -1,80 +1,49 @@
 import React from 'react';
-import PropType from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import noop from '../shared/noop';
 import Button from '../components/Button/Button';
 import classes from './UsersTracks.module.css';
 import Modal from '../components/Modals/Modal';
-import {
-  TASKS,
-  getElementDataFromCollection,
-  createTrack,
-  editTrack,
-  deleteTrack,
-  getTracks,
-} from '../utilities/fb-helpers';
+import { createTrack, editTrack, deleteTrack } from '../utilities/fb-helpers';
 import Track from '../components/Track/Track';
-import { TRACKS_MODAL_CREATE_TRACK, TRACKS_MODAL_TOGGLE, reducerFunc } from './usersTracks-helpers';
+import Loader from '../components/Loader/Loader';
+import openCreateTrackModal from '../store/actionCreators/openCreateTrackModal';
+import toggleModal from '../store/actionCreators/toggleModal';
+import fetchUsers from '../store/actionCreators/fetchUsers';
+import { getTaskDataById, getTaskTracksById } from '../store/store-helpers';
 
-export default class UsersTracks extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      selectedModal: '',
-      userId: '',
-      taskId: '',
-      taskData: {},
-      tracks: [],
-    };
-    this.toggleModal = this.toggleModal.bind(this);
-    this.createTrack = this.createTrack.bind(this);
-    this.editTrack = this.editTrack.bind(this);
-    this.deleteTrack = this.deleteTrack.bind(this);
-    this.updateData = this.updateData.bind(this);
-  }
+class UsersTracks extends React.PureComponent {
+  createTrack = (newTrack) => {
+    const { userId, taskId, fetchUsers } = this.props;
+    createTrack(userId, taskId, newTrack, fetchUsers);
+  };
 
-  async componentDidMount() {
-    const {
-      match: {
-        params: { userId, taskId },
-      },
-    } = this.props;
+  editTrack = (editedTrack) => {
+    const { userId, taskId, fetchUsers } = this.props;
+    editTrack(userId, taskId, editedTrack, fetchUsers);
+  };
 
-    const taskData = await getElementDataFromCollection(TASKS, taskId);
-    const tracks = await getTracks(userId, taskId);
-    this.setState({ userId, taskId, taskData, tracks });
-  }
-
-  openCreateModal = () => this.toggleModal(TRACKS_MODAL_CREATE_TRACK);
-
-  async updateData() {
-    const { userId, taskId } = this.state;
-    const tracks = await getTracks(userId, taskId);
-    this.setState({ tracks });
-  }
-
-  createTrack(newTrack) {
-    const { userId, taskId } = this.state;
-    createTrack(userId, taskId, newTrack, this.updateData);
-  }
-
-  editTrack(editedTrack) {
-    const { userId, taskId } = this.state;
-    editTrack(userId, taskId, editedTrack, this.updateData);
-  }
-
-  deleteTrack(trackId) {
-    const { userId, taskId } = this.state;
-    deleteTrack(userId, taskId, trackId, this.updateData);
-  }
-
-  toggleModal(modalType = '') {
-    this.setState((prevState) => reducerFunc(prevState, { type: TRACKS_MODAL_TOGGLE, modalType }));
-  }
+  deleteTrack = (trackId) => {
+    const { userId, taskId, fetchUsers } = this.props;
+    deleteTrack(userId, taskId, trackId, fetchUsers);
+  };
 
   render() {
-    const { userId, taskData, isOpen, selectedModal, tracks } = this.state;
+    const {
+      userId,
+      taskData,
+      app: { isModalOpen, loading, selectedModal },
+      tracks,
+      openCreateTrackModal,
+      toggleModal,
+    } = this.props;
+
+    if (loading) {
+      return <Loader />;
+    }
+
     const tracksList = tracks.map((track, index) => {
       return (
         <Track
@@ -98,7 +67,7 @@ export default class UsersTracks extends React.Component {
             <NavLink className={classes.navLink} to={`/main/users/${userId}/tasks`}>
               <Button onClick={noop}>Back</Button>
             </NavLink>
-            <Button onClick={this.openCreateModal} roleClass='create'>
+            <Button onClick={openCreateTrackModal} roleClass='create'>
               Create
             </Button>
           </div>
@@ -113,19 +82,51 @@ export default class UsersTracks extends React.Component {
           </div>
           {tracksList}
         </div>
-        {isOpen ? (
-          <Modal
-            item={taskData}
-            closeFunc={this.toggleModal}
-            actFunc={this.createTrack}
-            selectedModal={selectedModal}
-          />
+        {isModalOpen ? (
+          <Modal item={taskData} closeFunc={toggleModal} actFunc={this.createTrack} selectedModal={selectedModal} />
         ) : null}
       </div>
     );
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const {
+    match: {
+      params: { userId, taskId },
+    },
+  } = ownProps;
+  const taskData = getTaskDataById(state, taskId);
+  const tracks = getTaskTracksById(state, userId, taskId);
+
+  return {
+    app: state.app,
+    taskData,
+    tracks,
+    userId,
+    taskId,
+  };
+};
+
+const mapDispatchToProps = {
+  openCreateTrackModal,
+  toggleModal,
+  fetchUsers,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsersTracks);
+
 UsersTracks.propTypes = {
-  match: PropType.instanceOf(Object).isRequired,
+  app: PropTypes.shape({
+    isModalOpen: PropTypes.bool,
+    selectedModal: PropTypes.string,
+    loading: PropTypes.bool,
+  }).isRequired,
+  userId: PropTypes.string.isRequired,
+  taskId: PropTypes.string.isRequired,
+  taskData: PropTypes.instanceOf(Object).isRequired,
+  tracks: PropTypes.instanceOf(Array).isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  openCreateTrackModal: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired,
 };

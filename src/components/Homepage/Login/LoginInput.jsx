@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import classes from './LoginInput.module.css';
-import Validator from '../Modals/Users/Validator';
+import Validator from '../../Modals/Users/Validator';
 import passwordIcon from './icons/password.svg';
 import userIcon from './icons/user.svg';
 

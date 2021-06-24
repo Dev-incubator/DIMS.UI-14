@@ -1,35 +1,22 @@
 import React from 'react';
-import PropType from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import classes from './UsersProgress.module.css';
 import Button from '../components/Button/Button';
+import Loader from '../components/Loader/Loader';
 import noop from '../shared/noop';
-import { USERS, getElementDataFromCollection, getAllTracksFromAllTasks } from '../utilities/fb-helpers';
 import SimpleTrack from '../components/Track/SimpleTrack';
+import { createUserFullName, getAllTracksWithTaskTitle, getUserDataById } from '../store/store-helpers';
 
-export default class UsersProgress extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userFullName: '',
-      allTracks: [],
-    };
-  }
-
-  async componentDidMount() {
-    const {
-      match: {
-        params: { userId },
-      },
-    } = this.props;
-    const userData = await getElementDataFromCollection(USERS, userId);
-    const userFullName = `${userData.username} ${userData.surname}`;
-    const allTracks = await getAllTracksFromAllTasks(userData.tasks);
-    this.setState({ allTracks, userFullName });
-  }
-
+class UsersProgress extends React.PureComponent {
   render() {
-    const { allTracks, userFullName } = this.state;
+    const { allTracks, userFullName, loading } = this.props;
+
+    if (loading) {
+      return <Loader />;
+    }
+
     const trackItems = allTracks.map((track, index) => {
       return (
         <SimpleTrack
@@ -71,6 +58,29 @@ export default class UsersProgress extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const {
+    match: {
+      params: { userId },
+    },
+  } = ownProps;
+
+  const userData = getUserDataById(state, userId);
+  const userFullName = createUserFullName(userData);
+  const allTracks = getAllTracksWithTaskTitle(state, userData);
+
+  return {
+    tasksList: state.tasks.tasksList,
+    loading: state.app.loading,
+    userFullName,
+    allTracks,
+  };
+};
+
+export default connect(mapStateToProps, null)(UsersProgress);
+
 UsersProgress.propTypes = {
-  match: PropType.instanceOf(Object).isRequired,
+  loading: PropTypes.bool.isRequired,
+  userFullName: PropTypes.string.isRequired,
+  allTracks: PropTypes.instanceOf(Array).isRequired,
 };

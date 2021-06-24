@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import classes from './EditTrack.module.css';
 import Button from '../../Button/Button';
@@ -144,7 +144,7 @@ export default class EditTrack extends React.PureComponent {
 }
 
 EditTrack.propTypes = {
-  track: PropType.instanceOf(Object).isRequired,
-  closeFunc: PropType.func.isRequired,
-  liftUpEditTrack: PropType.func.isRequired,
+  track: PropTypes.instanceOf(Object).isRequired,
+  closeFunc: PropTypes.func.isRequired,
+  liftUpEditTrack: PropTypes.func.isRequired,
 };

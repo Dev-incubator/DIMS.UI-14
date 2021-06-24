@@ -122,7 +122,7 @@ export const editTaskInUsers = (usersToAssign, usersToUnassign, taskId) => {
     addTaskToUser(taskId, assignedUserId);
   });
 };
-
+// unused with Redux (UsersTasks Page)
 export async function getTasks(array) {
   const tasksList = [];
   await Promise.all(
@@ -261,30 +261,11 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
     });
 };
 
-export async function getTracks(userId, taskId) {
-  const user = await getElementDataFromCollection(USERS, userId);
-  const { tracks } = await user.tasks.find((item) => item.id === taskId);
-
-  return tracks;
-}
-
 const getTracksWithoutRequest = (tasks, taskId) => {
   const { tracks } = tasks.find((item) => item.id === taskId);
 
   return tracks;
 };
-
-export async function getAllTracksFromAllTasks(tasks) {
-  const allTracks = tasks.reduce(async (result, task) => {
-    const taskData = await getElementDataFromCollection(TASKS, task.id);
-    const { title } = taskData;
-    const extendedTracks = await Promise.all(task.tracks.map((track) => ({ ...track, title })));
-
-    return (await result).concat(extendedTracks);
-  }, []);
-
-  return allTracks;
-}
 
 export const createAuthForNewUser = async (email, password) => {
   try {
@@ -386,8 +367,7 @@ export const LogOut = async () => {
   }
 };
 
-export const resetUserPassword = async (loggedUser) => {
-  const { email } = loggedUser;
+export const resetUserPassword = async ({ email }) => {
   try {
     const auth = firebase.auth();
     await auth.sendPasswordResetEmail(email);

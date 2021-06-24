@@ -1,4 +1,4 @@
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 import classes from './Modal.module.css';
 import DeleteUser from './Users/DeleteUser';
 import CreateUser from './Users/CreateUser';
@@ -14,10 +14,10 @@ import DeleteTrack from './Tracks/DeleteTrack';
 import noop from '../../shared/noop';
 
 import { USER_MODAL_DELETE_USER, USER_MODAL_EDIT_USER, USER_MODAL_SHOW_USER } from '../User/user-helpers';
-import { USERS_MODAL_CREATE_USER } from '../../pages/users-helpers';
-import { TASKS_MODAL_CREATE_TASK } from '../../pages/tasks-helpers';
+import USERS_MODAL_CREATE_USER from '../../store/actions/openCreateUserModal';
+import TASKS_MODAL_CREATE_TASK from '../../store/actions/openCreateTaskModal';
+import TRACKS_MODAL_CREATE_TRACK from '../../store/actions/openCreateTrackModal';
 import { TASK_MODAL_DELETE_TASK, TASK_MODAL_SHOW_TASK, TASK_MODAL_EDIT_TASK } from '../Task/task-helpers';
-import { TRACKS_MODAL_CREATE_TRACK } from '../../pages/usersTracks-helpers';
 import { TRACK_MODAL_EDIT_TRACK, TRACK_MODAL_DELETE_TRACK } from '../Track/track-helpers';
 
 export default function Modal({ item, list, selectedModal, closeFunc, actFunc }) {
@@ -65,11 +65,11 @@ export default function Modal({ item, list, selectedModal, closeFunc, actFunc })
 }
 
 Modal.propTypes = {
-  item: PropType.instanceOf(Object),
-  list: PropType.instanceOf(Array),
-  closeFunc: PropType.func.isRequired,
-  actFunc: PropType.func,
-  selectedModal: PropType.string.isRequired,
+  item: PropTypes.instanceOf(Object),
+  list: PropTypes.instanceOf(Array),
+  closeFunc: PropTypes.func.isRequired,
+  actFunc: PropTypes.func,
+  selectedModal: PropTypes.string.isRequired,
 };
 
 Modal.defaultProps = {
