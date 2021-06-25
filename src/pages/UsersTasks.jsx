@@ -9,21 +9,10 @@ import UserTask from '../components/Task/UserTask';
 import { updateStatus } from '../utilities/fb-helpers';
 import { ROLES } from '../utilities/enums';
 import fetchUsers from '../store/actionCreators/fetchUsers';
-import fetchTasks from '../store/actionCreators/fetchTasks';
 import Loader from '../components/Loader/Loader';
 import { createUserFullName, getUserDataById, getUserTasks } from '../store/store-helpers';
 
 class UsersTasks extends React.PureComponent {
-  componentDidMount() {
-    const { fetchUsers, usersList, tasksList, fetchTasks } = this.props;
-    if (!usersList.length) {
-      fetchUsers();
-    }
-    if (!tasksList.length) {
-      fetchTasks();
-    }
-  }
-
   changeStatus = (taskId, newStatus) => {
     const { userId, fetchUsers } = this.props;
     updateStatus(userId, taskId, newStatus, fetchUsers);
@@ -117,7 +106,6 @@ const mapStateToProps = (state, ownProps) => {
       userFullName: '',
       tasksWithStatus: [],
       tasksList: [],
-      usersList: state.users.usersList,
     };
   }
   const userData = getUserDataById(state, userId);
@@ -132,22 +120,19 @@ const mapStateToProps = (state, ownProps) => {
     userFullName,
     tasksWithStatus,
     tasksList,
-    usersList: state.users.usersList,
   };
 };
 
-export default connect(mapStateToProps, { fetchUsers, fetchTasks })(UsersTasks);
+export default connect(mapStateToProps, { fetchUsers })(UsersTasks);
 
 UsersTasks.propTypes = {
   loading: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
   userFullName: PropTypes.string.isRequired,
   tasksWithStatus: PropTypes.instanceOf(Array).isRequired,
-  usersList: PropTypes.instanceOf(Array).isRequired,
   tasksList: PropTypes.instanceOf(Array).isRequired,
   loggedUser: PropTypes.shape({
     role: PropTypes.string.isRequired,
   }).isRequired,
   fetchUsers: PropTypes.func.isRequired,
-  fetchTasks: PropTypes.func.isRequired,
 };

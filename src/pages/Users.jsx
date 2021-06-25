@@ -20,19 +20,8 @@ import {
 import toggleModal from '../store/actionCreators/toggleModal';
 import fetchUsers from '../store/actionCreators/fetchUsers';
 import openCreateUserModal from '../store/actionCreators/openCreateUserModal';
-import fetchTasks from '../store/actionCreators/fetchTasks';
 
 class Users extends React.PureComponent {
-  componentDidMount() {
-    const { fetchUsers, fetchTasks, tasksList, usersList } = this.props;
-    if (!usersList.length) {
-      fetchUsers();
-    }
-    if (!tasksList.length) {
-      fetchTasks();
-    }
-  }
-
   deleteUser = (selectedId) => {
     const { usersList, fetchUsers } = this.props;
     const userToDelete = usersList.find((item) => item.id === selectedId);
@@ -126,7 +115,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   toggleModal,
   fetchUsers,
-  fetchTasks,
   openCreateUserModal,
 };
 
@@ -137,9 +125,7 @@ Users.propTypes = {
     role: PropTypes.string.isRequired,
   }).isRequired,
   usersList: PropTypes.instanceOf(Array).isRequired,
-  tasksList: PropTypes.instanceOf(Array).isRequired,
   fetchUsers: PropTypes.func.isRequired,
-  fetchTasks: PropTypes.func.isRequired,
   app: PropTypes.shape({
     isModalOpen: PropTypes.bool,
     selectedModal: PropTypes.string,

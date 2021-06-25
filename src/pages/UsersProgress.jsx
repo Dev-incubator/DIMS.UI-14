@@ -64,7 +64,14 @@ const mapStateToProps = (state, ownProps) => {
       params: { userId },
     },
   } = ownProps;
-
+  if (!state.users.usersList.length || !state.tasks.tasksList.length) {
+    return {
+      tasksList: [],
+      loading: state.app.loading,
+      userFullName: '',
+      allTracks: [],
+    };
+  }
   const userData = getUserDataById(state, userId);
   const userFullName = createUserFullName(userData);
   const allTracks = getAllTracksWithTaskTitle(state, userData);
