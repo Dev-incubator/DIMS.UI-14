@@ -1,159 +1,114 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import classes from './EditTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
+import { stateReducer, TASK_ONCHANGE, TASK_VALIDATE, validatorReducer } from '../modals-helpers';
+import { checkAllFormValidity } from '../../../utilities/form-validators';
 
-import { EDIT_TASK_ONCHANGE, EDIT_TASK_VALIDATE_FIELDS, EDIT_TASK_VALIDATE_FORM, reducerFunc } from './task-helpers';
-import debounce from '../../../utilities/debounce';
+export default function EditTask({ closeFunc, task, liftUpEditTask, usersList }) {
+  const onChangeSnapshot = useRef({});
+  const firstRender = useRef(true);
 
-export default class EditTask extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: {
-        title: '',
-        description: '',
-        startDate: '',
-        deadLine: '',
-        selectedUsers: [],
-      },
-      validator: {
-        title: true,
-        startDate: true,
-        deadLine: true,
-        selectedUsers: true,
-      },
-      errors: {
-        titleError: '',
-        startDateError: '',
-        deadLineError: '',
-        selectedUsersError: '',
-      },
-      usersList: [],
-      isValid: false,
-    };
-    this.onChange = this.onChange.bind(this);
-    this.liftUpEditTask = this.liftUpEditTask.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.validateFields = this.validateFields.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-  }
+  const [state, dispatchState] = useReducer(stateReducer, undefined, () => ({
+    ...task,
+  }));
 
-  componentDidMount() {
-    const { task, usersList } = this.props;
-    this.setState((prevState) => ({
-      ...prevState,
-      data: {
-        ...task,
-      },
-      usersList,
-    }));
-  }
+  const [validator, dispatchValidator] = useReducer(validatorReducer, undefined, () => ({
+    validator: {
+      title: true,
+      startDate: true,
+      deadLine: true,
+      selectedUsers: true,
+    },
+    errors: {
+      titleError: '',
+      startDateError: '',
+      deadLineError: '',
+      selectedUsersError: '',
+    },
+  }));
 
-  onChange(event) {
-    const { target } = event;
-    const { name, value } = target;
-    const targetType = target.type;
-    this.setState(
-      (prevState) =>
-        reducerFunc(prevState, {
-          type: EDIT_TASK_ONCHANGE,
-          name,
-          value,
-          targetType,
-        }),
-      debounce(() => {
-        this.validateFields(name, value, targetType);
-      }, 1000),
-    );
-  }
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
 
-  validateFields(fieldName, fieldValue, targetType) {
-    const state = reducerFunc(this.state, {
-      type: EDIT_TASK_VALIDATE_FIELDS,
-      fieldName,
-      fieldValue,
-      targetType,
-    });
-    this.setState(state, this.validateForm);
-  }
+      return;
+    }
+    setIsValid(checkAllFormValidity(validator.validator));
+  }, [validator.validator]);
 
-  validateForm() {
-    const state = reducerFunc(this.state, {
-      type: EDIT_TASK_VALIDATE_FORM,
-    });
-    this.setState(state);
-  }
+  useEffect(() => {
+    dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshot.current } });
+  }, [state.title, state.startDate, state.deadLine, state.selectedUsers]);
 
-  closeModal() {
-    const { closeFunc } = this.props;
-    closeFunc();
-  }
+  const [isValid, setIsValid] = useState(false);
 
-  liftUpEditTask() {
-    const { liftUpEditTask } = this.props;
-    const { data } = this.state;
-    const editedTask = { ...data };
+  const handleChange = (event) => {
+    const { name, value, type } = event.target;
+    onChangeSnapshot.current = { name, value, type };
+    dispatchState({ type: TASK_ONCHANGE, payload: { name, value, type } });
+  };
+
+  const editTask = () => {
+    const editedTask = { ...state };
     liftUpEditTask(editedTask);
-    this.closeModal();
-  }
+    closeFunc();
+  };
 
-  render() {
-    const {
-      isValid,
-      data: { title, description, startDate, deadLine, selectedUsers },
-      usersList,
-      errors: { titleError, startDateError, deadLineError, selectedUsersError },
-    } = this.state;
-
-    return (
-      <div className={classes.modal}>
-        <h3 className={classes.title}>Edit Task</h3>
-        <form>
-          <div className={classes.wrapper}>
-            <CraftInput title='Title' isRequired id='title' value={title} onChange={this.onChange} error={titleError} />
-            <CraftInput title='Description' id='description' value={description} onChange={this.onChange} />
-            <CraftInput
-              title='Start Date'
-              id='startDate'
-              isRequired
-              type='date'
-              value={startDate}
-              onChange={this.onChange}
-              error={startDateError}
-            />
-            <CraftInput
-              title='DeadLine'
-              isRequired
-              id='deadLine'
-              type='date'
-              value={deadLine}
-              onChange={this.onChange}
-              error={deadLineError}
-            />
-            <CraftInput
-              title='Users'
-              isRequired
-              id='selectedUsers'
-              type='checkbox'
-              value={selectedUsers}
-              options={usersList}
-              onChange={this.onChange}
-              error={selectedUsersError}
-            />
-          </div>
-          <div className={classes.requiredwarning}>* - these fields are required.</div>
-          <div className={classes.buttons}>
-            <Button onClick={this.liftUpEditTask} roleClass='edit' disabled={!isValid}>
-              Edit
-            </Button>
-            <Button onClick={this.closeModal}>Close</Button>
-          </div>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.modal}>
+      <h3 className={classes.title}>Edit Task</h3>
+      <form>
+        <div className={classes.wrapper}>
+          <CraftInput
+            title='Title'
+            isRequired
+            id='title'
+            value={state.title}
+            onChange={handleChange}
+            error={validator.errors.titleError}
+          />
+          <CraftInput title='Description' id='description' value={state.description} onChange={handleChange} />
+          <CraftInput
+            title='Start Date'
+            id='startDate'
+            isRequired
+            type='date'
+            value={state.startDate}
+            onChange={handleChange}
+            error={validator.errors.startDateError}
+          />
+          <CraftInput
+            title='DeadLine'
+            isRequired
+            id='deadLine'
+            type='date'
+            value={state.deadLine}
+            onChange={handleChange}
+            error={validator.errors.deadLineError}
+          />
+          <CraftInput
+            title='Users'
+            isRequired
+            id='selectedUsers'
+            type='checkbox'
+            value={state.selectedUsers}
+            options={usersList}
+            onChange={handleChange}
+            error={validator.errors.selectedUsersError}
+          />
+        </div>
+        <div className={classes.requiredwarning}>* - these fields are required.</div>
+        <div className={classes.buttons}>
+          <Button onClick={editTask} roleClass='edit' disabled={!isValid}>
+            Edit
+          </Button>
+          <Button onClick={() => closeFunc()}>Close</Button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 EditTask.propTypes = {

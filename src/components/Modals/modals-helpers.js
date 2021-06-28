@@ -74,3 +74,78 @@ export const useValidator = (initialState, password = '', startDate = '', ...tra
     isValid,
   };
 };
+
+export const TASK_ONCHANGE = 'TASK_ONCHANGE';
+export const TASK_VALIDATE = 'TASK_VALIDATE';
+
+export const stateReducer = (prevState, action) => {
+  switch (action.type) {
+    case TASK_ONCHANGE:
+      if (action.payload.type === 'checkbox') {
+        if (prevState.selectedUsers.find((id) => id === action.payload.name)) {
+          return {
+            ...prevState,
+            selectedUsers: prevState.selectedUsers.filter((id) => id !== action.payload.name),
+          };
+        }
+
+        return {
+          ...prevState,
+          selectedUsers: prevState.selectedUsers.concat(action.payload.name),
+        };
+      }
+
+      return {
+        ...prevState,
+        [action.payload.name]: action.payload.value,
+      };
+    default:
+      return prevState;
+  }
+};
+
+export const validatorReducer = (prevState, action) => {
+  switch (action.type) {
+    case TASK_VALIDATE:
+      if (action.payload.event.type === 'checkbox') {
+        const validity = !!action.payload.state.selectedUsers.length;
+        const errorMsg = validity ? '' : 'At least one user must be selected';
+
+        return {
+          ...prevState,
+          validator: {
+            ...prevState.validator,
+            selectedUsers: validity,
+          },
+          errors: {
+            ...prevState.errors,
+            selectedUsersError: errorMsg,
+          },
+        };
+      }
+      if (action.payload.event.name in prevState.validator) {
+        const { name, validity, errorMsg } = validateInput(
+          action.payload.event.name,
+          action.payload.event.value,
+          undefined,
+          action.payload.state.startDate,
+        );
+
+        return {
+          ...prevState,
+          validator: {
+            ...prevState.validator,
+            [name]: validity,
+          },
+          errors: {
+            ...prevState.errors,
+            [`${name}Error`]: errorMsg,
+          },
+        };
+      }
+
+      return prevState;
+    default:
+      return prevState;
+  }
+};
