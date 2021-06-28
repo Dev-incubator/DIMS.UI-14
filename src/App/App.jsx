@@ -15,7 +15,7 @@ const App = ({ isLogged, loggedUser }) => {
         <div className={classes.app}>
           <Switch>
             <Route path='/main' render={(props) => <Main {...props} routes={routes} />} />
-            <Route path='/' component={Homepage} />
+            <Route path='/' render={(props) => <Homepage {...props} isLogged={isLogged} />} />
           </Switch>
         </div>
         {isLoggedRedirector}
