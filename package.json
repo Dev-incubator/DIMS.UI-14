@@ -88,7 +88,7 @@
     "@testing-library/user-event": "13.1.9",
     "axios": "^0.21.1",
     "eslint": "7.26.0",
-    "firebase": "8.6.1",
+    "firebase": "8.6.8",
     "node-sass": "6.0.0",
     "prop-types": "15.7.2",
     "react": "17.0.2",
