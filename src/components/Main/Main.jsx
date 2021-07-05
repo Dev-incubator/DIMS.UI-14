@@ -15,9 +15,6 @@ export default function Main({ routes }) {
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
 

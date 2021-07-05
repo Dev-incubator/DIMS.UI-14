@@ -1,32 +1,36 @@
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 import classes from './EditTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import { useInput, useValidator } from '../modals-helpers';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 
 export default function EditTrack({ track: { id, date, note, title, name, startDate }, closeFunc, liftUpEditTrack }) {
-  const { state, onChange } = useInput({
+  const { state, onChange } = useInput(() => ({
     id,
     date,
     note,
     name,
-  });
+  }));
 
-  const { errors, isValid } = useValidator(
-    {
+  const { errors, validator } = useValidator(
+    () => ({
       name: true,
       date: true,
-    },
+    }),
     undefined,
     startDate,
-    ['name', state.name],
-    ['date', state.date],
+    useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]),
   );
+
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
   const editTrack = () => {
     liftUpEditTrack(state);
     closeFunc();
   };
+
+  const closeModal = () => closeFunc();
 
   return (
     <div className={classes.modal}>
@@ -58,7 +62,7 @@ export default function EditTrack({ track: { id, date, note, title, name, startD
           <Button onClick={editTrack} roleClass='edit' disabled={!isValid}>
             Edit
           </Button>
-          <Button onClick={() => closeFunc()}>Close</Button>
+          <Button onClick={closeModal}>Close</Button>
         </div>
       </form>
     </div>

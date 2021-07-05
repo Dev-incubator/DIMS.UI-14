@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useRef } from 'react';
-import { useInput, useValidator } from '../modals-helpers';
+import { useMemo, useRef } from 'react';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
@@ -11,7 +11,7 @@ import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers
 export default function CreateUser({ closeFunc, liftUpCreateUser }) {
   const newUserRef = useRef(createElemRefOnDB(USERS));
 
-  const { state, onChange } = useInput({
+  const { state, onChange } = useInput(() => ({
     id: newUserRef.current.id,
     username: '',
     surname: '',
@@ -30,10 +30,10 @@ export default function CreateUser({ closeFunc, liftUpCreateUser }) {
     averageScore: '',
     mathScore: '',
     tasks: [],
-  });
+  }));
 
-  const { errors, isValid } = useValidator(
-    {
+  const { errors, validator } = useValidator(
+    () => ({
       username: false,
       surname: false,
       email: false,
@@ -48,24 +48,46 @@ export default function CreateUser({ closeFunc, liftUpCreateUser }) {
       education: false,
       averageScore: false,
       mathScore: false,
-    },
+    }),
     state.password,
     undefined,
-    ['username', state.username],
-    ['surname', state.surname],
-    ['email', state.email],
-    ['direction', state.direction],
-    ['role', state.role],
-    ['password', state.password],
-    ['passwordRepeat', state.passwordRepeat],
-    ['dateOfBirth', state.dateOfBirth],
-    ['phone', state.phone],
-    ['skype', state.skype],
-    ['startDate', state.startDate],
-    ['education', state.education],
-    ['averageScore', state.averageScore],
-    ['mathScore', state.mathScore],
+    useMemo(
+      () => ({
+        username: state.username,
+        surname: state.surname,
+        email: state.email,
+        direction: state.direction,
+        role: state.role,
+        password: state.password,
+        passwordRepeat: state.passwordRepeat,
+        dateOfBirth: state.dateOfBirth,
+        phone: state.phone,
+        skype: state.skype,
+        startDate: state.startDate,
+        education: state.education,
+        averageScore: state.averageScore,
+        mathScore: state.mathScore,
+      }),
+      [
+        state.username,
+        state.surname,
+        state.email,
+        state.direction,
+        state.role,
+        state.password,
+        state.passwordRepeat,
+        state.dateOfBirth,
+        state.phone,
+        state.skype,
+        state.startDate,
+        state.education,
+        state.averageScore,
+        state.mathScore,
+      ],
+    ),
   );
+
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
   const createUser = () => {
     const newUser = { ...state, email: getLowerCasedStr(getTrimmedStr(state.email)) };
@@ -73,6 +95,8 @@ export default function CreateUser({ closeFunc, liftUpCreateUser }) {
     liftUpCreateUser(newUserRef.current, newUser);
     closeFunc();
   };
+
+  const closeModal = () => closeFunc();
 
   return (
     <div className={classes.modal}>
@@ -227,7 +251,7 @@ export default function CreateUser({ closeFunc, liftUpCreateUser }) {
         <Button onClick={createUser} roleClass='create' disabled={!isValid}>
           Create
         </Button>
-        <Button onClick={() => closeFunc()}>Close</Button>
+        <Button onClick={closeModal}>Close</Button>
       </div>
     </div>
   );

@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 import classes from './EditUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { ROLES, SEX, DIRECTIONS } from '../../../utilities/enums';
-import { useInput, useValidator } from '../modals-helpers';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers';
 
 export default function EditUser({ user, liftUpEditUser, closeFunc }) {
-  const { state, onChange } = useInput({
+  const { state, onChange } = useInput(() => ({
     ...user,
     passwordRepeat: user.password,
-  });
+  }));
 
-  const { errors, isValid } = useValidator(
-    {
+  const { errors, validator } = useValidator(
+    () => ({
       username: true,
       surname: true,
       email: true,
@@ -28,24 +29,46 @@ export default function EditUser({ user, liftUpEditUser, closeFunc }) {
       education: true,
       averageScore: true,
       mathScore: true,
-    },
+    }),
     state.password,
     undefined,
-    ['username', state.username],
-    ['surname', state.surname],
-    ['email', state.email],
-    ['direction', state.direction],
-    ['role', state.role],
-    ['password', state.password],
-    ['passwordRepeat', state.passwordRepeat],
-    ['dateOfBirth', state.dateOfBirth],
-    ['phone', state.phone],
-    ['skype', state.skype],
-    ['startDate', state.startDate],
-    ['education', state.education],
-    ['averageScore', state.averageScore],
-    ['mathScore', state.mathScore],
+    useMemo(
+      () => ({
+        username: state.username,
+        surname: state.surname,
+        email: state.email,
+        direction: state.direction,
+        role: state.role,
+        password: state.password,
+        passwordRepeat: state.passwordRepeat,
+        dateOfBirth: state.dateOfBirth,
+        phone: state.phone,
+        skype: state.skype,
+        startDate: state.startDate,
+        education: state.education,
+        averageScore: state.averageScore,
+        mathScore: state.mathScore,
+      }),
+      [
+        state.username,
+        state.surname,
+        state.email,
+        state.direction,
+        state.role,
+        state.password,
+        state.passwordRepeat,
+        state.dateOfBirth,
+        state.phone,
+        state.skype,
+        state.startDate,
+        state.education,
+        state.averageScore,
+        state.mathScore,
+      ],
+    ),
   );
+
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
   const editUser = () => {
     const editedUser = { ...state, email: getLowerCasedStr(getTrimmedStr(state.email)) };
@@ -53,6 +76,8 @@ export default function EditUser({ user, liftUpEditUser, closeFunc }) {
     liftUpEditUser(editedUser);
     closeFunc();
   };
+
+  const closeModal = () => closeFunc();
 
   return (
     <div className={classes.modal}>
@@ -207,7 +232,7 @@ export default function EditUser({ user, liftUpEditUser, closeFunc }) {
         <Button onClick={editUser} roleClass='edit' disabled={!isValid}>
           Edit
         </Button>
-        <Button onClick={() => closeFunc()}>Close</Button>
+        <Button onClick={closeModal}>Close</Button>
       </div>
     </div>
   );

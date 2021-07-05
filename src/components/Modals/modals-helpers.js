@@ -1,18 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { checkAllFormValidity, validateInput } from '../../utilities/form-validators';
+import { checkIfOneOfFieldsChanged, findChangedField } from '../../utilities/form-helpers';
 
 export const useInput = (initialState) => {
-  // why lazy loading doesn't work or why it's recreates every render?
-  const [state, setState] = useState(() => initialState);
+  const [state, setState] = useState(typeof initialState === 'function' ? initialState() : initialState);
 
-  const onChange = ({ target: { name, value } }) =>
-    setState((prevState) => {
-      return {
-        ...prevState,
-        [name]: value,
-      };
-    });
-  console.log(state);
+  const onChange = useCallback(
+    ({ target: { name, value } }) =>
+      setState((prevState) => {
+        return {
+          ...prevState,
+          [name]: value,
+        };
+      }),
+    [],
+  );
+  console.log('onChange');
 
   return {
     state,
@@ -20,23 +23,22 @@ export const useInput = (initialState) => {
   };
 };
 
-export const useValidator = (initialState, password = '', startDate = '', ...trackedFields) => {
-  const [validator, setValidator] = useState(() => initialState);
+export const useValidator = (initialState, password = '', startDate = '', trackedFields) => {
+  const [validator, setValidator] = useState(typeof initialState === 'function' ? initialState() : initialState);
   const [errors, setErrors] = useState(() => {
-    return Object.keys(initialState).reduce((result, key) => {
+    return Object.keys(validator).reduce((result, key) => {
       const errorKey = `${key}Error`;
 
       return { ...result, [errorKey]: '' };
     }, {});
   });
-  const [isValid, setIsValid] = useState(() => false);
   const prevTrackedFieldsRef = useRef(trackedFields);
-  const firstRender = useRef(true);
 
   useEffect(() => {
-    const changedField = trackedFields.find((field, index) => field[1] !== prevTrackedFieldsRef.current[index][1]);
+    const changedField = findChangedField(prevTrackedFieldsRef.current, trackedFields);
 
     if (changedField) {
+      console.log('useEffect setValidator, setErrors');
       const [fieldName, fieldValue] = changedField;
       const { name, validity, errorMsg } = validateInput(fieldName, fieldValue, password, startDate);
 
@@ -49,55 +51,63 @@ export const useValidator = (initialState, password = '', startDate = '', ...tra
         ...prevErrors,
         [`${name}Error`]: errorMsg,
       }));
-
       prevTrackedFieldsRef.current = trackedFields;
     }
-    // Previous validator & errors (actual will be after useEffect's called render).
-    console.log(validator);
-    console.log(errors);
-  }, [...Object.values(Object.fromEntries(trackedFields))]);
-
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-
-      return;
-    }
-    setIsValid(checkAllFormValidity(validator));
-    // Previous isValid (actual will be after useEffect's called render).
-    console.log(isValid);
-    // Makes 2 renders first time on Create Modals (changes both firstRender.current & validator)
-  }, [...Object.values(validator), firstRender.current]);
+  }, [trackedFields]);
 
   return {
     errors,
-    isValid,
+    validator,
   };
+};
+
+export const useAllSelectedFormsValidityChecker = (validator, initialState) => {
+  const [isValid, setIsValid] = useState(false);
+  const initialStateRef = useRef(initialState);
+
+  const isOneOfStateFieldsChanged = useMemo(() => checkIfOneOfFieldsChanged(initialStateRef.current, initialState), [
+    initialStateRef.current,
+    initialState,
+  ]);
+  useEffect(() => {
+    if (isOneOfStateFieldsChanged) {
+      console.log('useEffect setIsValid');
+      setIsValid(checkAllFormValidity(validator));
+    }
+  }, [validator, isOneOfStateFieldsChanged]);
+
+  return isValid;
 };
 
 export const TASK_ONCHANGE = 'TASK_ONCHANGE';
 export const TASK_VALIDATE = 'TASK_VALIDATE';
 
 export const stateReducer = (prevState, action) => {
+  console.log('state Reducer');
+  const {
+    payload: { name, value, type },
+  } = action;
+
   switch (action.type) {
     case TASK_ONCHANGE:
-      if (action.payload.type === 'checkbox') {
-        if (prevState.selectedUsers.find((id) => id === action.payload.name)) {
+      if (type === 'checkbox') {
+        const isSelectedUserExists = prevState.selectedUsers.find((id) => id === name);
+        if (isSelectedUserExists) {
           return {
             ...prevState,
-            selectedUsers: prevState.selectedUsers.filter((id) => id !== action.payload.name),
+            selectedUsers: prevState.selectedUsers.filter((id) => id !== name),
           };
         }
 
         return {
           ...prevState,
-          selectedUsers: prevState.selectedUsers.concat(action.payload.name),
+          selectedUsers: prevState.selectedUsers.concat(name),
         };
       }
 
       return {
         ...prevState,
-        [action.payload.name]: action.payload.value,
+        [name]: value,
       };
     default:
       return prevState;
@@ -105,17 +115,26 @@ export const stateReducer = (prevState, action) => {
 };
 
 export const validatorReducer = (prevState, action) => {
+  console.log('validator Reducer');
+  const {
+    payload: {
+      state,
+      event: { name, value, type },
+    },
+  } = action;
+  const isFieldNameInValidator = Object.keys(prevState.validator).includes(name);
+
   switch (action.type) {
     case TASK_VALIDATE:
-      if (action.payload.event.type === 'checkbox') {
-        const validity = !!action.payload.state.selectedUsers.length;
-        const errorMsg = validity ? '' : 'At least one user must be selected';
+      if (type === 'checkbox') {
+        const isValid = !!state.selectedUsers.length;
+        const errorMsg = isValid ? '' : 'At least one user must be selected';
 
         return {
           ...prevState,
           validator: {
             ...prevState.validator,
-            selectedUsers: validity,
+            selectedUsers: isValid,
           },
           errors: {
             ...prevState.errors,
@@ -123,23 +142,18 @@ export const validatorReducer = (prevState, action) => {
           },
         };
       }
-      if (action.payload.event.name in prevState.validator) {
-        const { name, validity, errorMsg } = validateInput(
-          action.payload.event.name,
-          action.payload.event.value,
-          undefined,
-          action.payload.state.startDate,
-        );
+      if (isFieldNameInValidator) {
+        const { name: eventName, validity, errorMsg } = validateInput(name, value, undefined, state.startDate);
 
         return {
           ...prevState,
           validator: {
             ...prevState.validator,
-            [name]: validity,
+            [eventName]: validity,
           },
           errors: {
             ...prevState.errors,
-            [`${name}Error`]: errorMsg,
+            [`${eventName}Error`]: errorMsg,
           },
         };
       }

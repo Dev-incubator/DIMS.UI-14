@@ -56,6 +56,8 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
     closeFunc();
   };
 
+  const closeModal = () => closeFunc();
+
   return (
     <div className={classes.modal}>
       <h3 className={classes.title}>Edit Task</h3>
@@ -104,7 +106,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
           <Button onClick={editTask} roleClass='edit' disabled={!isValid}>
             Edit
           </Button>
-          <Button onClick={() => closeFunc()}>Close</Button>
+          <Button onClick={closeModal}>Close</Button>
         </div>
       </form>
     </div>

@@ -1,15 +1,20 @@
 import PropTypes from 'prop-types';
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import classes from './CreateTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { TASKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
-import { stateReducer, TASK_ONCHANGE, TASK_VALIDATE, validatorReducer } from '../modals-helpers';
-import { checkAllFormValidity } from '../../../utilities/form-validators';
+import {
+  stateReducer,
+  TASK_ONCHANGE,
+  TASK_VALIDATE,
+  useAllSelectedFormsValidityChecker,
+  validatorReducer,
+} from '../modals-helpers';
 
 export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
   const newTaskRef = useRef(createElemRefOnDB(TASKS));
-  const onChangeSnapshot = useRef({});
+  const onChangeSnapshotRef = useRef({});
 
   const [state, dispatchState] = useReducer(stateReducer, newTaskRef.current.id, (newTaskId) => ({
     title: '',
@@ -35,19 +40,19 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
     },
   }));
 
-  const [isValid, setIsValid] = useState(false);
-
   useEffect(() => {
-    setIsValid(checkAllFormValidity(validator.validator));
-  }, [validator.validator]);
+    dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshotRef.current } });
+    /*
+     I don't need other dependencies here, coz validator's reducer has a checker, which verifies,
+      event-changed field inside or outside validator and returns prevState.
+    */
+  }, [state]);
 
-  useEffect(() => {
-    dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshot.current } });
-  }, [state.title, state.startDate, state.deadLine, state.selectedUsers]);
+  const isValid = useAllSelectedFormsValidityChecker(validator.validator, state);
 
   const handleChange = (event) => {
     const { name, value, type } = event.target;
-    onChangeSnapshot.current = { name, value, type };
+    onChangeSnapshotRef.current = { name, value, type };
     dispatchState({ type: TASK_ONCHANGE, payload: { name, value, type } });
   };
 
@@ -55,6 +60,8 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
     liftUpCreateTask(newTaskRef.current, state);
     closeFunc();
   };
+
+  const closeModal = () => closeFunc();
 
   return (
     <div className={classes.modal}>
@@ -104,7 +111,7 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
           <Button onClick={createTask} roleClass='create' disabled={!isValid}>
             Create
           </Button>
-          <Button onClick={() => closeFunc()}>Close</Button>
+          <Button onClick={closeModal}>Close</Button>
         </div>
       </form>
     </div>

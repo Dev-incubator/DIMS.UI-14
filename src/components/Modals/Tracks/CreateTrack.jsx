@@ -1,34 +1,39 @@
 import PropTypes from 'prop-types';
+import { useMemo, useRef } from 'react';
 import classes from './CreateTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-
 import { TRACKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
-import { useInput, useValidator } from '../modals-helpers';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 
 export default function CreateTrack({ task: { title, startDate }, closeFunc, liftUpCreateTrack }) {
-  const { state, onChange } = useInput({
-    id: createElemRefOnDB(TRACKS).id,
+  const newTrackRef = useRef(createElemRefOnDB(TRACKS));
+
+  const { state, onChange } = useInput(() => ({
+    id: newTrackRef.current.id,
     name: '',
     date: '',
     note: '',
-  });
+  }));
 
-  const { errors, isValid } = useValidator(
-    {
+  const { errors, validator } = useValidator(
+    () => ({
       name: false,
       date: false,
-    },
+    }),
     undefined,
     startDate,
-    ['name', state.name],
-    ['date', state.date],
+    useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]),
   );
+
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
   const createTrack = () => {
     liftUpCreateTrack(state);
     closeFunc();
   };
+
+  const closeModal = () => closeFunc();
 
   return (
     <div className={classes.modal}>
@@ -60,7 +65,7 @@ export default function CreateTrack({ task: { title, startDate }, closeFunc, lif
           <Button onClick={createTrack} roleClass='create' disabled={!isValid}>
             Create
           </Button>
-          <Button onClick={() => closeFunc()}>Close</Button>
+          <Button onClick={closeModal}>Close</Button>
         </div>
       </form>
     </div>
