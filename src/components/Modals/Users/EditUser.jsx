@@ -4,7 +4,7 @@ import classes from './EditUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { ROLES, SEX, DIRECTIONS } from '../../../utilities/enums';
-import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
+import { carriedUseValidator, useAllSelectedFormsValidityChecker, useInput } from '../modals-helpers';
 import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers';
 
 export default function EditUser({ user, liftUpEditUser, closeFunc }) {
@@ -13,25 +13,22 @@ export default function EditUser({ user, liftUpEditUser, closeFunc }) {
     passwordRepeat: user.password,
   }));
 
-  const { errors, validator } = useValidator(
-    () => ({
-      username: true,
-      surname: true,
-      email: true,
-      direction: true,
-      role: true,
-      password: true,
-      passwordRepeat: true,
-      dateOfBirth: true,
-      phone: true,
-      skype: true,
-      startDate: true,
-      education: true,
-      averageScore: true,
-      mathScore: true,
-    }),
-    state.password,
-    undefined,
+  const { errors, validator } = carriedUseValidator(() => ({
+    username: true,
+    surname: true,
+    email: true,
+    direction: true,
+    role: true,
+    password: true,
+    passwordRepeat: true,
+    dateOfBirth: true,
+    phone: true,
+    skype: true,
+    startDate: true,
+    education: true,
+    averageScore: true,
+    mathScore: true,
+  }))(state.password)()(
     useMemo(
       () => ({
         username: state.username,

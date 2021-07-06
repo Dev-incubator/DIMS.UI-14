@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import classes from './EditTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
+import { carriedUseValidator, useAllSelectedFormsValidityChecker, useInput } from '../modals-helpers';
 
 export default function EditTrack({ track: { id, date, note, title, name, startDate }, closeFunc, liftUpEditTrack }) {
   const { state, onChange } = useInput(() => ({
@@ -13,15 +13,10 @@ export default function EditTrack({ track: { id, date, note, title, name, startD
     name,
   }));
 
-  const { errors, validator } = useValidator(
-    () => ({
-      name: true,
-      date: true,
-    }),
-    undefined,
-    startDate,
-    useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]),
-  );
+  const { errors, validator } = carriedUseValidator(() => ({
+    name: true,
+    date: true,
+  }))()(startDate)(useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]));
 
   const isValid = useAllSelectedFormsValidityChecker(validator, state);
 

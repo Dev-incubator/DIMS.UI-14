@@ -4,7 +4,7 @@ import classes from './CreateTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { TRACKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
-import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
+import { carriedUseValidator, useAllSelectedFormsValidityChecker, useInput } from '../modals-helpers';
 
 export default function CreateTrack({ task: { title, startDate }, closeFunc, liftUpCreateTrack }) {
   const newTrackRef = useRef(createElemRefOnDB(TRACKS));
@@ -16,15 +16,10 @@ export default function CreateTrack({ task: { title, startDate }, closeFunc, lif
     note: '',
   }));
 
-  const { errors, validator } = useValidator(
-    () => ({
-      name: false,
-      date: false,
-    }),
-    undefined,
-    startDate,
-    useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]),
-  );
+  const { errors, validator } = carriedUseValidator(() => ({
+    name: false,
+    date: false,
+  }))()(startDate)(useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]));
 
   const isValid = useAllSelectedFormsValidityChecker(validator, state);
 

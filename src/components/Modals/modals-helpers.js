@@ -23,7 +23,17 @@ export const useInput = (initialState) => {
   };
 };
 
-export const useValidator = (initialState, password = '', startDate = '', trackedFields) => {
+export function carriedUseValidator(initialState) {
+  return (password = '') => {
+    return (startDate = '') => {
+      return (trackedFields) => {
+        return useValidator(initialState, password, startDate, trackedFields);
+      };
+    };
+  };
+}
+
+export const useValidator = (initialState, password, startDate, trackedFields) => {
   const [validator, setValidator] = useState(typeof initialState === 'function' ? initialState() : initialState);
   const [errors, setErrors] = useState(() => {
     return Object.keys(validator).reduce((result, key) => {
@@ -143,7 +153,11 @@ export const validatorReducer = (prevState, action) => {
         };
       }
       if (isFieldNameInValidator) {
-        const { name: eventName, validity, errorMsg } = validateInput(name, value, undefined, state.startDate);
+        /*
+         if state doesn't contain state.password or state.startDate,
+          this field will be undefined, what leads to default function parameters.
+        */
+        const { name: eventName, validity, errorMsg } = validateInput(name, value, state.password, state.startDate);
 
         return {
           ...prevState,

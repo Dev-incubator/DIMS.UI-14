@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useMemo, useRef } from 'react';
-import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
+import { carriedUseValidator, useAllSelectedFormsValidityChecker, useInput } from '../modals-helpers';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
@@ -32,25 +32,22 @@ export default function CreateUser({ closeFunc, liftUpCreateUser }) {
     tasks: [],
   }));
 
-  const { errors, validator } = useValidator(
-    () => ({
-      username: false,
-      surname: false,
-      email: false,
-      direction: true,
-      role: true,
-      password: false,
-      passwordRepeat: false,
-      dateOfBirth: false,
-      phone: false,
-      skype: false,
-      startDate: false,
-      education: false,
-      averageScore: false,
-      mathScore: false,
-    }),
-    state.password,
-    undefined,
+  const { errors, validator } = carriedUseValidator(() => ({
+    username: false,
+    surname: false,
+    email: false,
+    direction: true,
+    role: true,
+    password: false,
+    passwordRepeat: false,
+    dateOfBirth: false,
+    phone: false,
+    skype: false,
+    startDate: false,
+    education: false,
+    averageScore: false,
+    mathScore: false,
+  }))(state.password)()(
     useMemo(
       () => ({
         username: state.username,
