@@ -40,7 +40,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
 
   useEffect(() => {
     dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshot.current } });
-  }, [state.title, state.startDate, state.deadLine, state.selectedUsers]);
+  }, [state]);
 
   const [isValid, setIsValid] = useState(false);
 
