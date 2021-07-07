@@ -1,6 +1,10 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { checkAllFormValidity, validateInput } from '../../utilities/form-validators';
-import { checkIfOneOfFieldsChanged, findChangedField } from '../../utilities/form-helpers';
+import {
+  checkIfOneOfFieldsChanged,
+  createErrorsStateByValidator,
+  findChangedField,
+} from '../../utilities/form-helpers';
 
 export const useInput = (initialState) => {
   const [state, setState] = useState(typeof initialState === 'function' ? initialState() : initialState);
@@ -15,7 +19,6 @@ export const useInput = (initialState) => {
       }),
     [],
   );
-  console.log('onChange');
 
   return {
     state,
@@ -23,32 +26,16 @@ export const useInput = (initialState) => {
   };
 };
 
-export function carriedUseValidator(initialState) {
-  return (password = '') => {
-    return (startDate = '') => {
-      return (trackedFields) => {
-        return useValidator(initialState, password, startDate, trackedFields);
-      };
-    };
-  };
-}
-
-export const useValidator = (initialState, password, startDate, trackedFields) => {
+export const useValidator = (initialState, { password, startDate }, trackedFields) => {
+  console.log(password, startDate);
   const [validator, setValidator] = useState(typeof initialState === 'function' ? initialState() : initialState);
-  const [errors, setErrors] = useState(() => {
-    return Object.keys(validator).reduce((result, key) => {
-      const errorKey = `${key}Error`;
-
-      return { ...result, [errorKey]: '' };
-    }, {});
-  });
+  const [errors, setErrors] = useState(() => createErrorsStateByValidator(validator));
   const prevTrackedFieldsRef = useRef(trackedFields);
 
   useEffect(() => {
     const changedField = findChangedField(prevTrackedFieldsRef.current, trackedFields);
 
     if (changedField) {
-      console.log('useEffect setValidator, setErrors');
       const [fieldName, fieldValue] = changedField;
       const { name, validity, errorMsg } = validateInput(fieldName, fieldValue, password, startDate);
 
@@ -76,12 +63,10 @@ export const useAllSelectedFormsValidityChecker = (validator, initialState) => {
   const initialStateRef = useRef(initialState);
 
   const isOneOfStateFieldsChanged = useMemo(() => checkIfOneOfFieldsChanged(initialStateRef.current, initialState), [
-    initialStateRef.current,
     initialState,
   ]);
   useEffect(() => {
     if (isOneOfStateFieldsChanged) {
-      console.log('useEffect setIsValid');
       setIsValid(checkAllFormValidity(validator));
     }
   }, [validator, isOneOfStateFieldsChanged]);
@@ -93,7 +78,6 @@ export const TASK_ONCHANGE = 'TASK_ONCHANGE';
 export const TASK_VALIDATE = 'TASK_VALIDATE';
 
 export const stateReducer = (prevState, action) => {
-  console.log('state Reducer');
   const {
     payload: { name, value, type },
   } = action;
@@ -125,10 +109,9 @@ export const stateReducer = (prevState, action) => {
 };
 
 export const validatorReducer = (prevState, action) => {
-  console.log('validator Reducer');
   const {
     payload: {
-      state,
+      state: { password, startDate, selectedUsers },
       event: { name, value, type },
     },
   } = action;
@@ -137,7 +120,7 @@ export const validatorReducer = (prevState, action) => {
   switch (action.type) {
     case TASK_VALIDATE:
       if (type === 'checkbox') {
-        const isValid = !!state.selectedUsers.length;
+        const isValid = !!selectedUsers.length;
         const errorMsg = isValid ? '' : 'At least one user must be selected';
 
         return {
@@ -157,7 +140,7 @@ export const validatorReducer = (prevState, action) => {
          if state doesn't contain state.password or state.startDate,
           this field will be undefined, what leads to default function parameters.
         */
-        const { name: eventName, validity, errorMsg } = validateInput(name, value, state.password, state.startDate);
+        const { name: eventName, validity, errorMsg } = validateInput(name, value, password, startDate);
 
         return {
           ...prevState,

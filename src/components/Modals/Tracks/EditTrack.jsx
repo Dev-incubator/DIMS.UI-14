@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
 import classes from './EditTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import { carriedUseValidator, useAllSelectedFormsValidityChecker, useInput } from '../modals-helpers';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 
 export default function EditTrack({ track: { id, date, note, title, name, startDate }, closeFunc, liftUpEditTrack }) {
   const { state, onChange } = useInput(() => ({
@@ -12,11 +11,14 @@ export default function EditTrack({ track: { id, date, note, title, name, startD
     note,
     name,
   }));
-
-  const { errors, validator } = carriedUseValidator(() => ({
-    name: true,
-    date: true,
-  }))()(startDate)(useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]));
+  const { errors, validator } = useValidator(
+    () => ({
+      name: true,
+      date: true,
+    }),
+    { ...state, startDate },
+    { name: state.name, date: state.date },
+  );
 
   const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
@@ -52,7 +54,7 @@ export default function EditTrack({ track: { id, date, note, title, name, startD
           />
           <CraftInput title='Note' id='note' type='textarea' value={state.note} onChange={onChange} />
         </div>
-        <div className={classes.requiredwarning}>* - these fields are required.</div>
+        <div className={classes.requiredWarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
           <Button onClick={editTrack} roleClass='edit' disabled={!isValid}>
             Edit

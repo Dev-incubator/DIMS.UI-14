@@ -25,7 +25,7 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
     id: newTaskId,
   }));
 
-  const [validator, dispatchValidator] = useReducer(validatorReducer, undefined, () => ({
+  const [{ validator, errors }, dispatchValidator] = useReducer(validatorReducer, undefined, () => ({
     validator: {
       title: false,
       startDate: false,
@@ -48,7 +48,7 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
     */
   }, [state]);
 
-  const isValid = useAllSelectedFormsValidityChecker(validator.validator, state);
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
   const handleChange = (event) => {
     const { name, value, type } = event.target;
@@ -74,7 +74,7 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
             id='title'
             value={state.title}
             onChange={handleChange}
-            error={validator.errors.titleError}
+            error={errors.titleError}
           />
           <CraftInput title='Description' id='description' value={state.description} onChange={handleChange} />
           <CraftInput
@@ -84,7 +84,7 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
             type='date'
             value={state.startDate}
             onChange={handleChange}
-            error={validator.errors.startDateError}
+            error={errors.startDateError}
           />
           <CraftInput
             title='DeadLine'
@@ -93,7 +93,7 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
             type='date'
             value={state.deadLine}
             onChange={handleChange}
-            error={validator.errors.deadLineError}
+            error={errors.deadLineError}
           />
           <CraftInput
             title='Users'
@@ -103,10 +103,10 @@ export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
             value={state.selectedUsers}
             options={usersList}
             onChange={handleChange}
-            error={validator.errors.selectedUsersError}
+            error={errors.selectedUsersError}
           />
         </div>
-        <div className={classes.requiredwarning}>* - these fields are required.</div>
+        <div className={classes.requiredWarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
           <Button onClick={createTask} roleClass='create' disabled={!isValid}>
             Create

@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import classes from './CreateTrack.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { TRACKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
-import { carriedUseValidator, useAllSelectedFormsValidityChecker, useInput } from '../modals-helpers';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 
 export default function CreateTrack({ task: { title, startDate }, closeFunc, liftUpCreateTrack }) {
   const newTrackRef = useRef(createElemRefOnDB(TRACKS));
@@ -16,10 +16,14 @@ export default function CreateTrack({ task: { title, startDate }, closeFunc, lif
     note: '',
   }));
 
-  const { errors, validator } = carriedUseValidator(() => ({
-    name: false,
-    date: false,
-  }))()(startDate)(useMemo(() => ({ name: state.name, date: state.date }), [state.name, state.date]));
+  const { errors, validator } = useValidator(
+    () => ({
+      name: false,
+      date: false,
+    }),
+    { ...state, startDate },
+    { name: state.name, date: state.date },
+  );
 
   const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
@@ -55,7 +59,7 @@ export default function CreateTrack({ task: { title, startDate }, closeFunc, lif
           />
           <CraftInput title='Track Note' id='note' type='textarea' value={state.note} onChange={onChange} />
         </div>
-        <div className={classes.requiredwarning}>* - these fields are required.</div>
+        <div className={classes.requiredWarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
           <Button onClick={createTrack} roleClass='create' disabled={!isValid}>
             Create

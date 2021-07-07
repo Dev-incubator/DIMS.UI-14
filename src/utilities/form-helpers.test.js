@@ -1,4 +1,10 @@
-import { getLowerCasedStr, getTrimmedStr, findChangedField, checkIfOneOfFieldsChanged } from './form-helpers';
+import {
+  getLowerCasedStr,
+  getTrimmedStr,
+  findChangedField,
+  checkIfOneOfFieldsChanged,
+  createErrorsStateByValidator,
+} from './form-helpers';
 
 describe('getLowerCasedStr should', () => {
   it('return aliaksandr.razumny@gmail.com', () => {
@@ -91,5 +97,32 @@ describe('checkIfOneOfFieldsChanged should', () => {
     const actual = checkIfOneOfFieldsChanged(prevState, newState);
     const expected = true;
     expect(actual).toBe(expected);
+  });
+});
+
+describe('createErrorsStateByValidator should', () => {
+  it('return correct state', () => {
+    const validator = {
+      name: false,
+      date: false,
+    };
+    const actual = createErrorsStateByValidator(validator);
+    const expected = {
+      nameError: '',
+      dateError: '',
+    };
+    expect(actual).toStrictEqual(expected);
+  });
+  it('return incorrect state', () => {
+    const validator = {
+      name: false,
+      date: false,
+    };
+    const actual = createErrorsStateByValidator(validator);
+    const expected = {
+      name: '',
+      date: '',
+    };
+    expect(actual).not.toStrictEqual(expected);
   });
 });

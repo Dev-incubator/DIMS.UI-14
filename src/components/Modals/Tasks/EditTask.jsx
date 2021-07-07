@@ -101,7 +101,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
             error={validator.errors.selectedUsersError}
           />
         </div>
-        <div className={classes.requiredwarning}>* - these fields are required.</div>
+        <div className={classes.requiredWarning}>* - these fields are required.</div>
         <div className={classes.buttons}>
           <Button onClick={editTask} roleClass='edit' disabled={!isValid}>
             Edit
