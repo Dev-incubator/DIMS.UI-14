@@ -1,168 +1,121 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import classes from './CreateTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-
-import {
-  CREATE_TASK_ONCHANGE,
-  CREATE_TASK_VALIDATE_FIELDS,
-  CREATE_TASK_VALIDATE_FORM,
-  reducerFunc,
-} from './task-helpers';
 import { TASKS, createElemRefOnDB } from '../../../utilities/fb-helpers';
-import debounce from '../../../utilities/debounce';
+import {
+  stateReducer,
+  TASK_ONCHANGE,
+  TASK_VALIDATE,
+  useAllSelectedFormsValidityChecker,
+  validatorReducer,
+} from '../modals-helpers';
 
-export default class CreateTask extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: {
-        title: '',
-        description: '',
-        startDate: '',
-        deadLine: '',
-        selectedUsers: [],
-        id: '',
-      },
-      validator: {
-        title: false,
-        startDate: false,
-        deadLine: false,
-        selectedUsers: false,
-      },
-      errors: {
-        titleError: '',
-        startDateError: '',
-        deadLineError: '',
-        selectedUsersError: '',
-      },
-      usersList: [],
-      newTaskRef: createElemRefOnDB(TASKS),
-      isValid: false,
-    };
-    this.onChange = this.onChange.bind(this);
-    this.liftUpCreateTask = this.liftUpCreateTask.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.validateFields = this.validateFields.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-  }
+export default function CreateTask({ closeFunc, usersList, liftUpCreateTask }) {
+  const newTaskRef = useRef(createElemRefOnDB(TASKS));
+  const onChangeSnapshotRef = useRef({});
 
-  componentDidMount() {
-    const { usersList } = this.props;
-    this.setState((prevState) => ({
-      ...prevState,
-      data: {
-        ...prevState.data,
-        id: prevState.newTaskRef.id,
-      },
-      usersList,
-    }));
-  }
+  const [state, dispatchState] = useReducer(stateReducer, newTaskRef.current.id, (newTaskId) => ({
+    title: '',
+    description: '',
+    startDate: '',
+    deadLine: '',
+    selectedUsers: [],
+    id: newTaskId,
+  }));
 
-  onChange(event) {
-    const {
-      target: { name, value, type: targetType },
-    } = event;
-    this.setState(
-      (prevState) =>
-        reducerFunc(prevState, {
-          type: CREATE_TASK_ONCHANGE,
-          name,
-          value,
-          targetType,
-        }),
-      debounce(() => {
-        this.validateFields(name, value, targetType);
-      }, 1000),
-    );
-  }
+  const [{ validator, errors }, dispatchValidator] = useReducer(validatorReducer, undefined, () => ({
+    validator: {
+      title: false,
+      startDate: false,
+      deadLine: false,
+      selectedUsers: false,
+    },
+    errors: {
+      titleError: '',
+      startDateError: '',
+      deadLineError: '',
+      selectedUsersError: '',
+    },
+  }));
 
-  validateFields(fieldName, fieldValue, targetType) {
-    const state = reducerFunc(this.state, {
-      type: CREATE_TASK_VALIDATE_FIELDS,
-      fieldName,
-      fieldValue,
-      targetType,
-    });
-    this.setState(state, this.validateForm);
-  }
+  useEffect(() => {
+    dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshotRef.current } });
+    /*
+     I don't need other dependencies here, coz validator's reducer has a checker, which verifies,
+      event-changed field inside or outside validator and returns prevState.
+    */
+  }, [state]);
 
-  validateForm() {
-    const state = reducerFunc(this.state, {
-      type: CREATE_TASK_VALIDATE_FORM,
-    });
-    this.setState(state);
-  }
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
-  closeModal() {
-    const { closeFunc } = this.props;
+  const handleChange = (event) => {
+    const { name, value, type } = event.target;
+    onChangeSnapshotRef.current = { name, value, type };
+    dispatchState({ type: TASK_ONCHANGE, payload: { name, value, type } });
+  };
+
+  const createTask = () => {
+    liftUpCreateTask(newTaskRef.current, state);
     closeFunc();
-  }
+  };
 
-  liftUpCreateTask() {
-    const { liftUpCreateTask } = this.props;
-    const { data, newTaskRef } = this.state;
-    const newTask = { ...data };
-    liftUpCreateTask(newTaskRef, newTask);
-    this.closeModal();
-  }
+  const closeModal = () => closeFunc();
 
-  render() {
-    const {
-      isValid,
-      data: { title, description, startDate, deadLine, selectedUsers },
-      usersList,
-      errors: { titleError, startDateError, deadLineError, selectedUsersError },
-    } = this.state;
-
-    return (
-      <div className={classes.modal}>
-        <h3 className={classes.title}>Create Task</h3>
-        <form>
-          <div className={classes.wrapper}>
-            <CraftInput title='Title' isRequired id='title' value={title} onChange={this.onChange} error={titleError} />
-            <CraftInput title='Description' id='description' value={description} onChange={this.onChange} />
-            <CraftInput
-              title='Start Date'
-              id='startDate'
-              isRequired
-              type='date'
-              value={startDate}
-              onChange={this.onChange}
-              error={startDateError}
-            />
-            <CraftInput
-              title='DeadLine'
-              isRequired
-              id='deadLine'
-              type='date'
-              value={deadLine}
-              onChange={this.onChange}
-              error={deadLineError}
-            />
-            <CraftInput
-              title='Users'
-              isRequired
-              id='selectedUsers'
-              type='checkbox'
-              value={selectedUsers}
-              options={usersList}
-              onChange={this.onChange}
-              error={selectedUsersError}
-            />
-          </div>
-          <div className={classes.requiredwarning}>* - these fields are required.</div>
-          <div className={classes.buttons}>
-            <Button onClick={this.liftUpCreateTask} roleClass='create' disabled={!isValid}>
-              Create
-            </Button>
-            <Button onClick={this.closeModal}>Close</Button>
-          </div>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.modal}>
+      <h3 className={classes.title}>Create Task</h3>
+      <form>
+        <div className={classes.wrapper}>
+          <CraftInput
+            title='Title'
+            isRequired
+            id='title'
+            value={state.title}
+            onChange={handleChange}
+            error={errors.titleError}
+          />
+          <CraftInput title='Description' id='description' value={state.description} onChange={handleChange} />
+          <CraftInput
+            title='Start Date'
+            id='startDate'
+            isRequired
+            type='date'
+            value={state.startDate}
+            onChange={handleChange}
+            error={errors.startDateError}
+          />
+          <CraftInput
+            title='DeadLine'
+            isRequired
+            id='deadLine'
+            type='date'
+            value={state.deadLine}
+            onChange={handleChange}
+            error={errors.deadLineError}
+          />
+          <CraftInput
+            title='Users'
+            isRequired
+            id='selectedUsers'
+            type='checkbox'
+            value={state.selectedUsers}
+            options={usersList}
+            onChange={handleChange}
+            error={errors.selectedUsersError}
+          />
+        </div>
+        <div className={classes.requiredWarning}>* - these fields are required.</div>
+        <div className={classes.buttons}>
+          <Button onClick={createTask} roleClass='create' disabled={!isValid}>
+            Create
+          </Button>
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 CreateTask.propTypes = {

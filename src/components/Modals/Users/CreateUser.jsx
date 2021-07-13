@@ -1,331 +1,241 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useRef } from 'react';
+import { useAllSelectedFormsValidityChecker, useInput, useValidator } from '../modals-helpers';
 import classes from './CreateUser.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
 import { ROLES, SEX, DIRECTIONS } from '../../../utilities/enums';
-import {
-  CREATE_USER_ONCHANGE,
-  CREATE_USER_VALIDATE_FIELDS,
-  CREATE_USER_VALIDATE_FORM,
-  reducerFunc,
-} from './user-helpers';
 import { USERS, createElemRefOnDB } from '../../../utilities/fb-helpers';
-import debounce from '../../../utilities/debounce';
 import { getLowerCasedStr, getTrimmedStr } from '../../../utilities/form-helpers';
 
-export default class CreateUser extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: {
-        username: '',
-        surname: '',
-        email: '',
-        direction: DIRECTIONS.REACT,
-        sex: SEX.MALE,
-        role: ROLES.USER,
-        password: '',
-        passwordRepeat: '',
-        dateOfBirth: '',
-        address: '',
-        phone: '',
-        skype: '',
-        startDate: '',
-        education: '',
-        averageScore: '',
-        mathScore: '',
-        tasks: [],
-        id: '',
-      },
-      validator: {
-        username: false,
-        surname: false,
-        email: false,
-        direction: true,
-        role: true,
-        password: false,
-        passwordRepeat: false,
-        dateOfBirth: false,
-        phone: false,
-        skype: false,
-        startDate: false,
-        education: false,
-        averageScore: false,
-        mathScore: false,
-      },
-      errors: {
-        usernameError: '',
-        surnameError: '',
-        emailError: '',
-        directionError: '',
-        roleError: '',
-        passwordError: '',
-        passwordRepeatError: '',
-        dateOfBirthError: '',
-        phoneError: '',
-        skypeError: '',
-        startDateError: '',
-        educationError: '',
-        averageScoreError: '',
-        mathScoreError: '',
-      },
-      isValid: false,
-      newUserRef: createElemRefOnDB(USERS),
-    };
-    this.onChange = this.onChange.bind(this);
-    this.liftUpCreateUser = this.liftUpCreateUser.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.validateFields = this.validateFields.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-  }
+export default function CreateUser({ closeFunc, liftUpCreateUser }) {
+  const newUserRef = useRef(createElemRefOnDB(USERS));
 
-  componentDidMount() {
-    this.setState((prevState) => ({
-      ...prevState,
-      data: {
-        ...prevState.data,
-        id: prevState.newUserRef.id,
-      },
-    }));
-  }
+  const { state, onChange } = useInput(() => ({
+    id: newUserRef.current.id,
+    username: '',
+    surname: '',
+    email: '',
+    direction: DIRECTIONS.REACT,
+    sex: SEX.MALE,
+    role: ROLES.USER,
+    password: '',
+    passwordRepeat: '',
+    dateOfBirth: '',
+    address: '',
+    phone: '',
+    skype: '',
+    startDate: '',
+    education: '',
+    averageScore: '',
+    mathScore: '',
+    tasks: [],
+  }));
 
-  onChange(event) {
-    const { name, value } = event.target;
-    this.setState(
-      (prevState) =>
-        reducerFunc(prevState, {
-          type: CREATE_USER_ONCHANGE,
-          name,
-          value,
-        }),
-      debounce(() => {
-        this.validateFields(name, value);
-      }, 1000),
-    );
-  }
+  const { errors, validator } = useValidator(
+    () => ({
+      username: false,
+      surname: false,
+      email: false,
+      direction: true,
+      role: true,
+      password: false,
+      passwordRepeat: false,
+      dateOfBirth: false,
+      phone: false,
+      skype: false,
+      startDate: false,
+      education: false,
+      averageScore: false,
+      mathScore: false,
+    }),
+    state,
+    () => ({
+      username: state.username,
+      surname: state.surname,
+      email: state.email,
+      direction: state.direction,
+      role: state.role,
+      password: state.password,
+      passwordRepeat: state.passwordRepeat,
+      dateOfBirth: state.dateOfBirth,
+      phone: state.phone,
+      skype: state.skype,
+      startDate: state.startDate,
+      education: state.education,
+      averageScore: state.averageScore,
+      mathScore: state.mathScore,
+    }),
+  );
 
-  validateFields(fieldName, fieldValue) {
-    const state = reducerFunc(this.state, { type: CREATE_USER_VALIDATE_FIELDS, fieldName, fieldValue });
-    this.setState(state, this.validateForm);
-  }
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
-  validateForm() {
-    const state = reducerFunc(this.state, { type: CREATE_USER_VALIDATE_FORM });
-    this.setState(state);
-  }
-
-  closeModal() {
-    const { closeFunc } = this.props;
-    closeFunc();
-  }
-
-  liftUpCreateUser() {
-    const { liftUpCreateUser } = this.props;
-    const { data, newUserRef } = this.state;
-    const newUser = { ...data, email: getLowerCasedStr(getTrimmedStr(data.email)) };
+  const createUser = () => {
+    const newUser = { ...state, email: getLowerCasedStr(getTrimmedStr(state.email)) };
     delete newUser.passwordRepeat;
-    liftUpCreateUser(newUserRef, newUser);
-    this.closeModal();
-  }
+    liftUpCreateUser(newUserRef.current, newUser);
+    closeFunc();
+  };
 
-  render() {
-    const {
-      isValid,
-      data: {
-        username,
-        surname,
-        email,
-        direction,
-        sex,
-        role,
-        password,
-        passwordRepeat,
-        dateOfBirth,
-        address,
-        phone,
-        skype,
-        startDate,
-        education,
-        averageScore,
-        mathScore,
-      },
-      errors: {
-        usernameError,
-        surnameError,
-        emailError,
-        directionError,
-        roleError,
-        passwordError,
-        passwordRepeatError,
-        dateOfBirthError,
-        phoneError,
-        skypeError,
-        startDateError,
-        educationError,
-        averageScoreError,
-        mathScoreError,
-      },
-    } = this.state;
+  const closeModal = () => closeFunc();
 
-    return (
-      <div className={classes.modal}>
-        <h3 className={classes.title}>Create Member</h3>
-        <form>
-          <div className={classes.wrapper}>
-            <div className={classes.column}>
-              <CraftInput
-                title='Name'
-                isRequired
-                id='username'
-                value={username}
-                onChange={this.onChange}
-                error={usernameError}
-              />
-              <CraftInput
-                title='Second name'
-                isRequired
-                id='surname'
-                value={surname}
-                onChange={this.onChange}
-                error={surnameError}
-              />
-              <CraftInput
-                title='Email'
-                isRequired
-                id='email'
-                value={email}
-                onChange={this.onChange}
-                error={emailError}
-              />
-              <CraftInput
-                id='direction'
-                title='Direction'
-                isRequired
-                type='select'
-                value={direction}
-                onChange={this.onChange}
-                error={directionError}
-                options={[
-                  DIRECTIONS.REACT,
-                  DIRECTIONS.ANGULAR,
-                  DIRECTIONS.JAVA,
-                  DIRECTIONS.NET,
-                  DIRECTIONS.SALESFORCE,
-                  DIRECTIONS.PHP,
-                ]}
-              />
-              <CraftInput
-                id='sex'
-                type='select'
-                title='Sex'
-                value={sex}
-                onChange={this.onChange}
-                options={[SEX.MALE, SEX.FEMALE]}
-              />
-              <CraftInput
-                id='role'
-                title='Role'
-                isRequired
-                type='select'
-                value={role}
-                onChange={this.onChange}
-                options={[ROLES.ADMIN, ROLES.MENTOR, ROLES.USER]}
-                error={roleError}
-              />
-              <CraftInput
-                title='Password'
-                type='password'
-                isRequired
-                id='password'
-                value={password}
-                onChange={this.onChange}
-                error={passwordError}
-              />
-              <CraftInput
-                title='Repeat password'
-                type='password'
-                isRequired
-                id='passwordRepeat'
-                value={passwordRepeat}
-                onChange={this.onChange}
-                error={passwordRepeatError}
-              />
-            </div>
-            <div className={classes.column}>
-              <CraftInput
-                title='Date of Birth'
-                type='date'
-                isRequired
-                id='dateOfBirth'
-                value={dateOfBirth}
-                onChange={this.onChange}
-                error={dateOfBirthError}
-              />
-              <CraftInput title='Address' id='address' value={address} onChange={this.onChange} />
-              <CraftInput
-                title='Mobile phone'
-                type='tel'
-                isRequired
-                id='phone'
-                value={phone}
-                onChange={this.onChange}
-                error={phoneError}
-              />
-              <CraftInput
-                title='Skype'
-                isRequired
-                id='skype'
-                value={skype}
-                onChange={this.onChange}
-                error={skypeError}
-              />
-              <CraftInput
-                title='Start date'
-                type='date'
-                isRequired
-                id='startDate'
-                value={startDate}
-                onChange={this.onChange}
-                error={startDateError}
-              />
-              <CraftInput
-                title='Education'
-                isRequired
-                id='education'
-                value={education}
-                onChange={this.onChange}
-                error={educationError}
-              />
-              <CraftInput
-                title='University average score'
-                isRequired
-                id='averageScore'
-                value={averageScore}
-                onChange={this.onChange}
-                error={averageScoreError}
-              />
-              <CraftInput
-                title='Math score'
-                isRequired
-                id='mathScore'
-                value={mathScore}
-                onChange={this.onChange}
-                error={mathScoreError}
-              />
-            </div>
+  return (
+    <div className={classes.modal}>
+      <h3 className={classes.title}>Create Member</h3>
+      <form>
+        <div className={classes.wrapper}>
+          <div className={classes.column}>
+            <CraftInput
+              title='Name'
+              isRequired
+              id='username'
+              value={state.username}
+              onChange={onChange}
+              error={errors.usernameError}
+            />
+            <CraftInput
+              title='Second name'
+              isRequired
+              id='surname'
+              value={state.surname}
+              onChange={onChange}
+              error={errors.surnameError}
+            />
+            <CraftInput
+              title='Email'
+              isRequired
+              id='email'
+              value={state.email}
+              onChange={onChange}
+              error={errors.emailError}
+            />
+            <CraftInput
+              id='direction'
+              title='Direction'
+              isRequired
+              type='select'
+              value={state.direction}
+              onChange={onChange}
+              error={errors.directionError}
+              options={[
+                DIRECTIONS.REACT,
+                DIRECTIONS.ANGULAR,
+                DIRECTIONS.JAVA,
+                DIRECTIONS.NET,
+                DIRECTIONS.SALESFORCE,
+                DIRECTIONS.PHP,
+              ]}
+            />
+            <CraftInput
+              id='sex'
+              type='select'
+              title='Sex'
+              value={state.sex}
+              onChange={onChange}
+              options={[SEX.MALE, SEX.FEMALE]}
+            />
+            <CraftInput
+              id='role'
+              title='Role'
+              isRequired
+              type='select'
+              value={state.role}
+              onChange={onChange}
+              options={[ROLES.ADMIN, ROLES.MENTOR, ROLES.USER]}
+              error={errors.roleError}
+            />
+            <CraftInput
+              title='Password'
+              type='password'
+              isRequired
+              id='password'
+              value={state.password}
+              onChange={onChange}
+              error={errors.passwordError}
+            />
+            <CraftInput
+              title='Repeat password'
+              type='password'
+              isRequired
+              id='passwordRepeat'
+              value={state.passwordRepeat}
+              onChange={onChange}
+              error={errors.passwordRepeatError}
+            />
           </div>
-        </form>
-        <div className={classes.requiredwarning}>* - these fields are required.</div>
-        <div className={classes.buttons}>
-          <Button onClick={this.liftUpCreateUser} roleClass='create' disabled={!isValid}>
-            Create
-          </Button>
-          <Button onClick={this.closeModal}>Close</Button>
+          <div className={classes.column}>
+            <CraftInput
+              title='Date of Birth'
+              type='date'
+              isRequired
+              id='dateOfBirth'
+              value={state.dateOfBirth}
+              onChange={onChange}
+              error={errors.dateOfBirthError}
+            />
+            <CraftInput title='Address' id='address' value={state.address} onChange={onChange} />
+            <CraftInput
+              title='Mobile phone'
+              type='tel'
+              isRequired
+              id='phone'
+              value={state.phone}
+              onChange={onChange}
+              error={errors.phoneError}
+            />
+            <CraftInput
+              title='Skype'
+              isRequired
+              id='skype'
+              value={state.skype}
+              onChange={onChange}
+              error={errors.skypeError}
+            />
+            <CraftInput
+              title='Start date'
+              type='date'
+              isRequired
+              id='startDate'
+              value={state.startDate}
+              onChange={onChange}
+              error={errors.startDateError}
+            />
+            <CraftInput
+              title='Education'
+              isRequired
+              id='education'
+              value={state.education}
+              onChange={onChange}
+              error={errors.educationError}
+            />
+            <CraftInput
+              title='University average score'
+              isRequired
+              id='averageScore'
+              value={state.averageScore}
+              onChange={onChange}
+              error={errors.averageScoreError}
+            />
+            <CraftInput
+              title='Math score'
+              isRequired
+              id='mathScore'
+              value={state.mathScore}
+              onChange={onChange}
+              error={errors.mathScoreError}
+            />
+          </div>
         </div>
+      </form>
+      <div className={classes.requiredWarning}>* - these fields are required.</div>
+      <div className={classes.buttons}>
+        <Button onClick={createUser} roleClass='create' disabled={!isValid}>
+          Create
+        </Button>
+        <Button onClick={closeModal}>Close</Button>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 CreateUser.propTypes = {

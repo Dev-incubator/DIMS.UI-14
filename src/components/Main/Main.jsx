@@ -1,9 +1,27 @@
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import classes from './Main.module.css';
 import Header from './Header/Header';
+import Loader from '../Loader/Loader';
 import Aside from '../Aside/Aside';
+import fetchUsers from '../../store/actionCreators/fetchUsers';
+import fetchTasks from '../../store/actionCreators/fetchTasks';
 
-const Main = ({ routes }) => {
+export default function Main({ routes }) {
+  const { loading } = useSelector((state) => state.app);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+    dispatch(fetchTasks());
+  }, [dispatch]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className={classes.wrapper}>
       <Aside />
@@ -13,9 +31,7 @@ const Main = ({ routes }) => {
       </main>
     </div>
   );
-};
-
-export default Main;
+}
 
 Main.propTypes = {
   routes: PropTypes.instanceOf(Object),

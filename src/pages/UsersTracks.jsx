@@ -96,6 +96,15 @@ const mapStateToProps = (state, ownProps) => {
       params: { userId, taskId },
     },
   } = ownProps;
+  if (!state.users.usersList.length || !state.tasks.tasksList.length) {
+    return {
+      app: state.app,
+      taskData: {},
+      tracks: [],
+      userId,
+      taskId,
+    };
+  }
   const taskData = getTaskDataById(state, taskId);
   const tracks = getTaskTracksById(state, userId, taskId);
 

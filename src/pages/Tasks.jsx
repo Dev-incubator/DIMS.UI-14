@@ -16,22 +16,10 @@ import {
   editTaskInUsers,
 } from '../utilities/fb-helpers';
 import fetchTasks from '../store/actionCreators/fetchTasks';
-import fetchUsers from '../store/actionCreators/fetchUsers';
 import openCreateTaskModal from '../store/actionCreators/openCreateTaskModal';
 import toggleModal from '../store/actionCreators/toggleModal';
 
 class Tasks extends React.PureComponent {
-  componentDidMount() {
-    const { usersList, tasksList, fetchTasks, fetchUsers } = this.props;
-
-    if (!usersList.length) {
-      fetchUsers();
-    }
-    if (!tasksList.length) {
-      fetchTasks();
-    }
-  }
-
   deleteTask = (selectedId) => {
     const { fetchTasks, tasksList } = this.props;
     const assignedUsers = tasksList.find((task) => task.id === selectedId).selectedUsers;
@@ -118,7 +106,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   fetchTasks,
-  fetchUsers,
   openCreateTaskModal,
   toggleModal,
 };
@@ -127,7 +114,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
 
 Tasks.propTypes = {
   fetchTasks: PropTypes.func.isRequired,
-  fetchUsers: PropTypes.func.isRequired,
   openCreateTaskModal: PropTypes.func.isRequired,
   toggleModal: PropTypes.func.isRequired,
   tasksList: PropTypes.instanceOf(Array).isRequired,

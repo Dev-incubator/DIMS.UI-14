@@ -88,7 +88,7 @@ export const addTaskToUser = (newTaskId, assignedUserId) => {
       tasks: firebase.firestore.FieldValue.arrayUnion(newTaskObj),
     })
     .then(() => {
-      console.log(`TASK id:${newTaskId} was succeffully added to USER id:${assignedUserId}`);
+      console.log(`TASK id:${newTaskId} was successfully added to USER id:${assignedUserId}`);
     })
     .catch((error) => {
       console.log('Error with adding TASK to USERS: ', error);
@@ -106,7 +106,7 @@ export const deleteTaskFromUser = (taskId, assignedUserId) => {
           tasks: newTasks,
         })
         .then(() => {
-          console.log(`TASK id:${taskId} was succesfully deleted from USER:${assignedUserId}`);
+          console.log(`TASK id:${taskId} was successfully deleted from USER:${assignedUserId}`);
         });
     })
     .catch((error) => {
@@ -142,7 +142,7 @@ export const deleteUserFromTask = (userId, assignedTaskId) => {
       selectedUsers: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {
-      console.log(`USER id:${userId} was succeffully deleted from TASK id:${assignedTaskId}`);
+      console.log(`USER id:${userId} was successfully deleted from TASK id:${assignedTaskId}`);
     })
     .catch((error) => {
       console.log(`Error with deleting USER id:${userId} from TASK id:${assignedTaskId} `, error);
@@ -163,7 +163,7 @@ export const updateStatus = (userId, taskId, newStatus, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TASK id:${taskId} status:${newStatus} was succeffully updated in USER id:${userId}`);
+          console.log(`TASK id:${taskId} status:${newStatus} was successfully updated in USER id:${userId}`);
         });
     })
     .catch((error) => {
@@ -193,7 +193,7 @@ export const createTrack = (userId, taskId, newTrack, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TRACK id:${newTrack.id} from task id:${taskId} was succeffully added to USER id:${userId}`);
+          console.log(`TRACK id:${newTrack.id} from task id:${taskId} was successfully added to USER id:${userId}`);
         });
     })
     .catch((error) => {
@@ -224,7 +224,9 @@ export const editTrack = (userId, taskId, editedTrack, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TRACK id:${editedTrack.id} from task id:${taskId} was succeffully updated in USER id:${userId}`);
+          console.log(
+            `TRACK id:${editedTrack.id} from task id:${taskId} was successfully updated in USER id:${userId}`,
+          );
         });
     })
     .catch((error) => {
@@ -253,7 +255,7 @@ export const deleteTrack = (userId, taskId, trackId, callback) => {
         })
         .then(() => {
           callback();
-          console.log(`TRACK id:${trackId} from task id:${taskId} was succeffully deleted from USER id:${userId}`);
+          console.log(`TRACK id:${trackId} from task id:${taskId} was successfully deleted from USER id:${userId}`);
         });
     })
     .catch((error) => {
@@ -270,7 +272,7 @@ const getTracksWithoutRequest = (tasks, taskId) => {
 export const createAuthForNewUser = async (email, password) => {
   try {
     const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    console.log(`USER with email:${email} was succesfully added to auth`);
+    console.log(`USER with email:${email} was successfully added to auth`);
     const { user } = userCredential;
     await user.sendEmailVerification();
     console.log(`Verification email was sent to USER with email: ${email}`);
@@ -329,7 +331,7 @@ export const deleteUserAuth = async (userToDelete) => {
     await signInUser(userToDelete.email, userToDelete.password);
     const userAuth = firebase.auth().currentUser;
     await userAuth.delete();
-    console.log(`USER with ID:${userToDelete.id} was succesfully deleted from the Auth section`);
+    console.log(`USER with ID:${userToDelete.id} was successfully deleted from the Auth section`);
   } catch (error) {
     console.log(error.code);
     console.log(error.message);
@@ -346,11 +348,11 @@ export const updateUserAuthData = async (prevUserData, editedUserData) => {
     const userAuth = firebase.auth().currentUser;
     if (prevEmail !== editedEmail) {
       await userAuth.updateEmail(editedEmail);
-      console.log(`Email Auth of USER id:${prevUserData.id} was succesfully updated`);
+      console.log(`Email Auth of USER id:${prevUserData.id} was successfully updated`);
     }
     if (prevPassword !== editedPassword) {
       await userAuth.updatePassword(editedPassword);
-      console.log(`Password Auth of USER id:${prevUserData.id} was succesfully updated`);
+      console.log(`Password Auth of USER id:${prevUserData.id} was successfully updated`);
     }
   } catch (error) {
     console.log(error.code);
@@ -361,7 +363,7 @@ export const updateUserAuthData = async (prevUserData, editedUserData) => {
 export const LogOut = async () => {
   try {
     await firebase.auth().signOut();
-    console.log('Succesfully LogOut');
+    console.log('Successfully LogOut');
   } catch (error) {
     console.log('Something went wrong with Logout', error);
   }
@@ -371,7 +373,7 @@ export const resetUserPassword = async ({ email }) => {
   try {
     const auth = firebase.auth();
     await auth.sendPasswordResetEmail(email);
-    console.log(`Email to reset password was succesfully sent to email: ${email}`);
+    console.log(`Email to reset password was successfully sent to email: ${email}`);
   } catch (error) {
     console.log(`Error with sending email to reset password to email: ${email}`, error);
   }
