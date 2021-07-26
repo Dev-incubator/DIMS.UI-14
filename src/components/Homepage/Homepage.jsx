@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import HomeHeader from './HomeHeader';
 import About from '../../pages/About';
 import LoginWithContext from '../ContextHOCs/LoginWithContext';
@@ -11,6 +11,7 @@ export default function Homepage() {
       <Switch>
         <Route exact path='/about' component={About} />
         <Route exact path='/login' component={LoginWithContext} />
+        <Route exact path='/' render={() => <Redirect to='/login' />} />
         <Route component={PageNotFound} />
       </Switch>
     </>
