@@ -58,7 +58,7 @@ class UsersTracks extends React.PureComponent {
     });
 
     return (
-      <div>
+      <div className={classes.container}>
         <div className={classes.header}>
           <h2 className={classes.title}>
             {`${taskData.title}'s task tracks`} <span>({`${tracks.length}`})</span>

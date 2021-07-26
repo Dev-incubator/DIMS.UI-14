@@ -28,11 +28,17 @@ export default function UserTask({ userId, taskId, tableIndex, status, isUser, s
 
   return (
     <div className={classes.item}>
+      <div>№</div>
       <div>{tableIndex}</div>
+      <div>Task Name</div>
       <div>{title}</div>
+      <div>Start Date</div>
       <div>{getInternationalDate(startDate)}</div>
+      <div>Deadline</div>
       <div>{getInternationalDate(deadLine)}</div>
+      <div>Status</div>
       <div className={classes[status]}>{status}</div>
+      <div>{isUser ? 'View Tracks' : 'Update Status'}</div>
       <div className={classes.buttons}>{buttonGroup}</div>
     </div>
   );

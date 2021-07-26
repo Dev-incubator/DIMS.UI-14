@@ -63,7 +63,7 @@ class UsersTasks extends React.PureComponent {
     });
 
     return (
-      <div>
+      <div className={classes.container}>
         <div className={classes.header}>
           <h2 className={classes.title}>
             {`${userFullName}'s Tasks `}

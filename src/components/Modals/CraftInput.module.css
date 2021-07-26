@@ -10,6 +10,10 @@
   color: var(--craft-input-text-color);
 }
 
+.item span {
+  width: 55%;
+}
+
 .item:first-of-type {
   margin-top: 0;
 }

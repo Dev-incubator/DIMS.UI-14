@@ -1,7 +1,8 @@
 .modal {
-  width: 55%;
+  position: absolute;
+  width: calc(90% - 320 * ((100vw - 320px) / 880));
   background-color: var(--modal-background-color);
-  padding: 30px;
+  padding: calc(10px + 20 * ((100vw - 320px) / 880));
   border: 1px solid var(--modal-border-shadow-color);
   border-radius: 20px;
   display: flex;
@@ -12,9 +13,9 @@
 
 .title {
   margin: 0;
-  padding-bottom: 20px;
+  padding-bottom: calc(20px + 10 * ((100vw - 320px) / 880));
   font-size: 1.5rem;
-  line-height: 1.5rem;
+  line-height: 1em;
   text-align: center;
   border-bottom: 1px solid var(--modal-border-shadow-color);
 }
@@ -22,18 +23,36 @@
 .buttons {
   display: flex;
   justify-content: space-around;
-  margin-top: 30px;
+  margin-top: calc(20px + 10 * ((100vw - 320px) / 880));
 }
 .buttons button {
   width: 25%;
 }
 
 .wrapper {
-  margin-top: 20px;
+  margin-top: calc(10px + 10 * ((100vw - 320px) / 880));
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .column {
   width: 48%;
+}
+
+.requiredWarning {
+  font-size: 10px;
+  line-height: 1em;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    top: 0;
+  }
+  .column {
+    width: 100%;
+  }
+  .buttons button {
+    width: 40%;
+  }
 }

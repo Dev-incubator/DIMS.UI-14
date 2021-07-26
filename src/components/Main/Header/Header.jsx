@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <header className={classes.header}>
       <Hamburger />
-      <h1 className={classes.title}>HyperCube Managment System</h1>
+      <h1 className={classes.title}>HyperCube Management System</h1>
     </header>
   );
 };

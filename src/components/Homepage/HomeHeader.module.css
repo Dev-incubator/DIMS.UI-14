@@ -12,6 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 6px solid var(--login-header-color);
 }
 
 .logo img {
@@ -19,10 +20,10 @@
 }
 
 .title {
-  font-size: 2rem;
+  font-size: calc(24px + 8 * ((100vw - 320px) / 880));
   color: var(--login-text-color);
   margin-left: 1.25rem;
-  line-height: 2rem;
+  line-height: 1em;
 }
 
 .navLinkMenu {
@@ -31,17 +32,16 @@
 }
 
 .navLinkItem {
-  font-size: 1.5rem;
+  font-size: calc(24px + 4 * ((100vw - 320px) / 880));
   color: var(--login-text-color);
   text-decoration: none;
-}
-
-.navLinkItem {
-  padding: 1.5rem 1.5rem 0 1.5rem;
   height: 100%;
   cursor: pointer;
   transition: 0.5s all;
   border-bottom: 6px solid var(--login-header-color);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem 0 1.5rem;
 }
 
 .navLinkItem:hover {
@@ -52,4 +52,22 @@
 .navLinkItem.active {
   border-bottom: 6px solid var(--login-header-action-color);
   border-color: var(--login-header-active-color);
+}
+
+@media (max-width: 576px) {
+  .navLinkItem {
+    padding: 0 1rem 0 1rem;
+  }
+  .logo {
+    padding: 1rem 0 1rem 0.75rem;
+  }
+  .title {
+    margin-left: 0.75rem;
+  }
+  .navLinkMenu {
+    flex-direction: column;
+  }
+  .navLinkItem.active {
+    display: none;
+  }
 }

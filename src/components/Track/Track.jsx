@@ -66,10 +66,15 @@ export default class Track extends React.Component {
     return (
       <>
         <div className={classes.item}>
+          <div>№</div>
           <div>{tableIndex}</div>
+          <div>Track Name</div>
           <div>{track.name}</div>
+          <div>Track Note</div>
           <div>{track.note}</div>
+          <div>Date</div>
           <div>{getInternationalDate(track.date)}</div>
+          <div>Controls</div>
           <div className={classes.buttons}>
             <Button roleClass='edit' onClick={this.openEditModal}>
               Edit

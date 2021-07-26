@@ -12,3 +12,11 @@
   visibility: visible;
   width: 265px;
 }
+
+@media (max-width: 992px) {
+  .aside {
+    z-index: 100;
+    position: fixed;
+    height: 100%;
+  }
+}

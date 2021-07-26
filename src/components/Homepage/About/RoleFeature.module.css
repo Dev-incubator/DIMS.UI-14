@@ -71,3 +71,14 @@
   left: -2rem;
   top: 1rem;
 }
+
+
+@media (max-width: 576px) {
+  .roles__item {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .roles__item:first-of-type {
+    margin-top: 0;
+  }
+}

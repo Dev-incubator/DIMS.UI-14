@@ -32,3 +32,9 @@
 .hamburger.active span:nth-child(3) {
   transform: translateY(-8px) rotate(45deg);
 }
+
+@media (max-width: 992px) {
+  .hamburger {
+    right: calc(12px + 10 * ((100vw - 320px) / 672));
+  }
+}
