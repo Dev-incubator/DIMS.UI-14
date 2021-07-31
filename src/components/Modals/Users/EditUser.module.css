@@ -1,8 +1,8 @@
 .modal {
   position: absolute;
-  width: calc(90% - 320 * ((100vw - 320px) / 880));
+  width: var(--smoothIncrease90perc);
   background-color: var(--modal-background-color);
-  padding: calc(10px + 20 * ((100vw - 320px) / 880));
+  padding: var(--smoothDecease30to10px);
   border: 1px solid var(--modal-border-shadow-color);
   border-radius: 20px;
   display: flex;
@@ -13,7 +13,7 @@
 
 .title {
   margin: 0;
-  padding-bottom: calc(20px + 10 * ((100vw - 320px) / 880));
+  padding-bottom: var(--smoothDecease30to10px);
   font-size: 1.5rem;
   line-height: 1em;
   text-align: center;
@@ -23,14 +23,14 @@
 .buttons {
   display: flex;
   justify-content: space-around;
-  margin-top: calc(20px + 10 * ((100vw - 320px) / 880));
+  margin-top: var(--smoothDecease30to10px);
 }
 .buttons button {
   width: 25%;
 }
 
 .wrapper {
-  margin-top: calc(10px + 10 * ((100vw - 320px) / 880));
+  margin-top: var(--smoothDecease20to10px);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;

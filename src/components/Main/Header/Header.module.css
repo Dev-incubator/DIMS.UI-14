@@ -10,7 +10,7 @@
 
 .title {
   margin: 0;
-  font-size: calc(24px + 16 * ((100vw - 320px) / 880));
+  font-size: var(--smoothDecease40to24px);
   line-height: 1em;
   font-weight: normal;
 }

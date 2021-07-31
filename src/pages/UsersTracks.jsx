@@ -65,7 +65,9 @@ class UsersTracks extends React.PureComponent {
           </h2>
           <div className={classes.buttonsWrapper}>
             <NavLink className={classes.navLink} to={`/main/users/${userId}/tasks`}>
-              <Button onClick={noop}>Back</Button>
+              <Button onClick={noop} onScreen>
+                Back
+              </Button>
             </NavLink>
             <Button onClick={openCreateTrackModal} roleClass='create'>
               Create

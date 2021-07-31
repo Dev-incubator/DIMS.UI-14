@@ -75,11 +75,11 @@
 }
 
 .actionLinkWrap {
-  margin-top: calc(20px + 12 * ((100vw - 320px) / 880));
+  margin-top: var(--smoothDecease32to20px);
 }
 
 .messageBox h1 {
-  margin: calc(20px + 12 * ((100vw - 320px) / 880)) 0 calc(20px + 12 * ((100vw - 320px) / 880)) 0;
+  margin: var(--smoothDecease32to20px) 0 var(--smoothDecease32to20px) 0;
 }
 
 .actionLinkWrap a {

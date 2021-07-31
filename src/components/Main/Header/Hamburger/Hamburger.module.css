@@ -35,6 +35,6 @@
 
 @media (max-width: 992px) {
   .hamburger {
-    right: calc(12px + 10 * ((100vw - 320px) / 672));
+    right: var(--calcHamburgerPosition);
   }
 }

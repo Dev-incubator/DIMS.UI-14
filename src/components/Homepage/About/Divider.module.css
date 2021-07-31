@@ -1,6 +1,6 @@
 .divider {
   height: 2px;
   width: 5rem;
-  margin: calc(20px + 12 * ((100vw - 320px) / 880)) auto 0 auto;
+  margin: var(--smoothDecease32to20px) auto 0 auto;
   background-color: var(--about-divider-color);
 }

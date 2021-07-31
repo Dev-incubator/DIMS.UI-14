@@ -1,6 +1,6 @@
 .modal {
   position: absolute;
-  width: calc(90% - 768 * ((100vw - 320px) / 880));
+  width: var(--smoothIncrease90perc768px);
   background-color: var(--modal-background-color);
   padding: 30px;
   border: 1px solid var(--modal-border-shadow-color);

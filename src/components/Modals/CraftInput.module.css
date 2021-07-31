@@ -96,6 +96,8 @@ input[type='checkbox'] {
   border-radius: 10px;
   border: 1px solid var(--craft-input-border-color);
   resize: none;
+  background-color: var(--craft-input-background-color);
+  color: var(--craft-input-text-color);
 }
 
 .textArea:focus {

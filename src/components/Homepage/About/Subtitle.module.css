@@ -1,6 +1,6 @@
 .subtitle {
   text-align: center;
-  font-size: calc(20px + 4 * ((100vw - 320px) / 880));
+  font-size: var(--smoothDecease24to20px);
   font-weight: 400;
   margin: 0;
 }

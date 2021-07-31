@@ -18,13 +18,13 @@
 }
 
 .features__text {
-  margin-left: calc(20px + 80 * ((100vw - 320px) / 880));
+  margin-left: var(--smoothDecease100to20px);
   width: 20rem;
 }
 
 .features__item_reversed .features__text {
   margin-left: 0;
-  margin-right: calc(20px + 80 * ((100vw - 320px) / 880));
+  margin-right: var(--smoothDecease100to20px);
 }
 
 .features__title {

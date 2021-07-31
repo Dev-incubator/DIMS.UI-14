@@ -38,7 +38,7 @@
   line-height: 22px;
   align-items: center;
   border-left: 6px solid var(--menu-item-border-color);
-  transition: background-color 0.3s all;
+  transition: background-color 0.3s;
   cursor: pointer;
 }
 

@@ -1,7 +1,7 @@
 .welcome {
   margin: 5rem 0 0 0;
   text-align: center;
-  font-size: calc(40px + 8 * ((100vw - 320px) / 880));
+  font-size: var(--smoothDecease48to40px);
   font-weight: 300;
 }
 
@@ -17,7 +17,7 @@
 }
 
 .formWrapper {
-  width: calc(90vw - 768 * ((100vw - 320px) / 880));
+  width: var(--smoothIncrease90perc768px);
 }
 
 .buttonWrapper {
