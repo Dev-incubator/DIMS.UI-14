@@ -1,3 +1,3 @@
 .section {
-  margin: 2rem auto 0 auto;
+  margin: var(--smoothDecease32to20px) auto 0 auto;
 }

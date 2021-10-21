@@ -75,7 +75,7 @@ class Users extends React.PureComponent {
     const isAdmin = role === ROLES.ADMIN;
 
     return (
-      <div>
+      <div className={classes.container}>
         <div className={classes.header}>
           <h2 className={classes.title}>
             Users <span>({`${usersList.length}`})</span>

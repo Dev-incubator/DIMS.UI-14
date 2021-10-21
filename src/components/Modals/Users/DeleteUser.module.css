@@ -1,9 +1,10 @@
 .modal {
+  position: absolute;
+  width: var(--smoothIncrease90perc768px);
   background-color: var(--modal-background-color);
   padding: 30px;
   border: 1px solid var(--modal-border-shadow-color);
   border-radius: 20px;
-  width: 250px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -12,17 +13,18 @@
 
 .title {
   margin: 0;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
   font-size: 1.5rem;
-  line-height: 1.5rem;
+  line-height: 1em;
   text-align: center;
   border-bottom: 1px solid var(--modal-border-shadow-color);
 }
 
 .text {
-  margin-top: 20px;
+  margin-top: 30px;
   text-align: center;
 }
+
 .text span {
   color: var(--modal-div-color);
 }
@@ -30,8 +32,9 @@
 .buttons {
   display: flex;
   justify-content: space-around;
-  margin-top: 25px;
+  margin-top: 30px;
 }
+
 .buttons button {
-  width: 35%;
+  width: 40%;
 }

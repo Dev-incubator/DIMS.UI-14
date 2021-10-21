@@ -59,6 +59,7 @@ body[data-theme='light'] {
   --modal-border-shadow-color: var(--lightGray);
   --modal-div-color: var(--lightBlue);
   --craft-input-border-color: var(--darkGray);
+  --craft-input-background-color: var(--white);
   --craft-input-border-focus-color: var(--lightBlue);
   --craft-input-readonly-color: var(--lightGray);
   --craft-input-text-color: var(--black);
@@ -130,6 +131,7 @@ body[data-theme='dark'] {
   --modal-border-shadow-color: var(--navyBlue);
   --modal-div-color: var(--lightBlue);
   --craft-input-border-color: var(--lightBlue);
+  --craft-input-background-color: var(--darkBlue);
   --craft-input-border-focus-color: var(--lightBlue);
   --craft-input-readonly-color: var(--darkBlue);
   --craft-input-text-color: var(--lightGray);
@@ -178,6 +180,27 @@ body[data-theme='dark'] {
   --green: #0ca52f;
   --darkGreen: #026c45;
   --slytherinGreen: #013220;
+
+  /* first parameter - last value, second parameter - difference between last and first value,
+  880 - difference between start resolution and last resolution (f.e. 1200 - 320)*/
+  --smoothDecease100to20px: calc(20px + 80 * ((100vw - 320px) / 880));
+  --smoothDesease50to20px: calc(20px + 30 * ((100vw - 320px) / 880));
+  --smoothDecease48to40px: calc(40px + 8 * ((100vw - 320px) / 880));
+  --smoothDecease44to30px: calc(30px + 14 * ((100vw - 320px) / 880));
+  --smoothDecease40to24px: calc(24px + 16 * ((100vw - 320px) / 880));
+  --smoothDecease32to24px: calc(24px + 8 * ((100vw - 320px) / 880));
+  --smoothDecease32to20px: calc(20px + 12 * ((100vw - 320px) / 880));
+  --smoothDecease30to10px: calc(10px + 20 * ((100vw - 320px) / 880));
+  --smoothDecease28to24px: calc(24px + 4 * ((100vw - 320px) / 880));
+  --smoothDecease24to20px: calc(20px + 4 * ((100vw - 320px) / 880));
+  --smoothDecease20to10px: calc(10px + 10 * ((100vw - 320px) / 880));
+
+
+  --smoothIncrease90perc: calc(90% - 320 * ((100vw - 320px) / 880));
+  --smoothIncrease90perc768px: calc(90% - 768 * ((100vw - 320px) / 880));
+  --smoothIncrease90perc576px: calc(90% - 576 * ((100vw - 320px) / 880));
+
+  --calcHamburgerPosition: calc(12px + 10 * ((100vw - 320px) / 672));
 }
 
 code {

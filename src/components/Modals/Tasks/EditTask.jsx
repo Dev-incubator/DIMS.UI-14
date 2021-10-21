@@ -1,20 +1,24 @@
 import PropTypes from 'prop-types';
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import classes from './EditTask.module.css';
 import Button from '../../Button/Button';
 import CraftInput from '../CraftInput';
-import { stateReducer, TASK_ONCHANGE, TASK_VALIDATE, validatorReducer } from '../modals-helpers';
-import { checkAllFormValidity } from '../../../utilities/form-validators';
+import {
+  stateReducer,
+  TASK_ONCHANGE,
+  TASK_VALIDATE,
+  useAllSelectedFormsValidityChecker,
+  validatorReducer,
+} from '../modals-helpers';
 
 export default function EditTask({ closeFunc, task, liftUpEditTask, usersList }) {
-  const onChangeSnapshot = useRef({});
-  const firstRender = useRef(true);
+  const onChangeSnapshotRef = useRef({});
 
   const [state, dispatchState] = useReducer(stateReducer, undefined, () => ({
     ...task,
   }));
 
-  const [validator, dispatchValidator] = useReducer(validatorReducer, undefined, () => ({
+  const [{ validator, errors }, dispatchValidator] = useReducer(validatorReducer, undefined, () => ({
     validator: {
       title: true,
       startDate: true,
@@ -30,23 +34,18 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
   }));
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-
-      return;
-    }
-    setIsValid(checkAllFormValidity(validator.validator));
-  }, [validator.validator]);
-
-  useEffect(() => {
-    dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshot.current } });
+    dispatchValidator({ type: TASK_VALIDATE, payload: { state, event: onChangeSnapshotRef.current } });
+    /*
+     I don't need other dependencies here, coz validator's reducer has a checker, which verifies,
+      event-changed field inside or outside validator and returns prevState.
+    */
   }, [state]);
 
-  const [isValid, setIsValid] = useState(false);
+  const isValid = useAllSelectedFormsValidityChecker(validator, state);
 
   const handleChange = (event) => {
     const { name, value, type } = event.target;
-    onChangeSnapshot.current = { name, value, type };
+    onChangeSnapshotRef.current = { name, value, type };
     dispatchState({ type: TASK_ONCHANGE, payload: { name, value, type } });
   };
 
@@ -69,7 +68,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
             id='title'
             value={state.title}
             onChange={handleChange}
-            error={validator.errors.titleError}
+            error={errors.titleError}
           />
           <CraftInput title='Description' id='description' value={state.description} onChange={handleChange} />
           <CraftInput
@@ -79,7 +78,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
             type='date'
             value={state.startDate}
             onChange={handleChange}
-            error={validator.errors.startDateError}
+            error={errors.startDateError}
           />
           <CraftInput
             title='DeadLine'
@@ -88,7 +87,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
             type='date'
             value={state.deadLine}
             onChange={handleChange}
-            error={validator.errors.deadLineError}
+            error={errors.deadLineError}
           />
           <CraftInput
             title='Users'
@@ -98,7 +97,7 @@ export default function EditTask({ closeFunc, task, liftUpEditTask, usersList })
             value={state.selectedUsers}
             options={usersList}
             onChange={handleChange}
-            error={validator.errors.selectedUsersError}
+            error={errors.selectedUsersError}
           />
         </div>
         <div className={classes.requiredWarning}>* - these fields are required.</div>
