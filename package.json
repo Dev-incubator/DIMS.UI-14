@@ -104,7 +104,7 @@
     "web-vitals": "2.0.1"
   },
   "devDependencies": {
-    "codecov": "3.8.2",
+    "codecov": "3.8.3",
     "commitizen": "4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "eslint-config-airbnb": "18.2.1",
